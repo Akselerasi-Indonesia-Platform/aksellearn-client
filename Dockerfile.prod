@@ -1,0 +1,23 @@
+# Production Runtime - Only contains the compiled bundle (IP Protected)
+FROM oven/bun:latest
+
+WORKDIR /app
+
+# Ensure we have curl for healthchecks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Fix: Only copy the BUILT production output
+# This prevents your source code (TSX/TS) from being part of the image
+COPY .output/ /app/.output/
+
+# Set production environment
+ENV NODE_ENV=production
+ENV PORT=2000
+
+EXPOSE 2000
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:2000/ || exit 1
+
+ENTRYPOINT []
+CMD ["bun", "run", ".output/server/index.mjs"]

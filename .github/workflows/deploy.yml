@@ -1,0 +1,170 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Normalize image name to lowercase
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Fix: Pass build arguments for Vite env inlining
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_API_APP_ID=${{ secrets.VITE_API_APP_ID }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Normalize image name to lowercase
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure docker-compose.prod.yml exists
+        run: |
+          if [ ! -f docker-compose.prod.yml ]; then
+            echo "docker-compose.prod.yml is missing."
+            exit 1
+          fi
+
+      - name: Prepare Remote Directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            sudo mkdir -p ${{ secrets.SERVER_WORKDIR }}
+            sudo chown -R $USER:$USER ${{ secrets.SERVER_WORKDIR }}
+
+      - name: Copy docker-compose and configs
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          source: 'docker-compose.prod.yml'
+          target: '${{ secrets.SERVER_WORKDIR }}'
+
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          envs: VITE_API_URL,INTERNAL_API_URL,CLARA_APP_SECRET,VITE_API_APP_ID,VITE_ENABLE_SIGNATURE,CLARA_LICENSE_KEY,PORT,COMPOSE_PROJECT_NAME,GHCR_PAT,GITHUB_ACTOR,REGISTRY,IMAGE_NAME
+          script: |
+            set -e
+            
+            cd ${{ secrets.SERVER_WORKDIR }}
+
+            # Remove legacy container name to prevent port/name conflicts
+            docker stop ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
+            docker rm ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
+
+            # Create .env.production from GitHub Secrets (Cattle Approach)
+            # This ensures the server is always in sync with GitHub
+            cat <<EOF > .env.production
+            PORT=$PORT
+            VITE_API_URL=$VITE_API_URL
+            INTERNAL_API_URL=$INTERNAL_API_URL
+            CLARA_APP_SECRET=$CLARA_APP_SECRET
+            VITE_API_APP_ID=$VITE_API_APP_ID
+            VITE_ENABLE_SIGNATURE=$VITE_ENABLE_SIGNATURE
+            CLARA_LICENSE_KEY="$CLARA_LICENSE_KEY"
+            COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
+            EOF
+
+            # Set image name to latest for simple management
+            export DOCKER_IMAGE=$REGISTRY/$IMAGE_NAME:latest
+
+            # Determine backend network (strip '-client' from COMPOSE_PROJECT_NAME)
+            # Example: 'aksellearn-client' becomes 'aksellearn-network'
+            BACKEND_PROJ="${COMPOSE_PROJECT_NAME%-client}"
+            export APP_NETWORK="${BACKEND_PROJ}-network"
+
+            # Log in to GHCR on the remote server using a secure method
+            # We use --password-stdin to avoid the password appearing in 'ps'
+            echo "$GHCR_PAT" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+
+            # Pull and Update with --wait for health check verification
+            docker compose --env-file .env.production -f docker-compose.prod.yml pull
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --force-recreate --wait
+
+            # Smart Cleanup: Keep only the 5 most recent images for this repo to prevent disk bloat
+            docker images --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" \
+              | grep "$REGISTRY/$IMAGE_NAME" \
+              | sort -k2 -r \
+              | awk 'NR>5 {print $1}' \
+              | xargs -r docker rmi
+
+            # Cleanup orphaned/unused builder layers
+            docker builder prune -f
+        env:
+          PORT: 2000
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          INTERNAL_API_URL: ${{ secrets.INTERNAL_API_URL }}
+          CLARA_APP_SECRET: ${{ secrets.CLARA_APP_SECRET || secrets.VITE_API_APP_SECRET }}
+          VITE_API_APP_ID: ${{ secrets.VITE_API_APP_ID }}
+          VITE_ENABLE_SIGNATURE: ${{ secrets.VITE_ENABLE_SIGNATURE }}
+          CLARA_LICENSE_KEY: ${{ secrets.CLARA_LICENSE_KEY }}
+          COMPOSE_PROJECT_NAME: ${{ secrets.COMPOSE_PROJECT_NAME }}
+          GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          REGISTRY: ${{ env.REGISTRY }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
