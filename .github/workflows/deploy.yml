@@ -117,18 +117,7 @@ jobs:
             docker stop ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
             docker rm ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
 
-            # Create .env.production from GitHub Secrets (Cattle Approach)
-            # This ensures the server is always in sync with GitHub
-            cat <<EOF > .env.production
-            PORT=$PORT
-            VITE_API_URL=$VITE_API_URL
-            INTERNAL_API_URL=$INTERNAL_API_URL
-            CLARA_APP_SECRET=$CLARA_APP_SECRET
-            VITE_API_APP_ID=$VITE_API_APP_ID
-            VITE_ENABLE_SIGNATURE=$VITE_ENABLE_SIGNATURE
-            CLARA_LICENSE_KEY="$CLARA_LICENSE_KEY"
-            COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
-            EOF
+            # We rely on the existing .env.production file managed manually on the server.
 
             # Set image name to latest for simple management
             export DOCKER_IMAGE=$REGISTRY/$IMAGE_NAME:latest
