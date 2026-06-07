@@ -212,6 +212,10 @@ export function AdminSidebar({
             title: t('sidebar.paymentMethods', 'Payment Methods'),
             url: '/admin/setting/payment-method',
           },
+          {
+            title: t('sidebar.notificationPreferences', 'Notifications'),
+            url: '/admin/setting/notification-preferences',
+          },
         ],
       },
     ],

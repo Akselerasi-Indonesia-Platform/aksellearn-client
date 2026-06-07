@@ -287,10 +287,47 @@ apiClient.interceptors.request.use(
 )
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // 🛡️ Implicit Verification for Commerce Endpoints
+    if (typeof window !== 'undefined') {
+      const url = response.config.url || ''
+      if (url.includes('/api/v1/cart') || url.includes('/api/v1/enroll')) {
+        import('@/hooks/use-auth').then(({ useAuthStore }) => {
+          const authStore = useAuthStore.getState()
+          if (authStore.user && !authStore.user.email_verified_at) {
+            authStore.setUser({
+              ...authStore.user,
+              email_verified_at: new Date().toISOString()
+            } as any)
+          }
+        })
+      }
+    }
+    return response
+  },
   async (error) => {
     const isBrowser = typeof window !== 'undefined'
     const originalRequest = error.config
+
+    if (error.response?.status === 403 && error.response?.data?.code === 'EMAIL_NOT_VERIFIED') {
+      if (isBrowser) {
+        import('@/hooks/use-auth').then(({ useAuthStore }) => {
+          const authStore = useAuthStore.getState()
+          if (authStore.user && authStore.user.email_verified_at) {
+            authStore.setUser({
+              ...authStore.user,
+              email_verified_at: null
+            } as any)
+          }
+        })
+        import('sonner').then(({ toast }) => {
+          toast.error('Verification Required', {
+            description: error.response?.data?.message || 'Please verify your email address to continue.'
+          })
+        })
+      }
+      return Promise.reject(error)
+    }
 
     if (error.response?.status === 401) {
       const appBootTime = (window as any).__APP_BOOT_TIME__ || Date.now()

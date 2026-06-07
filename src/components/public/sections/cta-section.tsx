@@ -11,9 +11,9 @@ import { SectionHeader } from '@/components/public/ui/section-header'
  */
 export function CTASection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="rounded-2xl bg-brand-gradient brand-rings p-8 md:p-16 relative overflow-hidden shadow-2xl">
+        <div className="rounded-2xl bg-brand-gradient brand-rings p-6 sm:p-8 md:p-16 relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 h-full w-1/2 bg-linear-to-l from-white/10 to-transparent"></div>
           <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-white/20 rounded-full blur-[100px]"></div>
 
@@ -30,6 +30,7 @@ export function CTASection() {
                   asChild
                   variant="cta"
                   size="xl"
+                  className="w-full sm:w-auto"
                 >
                   <a href={`mailto:${APP_CONFIG.contact.email}`}>
                     Talk to Us

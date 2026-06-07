@@ -298,12 +298,12 @@ export function CourseFilterBar({
             Filters {isFiltersActive && <span className="ml-1 flex h-2 w-2 rounded-full bg-primary"></span>}
           </Button>
         </SheetTrigger>
-        <SheetContent side="bottom" className="h-[80vh] rounded-t-3xl sm:max-w-none w-full">
-          <SheetHeader className="border-b pb-4">
-            <SheetTitle>Filters & Sort</SheetTitle>
+        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl sm:max-w-none w-full flex flex-col p-0 gap-0">
+          <SheetHeader className="border-b p-4 shrink-0">
+            <SheetTitle className="text-left font-bold text-lg">Filters & Sort</SheetTitle>
           </SheetHeader>
           
-          <div className="py-6 space-y-6 overflow-y-auto">
+          <div className="flex-1 p-4 space-y-8 overflow-y-auto no-scrollbar">
             {categories && categories.length > 0 && onCategoryChange && (
               <div className="space-y-3">
                 <label className="text-sm font-bold text-slate-900">Category</label>
@@ -371,7 +371,7 @@ export function CourseFilterBar({
             </div>
           </div>
 
-          <SheetFooter className="flex-row gap-3 pt-4 border-t mt-auto absolute bottom-0 left-0 right-0 p-4 bg-white">
+          <SheetFooter className="flex-row gap-3 p-4 border-t shrink-0 bg-white sm:justify-between shadow-[0_-4px_10px_-2px_rgba(0,0,0,0.05)] z-10">
             <Button
               variant="outline"
               className="flex-1 h-12"

@@ -58,12 +58,12 @@ export function FeaturedCourses({
   }
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-white relative overflow-hidden">
       {/* Subtle Background Accent */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-linear-to-r from-transparent via-slate-200 to-transparent" />
       
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-16">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-10 mb-10 md:mb-16">
           <SectionHeader
             badge={{ icon: Sparkles, label: badgeLabel }}
             title={title}
@@ -84,7 +84,7 @@ export function FeaturedCourses({
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[...Array(4)].map((_, i) => (
               <CourseCardSkeleton key={i} />
             ))}
@@ -94,7 +94,7 @@ export function FeaturedCourses({
             {emptyStateMessage}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {courses.slice(0, 8).map((course) => (
               <Link
                 key={course.id}

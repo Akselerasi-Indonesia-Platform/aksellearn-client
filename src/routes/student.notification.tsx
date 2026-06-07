@@ -49,7 +49,25 @@ function StudentInboxPage() {
   // 2. Mutations
   const markAsReadMutation = useMutation({
     mutationFn: (uuid: string) => notificationService.markAsRead(uuid),
-    onSuccess: () => {
+    onMutate: async (uuid: string) => {
+      await queryClient.cancelQueries({ queryKey: ['user', 'notifications'] })
+      const previousNotifications = queryClient.getQueryData(['user', 'notifications', category, currentPage])
+
+      queryClient.setQueryData(['user', 'notifications', category, currentPage], (old: any) => {
+        if (!old || !old.data) return old
+        return {
+          ...old,
+          data: old.data.map((n: any) => 
+            n.uuid === uuid ? { ...n, read_at: new Date().toISOString() } : n
+          )
+        }
+      })
+      return { previousNotifications }
+    },
+    onError: (err, newTodo, context: any) => {
+      queryClient.setQueryData(['user', 'notifications', category, currentPage], context.previousNotifications)
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['user', 'notifications'] })
     },
   })

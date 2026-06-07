@@ -14,6 +14,7 @@ import {
   Menu,
   History,
   FileText,
+  Bell,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -183,6 +184,14 @@ function UserLayout() {
               >
                 <Link to="/student/profile">
                   <UserIcon className="mr-3 size-4" /> Profile Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="rounded-xl px-3 py-3 font-bold text-[#0D3A6E]/80 focus:bg-[#F0F7FF] focus:text-[#056FAE] cursor-pointer"
+                asChild
+              >
+                <Link to="/student/notification-settings">
+                  <Bell className="mr-3 size-4" /> Notification Settings
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem

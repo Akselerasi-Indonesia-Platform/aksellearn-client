@@ -32,7 +32,7 @@ export function Hero({ stats }: HeroProps) {
   }
 
   return (
-    <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-[#056FAE] via-[#1A7AB8] to-[#2AABAA] brand-rings py-20 lg:py-28">
+    <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-[#056FAE] via-[#1A7AB8] to-[#2AABAA] brand-rings py-16 md:py-20 lg:py-28">
 
       <div className="container relative z-10 mx-auto px-4 md:px-6 max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -50,8 +50,8 @@ export function Hero({ stats }: HeroProps) {
             </div>
 
             <div className="space-y-6">
-              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl xl:text-7xl leading-[1.1]">
-                Learn skills that <br />
+              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+                Learn skills that <br className="hidden sm:block" />
                 <span className="text-[#70C942] italic">
                   open new doors.
                 </span>
@@ -61,11 +61,12 @@ export function Hero({ stats }: HeroProps) {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
               <Button
                 asChild
                 variant="cta"
                 size="xl"
+                className="w-full sm:w-auto"
               >
                 <Link to="/search">Start for Free</Link>
               </Button>
@@ -73,6 +74,7 @@ export function Hero({ stats }: HeroProps) {
                 asChild
                 variant="outline-white"
                 size="xl"
+                className="w-full sm:w-auto"
               >
                 <Link to="/search">Browse Courses</Link>
               </Button>

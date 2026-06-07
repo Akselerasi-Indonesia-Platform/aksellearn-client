@@ -164,6 +164,8 @@ function NotFound() {
   )
 }
 
+import { GlobalAuthSync } from '@/components/auth/global-auth-sync'
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = React.useState(false)
   const { profile } = usePlatformStore()
@@ -209,6 +211,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body suppressHydrationWarning>
         <QueryClientProvider client={queryClient}>
+          {mounted && <GlobalAuthSync />}
           {children}
           {mounted && !import.meta.env.PROD && (
             <React.Suspense>

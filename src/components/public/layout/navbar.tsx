@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link } from '@tanstack/react-router'
-import { ChevronDown, Menu, Search, ShoppingCart } from 'lucide-react'
+import { ChevronDown, ChevronRight, Menu, Search, ShoppingCart } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { isAuthenticated, getUser, removeToken, isAdmin } from '@/lib/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -260,23 +260,24 @@ export function PublicNavbar() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[300px] sm:w-[400px]" side="right">
-                <div className="flex flex-col gap-6 py-4">
+              <SheetContent className="w-full sm:max-w-[400px]" side="right">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <div className="flex flex-col gap-8 py-6 h-full overflow-y-auto no-scrollbar pb-12 px-2">
                   <Link
-                    className="text-xl font-bold italic text-primary flex items-center gap-2"
+                    className="text-2xl font-bold italic text-primary flex items-center gap-2"
                     to="/"
                   >
                     {profile?.logo?.url ? (
                       <img
                         src={profile.logo.url}
                         alt={profile.name || 'Logo'}
-                        className="h-8 w-auto object-contain"
+                        className="h-10 w-auto object-contain"
                       />
                     ) : profile?.logo_dark?.url ? (
                       <img
                         src={profile.logo_dark.url}
                         alt={profile.name || 'Logo'}
-                        className="h-8 w-auto object-contain"
+                        className="h-10 w-auto object-contain"
                       />
                     ) : (
                       <span>{profile?.name?.toUpperCase() || 'CLARA LEARN'}</span>
@@ -289,7 +290,7 @@ export function PublicNavbar() {
                     >
                       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                       <Input
-                        className="w-full bg-muted/50 pl-10 h-11 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all"
+                        className="w-full bg-muted/50 pl-11 h-12 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all text-base"
                         placeholder="Search courses..."
                         type="search"
                         value={searchQuery}
@@ -298,29 +299,30 @@ export function PublicNavbar() {
                     </form>
                   </div>
 
-                  <div className="flex flex-col gap-4">
-                    <h3 className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <div className="flex flex-col gap-3">
+                    <h3 className="font-bold text-xs uppercase tracking-widest text-muted-foreground ml-1">
                       Most Popular
                     </h3>
-                    <div className="grid gap-2">
+                    <div className="flex flex-col">
                       {categories?.map((cat) => (
                         <Link
                           key={cat.id}
-                          className="text-lg font-bold hover:text-primary transition-colors"
+                          className="text-base font-bold text-slate-700 hover:text-primary transition-colors py-3.5 border-b border-slate-100 last:border-0 flex items-center justify-between group"
                           to="/search"
                           search={{ category: cat.slug }}
                         >
                           {cat.name}
+                          <ChevronRight className="size-4 text-slate-300 group-hover:text-primary transition-colors" />
                         </Link>
                       ))}
                     </div>
                   </div>
-                  <div className="border-t pt-4">
-                    <div className="flex flex-col gap-4">
+                  <div className="border-t border-slate-100 pt-6 mt-auto">
+                    <div className="flex flex-col gap-3">
                       {canApplyInstructor && (
                         <Button
                           asChild
-                          className="w-full justify-start gap-3 rounded-xl border-white/20 hover:bg-white/10"
+                          className="w-full justify-start gap-3 rounded-xl border-white/20 hover:bg-white/10 h-12 text-base font-bold"
                           variant="outline"
                         >
                           <Link to="/become-an-instructor">
@@ -332,7 +334,7 @@ export function PublicNavbar() {
                         <>
                           <Button
                             asChild
-                            className="w-full justify-start gap-3 rounded-xl"
+                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
                             variant="outline"
                           >
                             <Link to="/student/profile">
@@ -341,7 +343,7 @@ export function PublicNavbar() {
                           </Button>
                           <Button
                             asChild
-                            className="w-full justify-start gap-3 rounded-xl"
+                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
                             variant="outline"
                           >
                             <Link to="/student/settings">
@@ -350,7 +352,7 @@ export function PublicNavbar() {
                           </Button>
                           <Button
                             asChild
-                            className="w-full justify-start gap-3 rounded-xl"
+                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
                             variant="outline"
                           >
                             <Link to="/cart">
@@ -364,7 +366,7 @@ export function PublicNavbar() {
                           </Button>
                           <Button
                             asChild
-                            className="w-full justify-start gap-3 rounded-xl"
+                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
                             variant="outline"
                           >
                             <Link to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}>
@@ -374,17 +376,17 @@ export function PublicNavbar() {
                           </Button>
                           <Button
                             onClick={handleLogout}
-                            className="w-full justify-start gap-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 border-none"
+                            className="w-full justify-start gap-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 border-none h-12 text-base"
                           >
                             <LogOut className="h-4 w-4" /> Logout Session
                           </Button>
                         </>
                       ) : (
                         <>
-                          <Button asChild className="w-full" variant="outline">
+                          <Button asChild className="w-full h-12 text-base rounded-xl" variant="outline">
                             <Link to="/login">Log in</Link>
                           </Button>
-                          <Button asChild className="w-full">
+                          <Button asChild className="w-full h-12 text-base rounded-xl">
                             <Link to="/login">Sign up</Link>
                           </Button>
                         </>

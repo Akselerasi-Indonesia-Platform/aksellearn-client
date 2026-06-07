@@ -27,7 +27,6 @@ import { PaymentSelector } from '@/components/public/checkout/payment-selector'
 function CheckoutPage() {
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
-  const needsEmailVerification = !!user && !user.email_verified_at
   const { cart, isLoading: isCartLoading, removeFromCart } = useCart()
   const { isReady: isSnapReady } = useMidtrans()
   const [selectedMethod, setSelectedMethod] = React.useState<string | number | null>(
@@ -180,32 +179,7 @@ function CheckoutPage() {
     )
   }
 
-  // --------------------- EMAIL VERIFICATION BLOCKER --------------------- //
-  if (needsEmailVerification) {
-    return (
-      <PublicLayout>
-        <div className="container mx-auto px-4 py-32 text-center space-y-6 max-w-lg">
-          <div className="size-20 bg-amber-50 rounded-full flex items-center justify-center text-amber-400 mx-auto">
-            <MailWarning className="size-10" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-900">Verify Your Email First</h2>
-          <p className="text-slate-500 leading-relaxed">
-            You need to verify your email address before you can complete a purchase.
-            Check your inbox for the verification link we sent when you registered.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={handleResend} disabled={isResending || cooldown > 0} className="rounded-xl h-12 px-8">
-              {isResending ? <Loader2 className="animate-spin size-4 mr-2" /> : <Mail className="size-4 mr-2" />}
-              {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend Verification Email'}
-            </Button>
-            <Button variant="outline" onClick={() => navigate({ to: '/' })} className="rounded-xl h-12 px-8">
-              Back to Home
-            </Button>
-          </div>
-        </div>
-      </PublicLayout>
-    )
-  }
+
 
   return (
     <PublicLayout>
@@ -311,7 +285,7 @@ function CheckoutPage() {
                   cart={cart}
                   isPending={checkoutMutation.isPending}
                   isSnapReady={isSnapReady}
-                  canCheckout={!needsEmailVerification}
+                  canCheckout={true}
                   selectedMethodName={methods.find(m => m.id === selectedMethod)?.name}
                   onCheckout={() => checkoutMutation.mutate()}
                 />

@@ -275,16 +275,6 @@ function CoursePublicDetails() {
       })
       return
     }
-    if (needsEmailVerification) {
-      toast.warning('Please verify your email before adding courses to your cart.', {
-        description: 'Check your inbox for the verification link.',
-        action: {
-          label: 'Resend',
-          onClick: () => authService.resendVerification(),
-        },
-      })
-      return
-    }
     if (!course?.uuid) return
     addToCart({ id: course.uuid, type: 'course', quantity: 1 })
   }
@@ -724,16 +714,6 @@ function CoursePublicDetails() {
                             <div className="flex flex-col gap-3">
                               <Button
                                 onClick={() => {
-                                  if (needsEmailVerification) {
-                                    toast.warning('Please verify your email before checking out.', {
-                                      description: 'Check your inbox for the verification link.',
-                                      action: {
-                                        label: 'Resend',
-                                        onClick: () => authService.resendVerification(),
-                                      },
-                                    })
-                                    return
-                                  }
                                   handleAddToCart()
                                   navigate({ to: '/checkout' })
                                 }}

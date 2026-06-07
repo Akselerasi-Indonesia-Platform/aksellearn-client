@@ -28,6 +28,7 @@ import { Route as VerifyUuidRouteImport } from './routes/verify.$uuid'
 import { Route as StudentWishlistRouteImport } from './routes/student.wishlist'
 import { Route as StudentSettingsRouteImport } from './routes/student.settings'
 import { Route as StudentProfileRouteImport } from './routes/student.profile'
+import { Route as StudentNotificationSettingsRouteImport } from './routes/student.notification-settings'
 import { Route as StudentNotificationRouteImport } from './routes/student.notification'
 import { Route as StudentDashboardRouteImport } from './routes/student.dashboard'
 import { Route as CourseCourseSlugRouteImport } from './routes/course/$courseSlug'
@@ -58,6 +59,7 @@ import { Route as CertificateVerifyUuidRouteImport } from './routes/certificate/
 import { Route as B2bActivateInvitationUuidRouteImport } from './routes/b2b/activate.$invitationUuid'
 import { Route as AdminSettingPlatformRouteImport } from './routes/admin/setting/platform'
 import { Route as AdminSettingPaymentMethodRouteImport } from './routes/admin/setting/payment-method'
+import { Route as AdminSettingNotificationPreferencesRouteImport } from './routes/admin/setting/notification-preferences'
 import { Route as AdminSettingAppRouteImport } from './routes/admin/setting/app'
 import { Route as AdminQuizQuizUuidRouteImport } from './routes/admin/quiz/$quizUuid'
 import { Route as AdminPromotionCreateVoucherRouteImport } from './routes/admin/promotion/create-voucher'
@@ -175,6 +177,12 @@ const StudentProfileRoute = StudentProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentNotificationSettingsRoute =
+  StudentNotificationSettingsRouteImport.update({
+    id: '/notification-settings',
+    path: '/notification-settings',
+    getParentRoute: () => StudentRoute,
+  } as any)
 const StudentNotificationRoute = StudentNotificationRouteImport.update({
   id: '/notification',
   path: '/notification',
@@ -329,6 +337,12 @@ const AdminSettingPaymentMethodRoute =
     path: '/setting/payment-method',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminSettingNotificationPreferencesRoute =
+  AdminSettingNotificationPreferencesRouteImport.update({
+    id: '/setting/notification-preferences',
+    path: '/setting/notification-preferences',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminSettingAppRoute = AdminSettingAppRouteImport.update({
   id: '/setting/app',
   path: '/setting/app',
@@ -467,6 +481,7 @@ export interface FileRoutesByFullPath {
   '/course/$courseSlug': typeof CourseCourseSlugRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/notification': typeof StudentNotificationRoute
+  '/student/notification-settings': typeof StudentNotificationSettingsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/settings': typeof StudentSettingsRoute
   '/student/wishlist': typeof StudentWishlistRoute
@@ -491,6 +506,7 @@ export interface FileRoutesByFullPath {
   '/admin/promotion/create-voucher': typeof AdminPromotionCreateVoucherRoute
   '/admin/quiz/$quizUuid': typeof AdminQuizQuizUuidRoute
   '/admin/setting/app': typeof AdminSettingAppRoute
+  '/admin/setting/notification-preferences': typeof AdminSettingNotificationPreferencesRoute
   '/admin/setting/payment-method': typeof AdminSettingPaymentMethodRoute
   '/admin/setting/platform': typeof AdminSettingPlatformRoute
   '/b2b/activate/$invitationUuid': typeof B2bActivateInvitationUuidRoute
@@ -538,6 +554,7 @@ export interface FileRoutesByTo {
   '/course/$courseSlug': typeof CourseCourseSlugRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/notification': typeof StudentNotificationRoute
+  '/student/notification-settings': typeof StudentNotificationSettingsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/settings': typeof StudentSettingsRoute
   '/student/wishlist': typeof StudentWishlistRoute
@@ -562,6 +579,7 @@ export interface FileRoutesByTo {
   '/admin/promotion/create-voucher': typeof AdminPromotionCreateVoucherRoute
   '/admin/quiz/$quizUuid': typeof AdminQuizQuizUuidRoute
   '/admin/setting/app': typeof AdminSettingAppRoute
+  '/admin/setting/notification-preferences': typeof AdminSettingNotificationPreferencesRoute
   '/admin/setting/payment-method': typeof AdminSettingPaymentMethodRoute
   '/admin/setting/platform': typeof AdminSettingPlatformRoute
   '/b2b/activate/$invitationUuid': typeof B2bActivateInvitationUuidRoute
@@ -611,6 +629,7 @@ export interface FileRoutesById {
   '/course/$courseSlug': typeof CourseCourseSlugRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/notification': typeof StudentNotificationRoute
+  '/student/notification-settings': typeof StudentNotificationSettingsRoute
   '/student/profile': typeof StudentProfileRoute
   '/student/settings': typeof StudentSettingsRoute
   '/student/wishlist': typeof StudentWishlistRoute
@@ -635,6 +654,7 @@ export interface FileRoutesById {
   '/admin/promotion/create-voucher': typeof AdminPromotionCreateVoucherRoute
   '/admin/quiz/$quizUuid': typeof AdminQuizQuizUuidRoute
   '/admin/setting/app': typeof AdminSettingAppRoute
+  '/admin/setting/notification-preferences': typeof AdminSettingNotificationPreferencesRoute
   '/admin/setting/payment-method': typeof AdminSettingPaymentMethodRoute
   '/admin/setting/platform': typeof AdminSettingPlatformRoute
   '/b2b/activate/$invitationUuid': typeof B2bActivateInvitationUuidRoute
@@ -685,6 +705,7 @@ export interface FileRouteTypes {
     | '/course/$courseSlug'
     | '/student/dashboard'
     | '/student/notification'
+    | '/student/notification-settings'
     | '/student/profile'
     | '/student/settings'
     | '/student/wishlist'
@@ -709,6 +730,7 @@ export interface FileRouteTypes {
     | '/admin/promotion/create-voucher'
     | '/admin/quiz/$quizUuid'
     | '/admin/setting/app'
+    | '/admin/setting/notification-preferences'
     | '/admin/setting/payment-method'
     | '/admin/setting/platform'
     | '/b2b/activate/$invitationUuid'
@@ -756,6 +778,7 @@ export interface FileRouteTypes {
     | '/course/$courseSlug'
     | '/student/dashboard'
     | '/student/notification'
+    | '/student/notification-settings'
     | '/student/profile'
     | '/student/settings'
     | '/student/wishlist'
@@ -780,6 +803,7 @@ export interface FileRouteTypes {
     | '/admin/promotion/create-voucher'
     | '/admin/quiz/$quizUuid'
     | '/admin/setting/app'
+    | '/admin/setting/notification-preferences'
     | '/admin/setting/payment-method'
     | '/admin/setting/platform'
     | '/b2b/activate/$invitationUuid'
@@ -828,6 +852,7 @@ export interface FileRouteTypes {
     | '/course/$courseSlug'
     | '/student/dashboard'
     | '/student/notification'
+    | '/student/notification-settings'
     | '/student/profile'
     | '/student/settings'
     | '/student/wishlist'
@@ -852,6 +877,7 @@ export interface FileRouteTypes {
     | '/admin/promotion/create-voucher'
     | '/admin/quiz/$quizUuid'
     | '/admin/setting/app'
+    | '/admin/setting/notification-preferences'
     | '/admin/setting/payment-method'
     | '/admin/setting/platform'
     | '/b2b/activate/$invitationUuid'
@@ -1034,6 +1060,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/student/profile'
       preLoaderRoute: typeof StudentProfileRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/notification-settings': {
+      id: '/student/notification-settings'
+      path: '/notification-settings'
+      fullPath: '/student/notification-settings'
+      preLoaderRoute: typeof StudentNotificationSettingsRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/notification': {
@@ -1246,6 +1279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingPaymentMethodRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/setting/notification-preferences': {
+      id: '/admin/setting/notification-preferences'
+      path: '/setting/notification-preferences'
+      fullPath: '/admin/setting/notification-preferences'
+      preLoaderRoute: typeof AdminSettingNotificationPreferencesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/setting/app': {
       id: '/admin/setting/app'
       path: '/setting/app'
@@ -1423,6 +1463,7 @@ interface AdminRouteChildren {
   AdminPromotionCreateVoucherRoute: typeof AdminPromotionCreateVoucherRoute
   AdminQuizQuizUuidRoute: typeof AdminQuizQuizUuidRoute
   AdminSettingAppRoute: typeof AdminSettingAppRoute
+  AdminSettingNotificationPreferencesRoute: typeof AdminSettingNotificationPreferencesRoute
   AdminSettingPaymentMethodRoute: typeof AdminSettingPaymentMethodRoute
   AdminSettingPlatformRoute: typeof AdminSettingPlatformRoute
   AdminArticleIndexRoute: typeof AdminArticleIndexRoute
@@ -1465,6 +1506,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPromotionCreateVoucherRoute: AdminPromotionCreateVoucherRoute,
   AdminQuizQuizUuidRoute: AdminQuizQuizUuidRoute,
   AdminSettingAppRoute: AdminSettingAppRoute,
+  AdminSettingNotificationPreferencesRoute:
+    AdminSettingNotificationPreferencesRoute,
   AdminSettingPaymentMethodRoute: AdminSettingPaymentMethodRoute,
   AdminSettingPlatformRoute: AdminSettingPlatformRoute,
   AdminArticleIndexRoute: AdminArticleIndexRoute,
@@ -1485,6 +1528,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
   StudentNotificationRoute: typeof StudentNotificationRoute
+  StudentNotificationSettingsRoute: typeof StudentNotificationSettingsRoute
   StudentProfileRoute: typeof StudentProfileRoute
   StudentSettingsRoute: typeof StudentSettingsRoute
   StudentWishlistRoute: typeof StudentWishlistRoute
@@ -1496,6 +1540,7 @@ interface StudentRouteChildren {
 const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
   StudentNotificationRoute: StudentNotificationRoute,
+  StudentNotificationSettingsRoute: StudentNotificationSettingsRoute,
   StudentProfileRoute: StudentProfileRoute,
   StudentSettingsRoute: StudentSettingsRoute,
   StudentWishlistRoute: StudentWishlistRoute,
