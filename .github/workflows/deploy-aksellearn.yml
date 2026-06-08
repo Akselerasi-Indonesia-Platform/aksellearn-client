@@ -95,13 +95,7 @@ jobs:
             docker stop aksellearn-aksellearn 2>/dev/null || true
             docker rm aksellearn-aksellearn 2>/dev/null || true
 
-            # Write runtime env from GitHub Secrets (cattle approach — always in sync)
-            cat <<EOF > .env.production
-            PORT=2001
-            INTERNAL_API_URL=$INTERNAL_API_URL
-            CLARA_APP_SECRET=$CLARA_APP_SECRET
-            CLARA_LICENSE_KEY="$CLARA_LICENSE_KEY"
-            EOF
+            # We rely on the existing .env.production file managed manually on the server.
 
             export DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
