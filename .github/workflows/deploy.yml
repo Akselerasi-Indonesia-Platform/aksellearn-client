@@ -117,18 +117,8 @@ jobs:
             docker stop ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
             docker rm ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
 
-            # Create .env.production from GitHub Secrets (Cattle Approach)
-            # This ensures the server is always in sync with GitHub
-            cat <<EOF > .env.production
-            PORT=$PORT
-            VITE_API_URL=$VITE_API_URL
-            INTERNAL_API_URL=$INTERNAL_API_URL
-            AKSELLEARN_APP_SECRET=$AKSELLEARN_APP_SECRET
-            VITE_API_APP_ID=$VITE_API_APP_ID
-            VITE_ENABLE_SIGNATURE=$VITE_ENABLE_SIGNATURE
-            AKSELLEARN_LICENSE_KEY="$AKSELLEARN_LICENSE_KEY"
-            COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
-            EOF
+            # We rely on the existing .env.production file managed manually on the server.
+            # Make sure the server's .env.production uses the new AKSELLEARN_ variable names!
 
             # Set image name to latest for simple management
             export DOCKER_IMAGE=$REGISTRY/$IMAGE_NAME:latest
@@ -143,8 +133,13 @@ jobs:
             echo "$GHCR_PAT" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
 
             # Pull and Update with --wait for health check verification
+            # If the healthcheck fails, we print the logs to diagnose why the container crashed.
             docker compose --env-file .env.production -f docker-compose.prod.yml pull
-            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --force-recreate --wait
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --force-recreate --wait || {
+              echo "Container failed healthcheck. Printing logs:"
+              docker compose --env-file .env.production -f docker-compose.prod.yml logs
+              exit 1
+            }
 
             # Smart Cleanup: Keep only the 5 most recent images for this repo to prevent disk bloat
             docker images --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" \
