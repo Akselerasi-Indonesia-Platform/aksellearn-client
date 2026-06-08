@@ -67,7 +67,7 @@ function ArticlePage() {
 
   // SEO: Generate dynamic page title and description
   React.useEffect(() => {
-    const baseTitle = 'Article - Clara Learn'
+    const baseTitle = 'Article - Aksellearn Learn'
     const baseDescription =
       'Discover insights, tutorials, and stories from industry experts to help you grow your skills and career.'
 

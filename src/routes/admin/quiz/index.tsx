@@ -20,7 +20,7 @@ export const Route = createFileRoute('/admin/quiz/')({
   head: () => ({
     meta: [
       {
-        title: 'Clara | Quizzes',
+        title: 'Aksellearn | Quizzes',
       },
     ],
   }),

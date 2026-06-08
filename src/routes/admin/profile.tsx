@@ -236,7 +236,7 @@ export function ProfilePage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background transition-all font-bold"
-                      placeholder="e.g. john@clara.dev"
+                      placeholder="e.g. john@aksellearn.dev"
                     />
                   </div>
                 </div>

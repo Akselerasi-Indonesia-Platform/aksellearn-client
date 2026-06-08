@@ -121,7 +121,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'clara-auth-storage',
+      name: 'aksellearn-auth-storage',
       version: 2,
       migrate: (persistedState: any, version: number) => {
         // On version mismatch, discard stale state and force a fresh rehydrate

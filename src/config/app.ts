@@ -4,7 +4,7 @@
  * Use this file to toggle features and configure global application behavior.
  */
 export const APP_CONFIG = {
-  name: 'Clara',
+  name: 'Aksellearn',
   description: 'Core Learning App',
 
   // Feature Toggles (Show/Hide entire modules)

@@ -221,7 +221,7 @@ function PlatformSettingsPage() {
                       <FormItem>
                         <FormLabel>Platform Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="E.g. Clara LMS" {...field} />
+                          <Input placeholder="E.g. Aksellearn LMS" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

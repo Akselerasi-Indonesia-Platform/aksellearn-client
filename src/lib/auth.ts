@@ -195,7 +195,7 @@ export const removeToken = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(AUTH_TOKEN_KEY)
     localStorage.removeItem(AUTH_USER_KEY)
-    localStorage.removeItem('clara-auth-storage')
+    localStorage.removeItem('aksellearn-auth-storage')
   }
 }
 
@@ -237,6 +237,8 @@ export const isAdmin = (requestOrUser?: Request | User) => {
   if (requestOrUser && 'role' in (requestOrUser as any)) {
     user = requestOrUser as User
   } else {
+    // If not passing a User object, verify we are actually authenticated
+    if (!isAuthenticated(requestOrUser as Request)) return false
     user = getUser(requestOrUser as Request)
   }
 

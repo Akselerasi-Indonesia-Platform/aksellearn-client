@@ -1,5 +1,5 @@
 {
-  "name": "mc-clara",
+  "name": "mc-aksellearn",
   "version": "1.0.0",
   "overrides": {
     "react-is": "^19.2.0"
@@ -15,9 +15,9 @@
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
-    "docker:build": "docker build --build-arg VITE_API_URL=http://localhost:3000 -t clara:latest .",
-    "docker:tag": "docker tag clara:latest your-username/clara:latest",
-    "docker:push": "docker push your-username/clara:latest",
+    "docker:build": "docker build --build-arg VITE_API_URL=http://localhost:3000 -t aksellearn:latest .",
+    "docker:tag": "docker tag aksellearn:latest your-username/aksellearn:latest",
+    "docker:push": "docker push your-username/aksellearn:latest",
     "docker:publish": "bun run docker:build && bun run docker:tag && bun run docker:push",
     "docker:run": "docker compose -f docker-compose.prod.yml --env-file .env.production up -d",
     "docker:stop": "docker compose -f docker-compose.prod.yml down"

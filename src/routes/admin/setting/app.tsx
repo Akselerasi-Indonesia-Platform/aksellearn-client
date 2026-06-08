@@ -128,7 +128,7 @@ function AppSettingsPage() {
         <h1 className="text-3xl font-bold tracking-tight">App Settings</h1>
         <p className="text-muted-foreground">
           Manage application performance and view system information for the
-          Clara Platform.
+          Aksellearn Platform.
         </p>
       </div>
 

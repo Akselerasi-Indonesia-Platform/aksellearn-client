@@ -67,7 +67,7 @@ describe('API Client Signature Logic (Payload Correctness)', () => {
   it('should generate matching signature with CryptoJS', () => {
     const method = 'PUT'
     const url = '/api/update'
-    const body = JSON.stringify({ name: 'Clara' })
+    const body = JSON.stringify({ name: 'Aksellearn' })
     const payload = simulateSignaturePayload(method, url, timestamp, body)
 
     const signature = crypto

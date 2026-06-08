@@ -42,7 +42,7 @@ const courseSearchSchema = z.object({
 export const Route = createFileRoute('/admin/course/')({
   validateSearch: courseSearchSchema,
   head: () => ({
-    meta: [{ title: 'Clara | Courses' }],
+    meta: [{ title: 'Aksellearn | Courses' }],
   }),
   component: CoursesPage,
 })

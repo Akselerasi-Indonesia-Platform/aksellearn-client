@@ -82,6 +82,7 @@ export function useCart() {
     error: cartQuery.error,
     isFetching: cartQuery.isFetching,
     addToCart: addToCartMutation.mutate,
+    addToCartAsync: addToCartMutation.mutateAsync,
     isAdding: addToCartMutation.isPending,
     removeFromCart: removeFromCartMutation.mutate,
     isRemoving: removeFromCartMutation.isPending,

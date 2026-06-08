@@ -14,7 +14,7 @@ import { PromotionForm } from '@/components/admin/promotions/promotion-form'
 
 export const Route = createFileRoute('/admin/promotion/create-voucher')({
   head: () => ({
-    meta: [{ title: 'Clara | New Coupon' }],
+    meta: [{ title: 'Aksellearn | New Coupon' }],
   }),
   component: VoucherCreatePage,
 })

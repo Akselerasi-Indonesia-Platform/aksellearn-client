@@ -107,7 +107,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: ${{ secrets.SERVER_PORT || 22 }}
-          envs: VITE_API_URL,INTERNAL_API_URL,CLARA_APP_SECRET,VITE_API_APP_ID,VITE_ENABLE_SIGNATURE,CLARA_LICENSE_KEY,PORT,COMPOSE_PROJECT_NAME,GHCR_PAT,GITHUB_ACTOR,REGISTRY,IMAGE_NAME
+          envs: VITE_API_URL,INTERNAL_API_URL,AKSELLEARN_APP_SECRET,VITE_API_APP_ID,VITE_ENABLE_SIGNATURE,AKSELLEARN_LICENSE_KEY,PORT,COMPOSE_PROJECT_NAME,GHCR_PAT,GITHUB_ACTOR,REGISTRY,IMAGE_NAME
           script: |
             set -e
             
@@ -148,10 +148,10 @@ jobs:
           PORT: 2000
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           INTERNAL_API_URL: ${{ secrets.INTERNAL_API_URL }}
-          CLARA_APP_SECRET: ${{ secrets.CLARA_APP_SECRET || secrets.VITE_API_APP_SECRET }}
+          AKSELLEARN_APP_SECRET: ${{ secrets.AKSELLEARN_APP_SECRET || secrets.VITE_API_APP_SECRET }}
           VITE_API_APP_ID: ${{ secrets.VITE_API_APP_ID }}
           VITE_ENABLE_SIGNATURE: ${{ secrets.VITE_ENABLE_SIGNATURE }}
-          CLARA_LICENSE_KEY: ${{ secrets.CLARA_LICENSE_KEY }}
+          AKSELLEARN_LICENSE_KEY: ${{ secrets.AKSELLEARN_LICENSE_KEY }}
           COMPOSE_PROJECT_NAME: ${{ secrets.COMPOSE_PROJECT_NAME }}
           GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}

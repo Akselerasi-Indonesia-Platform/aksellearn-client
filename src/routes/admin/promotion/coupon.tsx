@@ -31,7 +31,7 @@ const couponSearchSchema = z.object({
 export const Route = createFileRoute('/admin/promotion/coupon')({
   validateSearch: couponSearchSchema,
   head: () => ({
-    meta: [{ title: 'Clara | Coupons' }],
+    meta: [{ title: 'Aksellearn | Coupons' }],
   }),
   component: CouponsPage,
 })

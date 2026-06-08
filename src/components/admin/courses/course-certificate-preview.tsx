@@ -119,13 +119,13 @@ export function CourseCertificatePreview({
           htmlStr = htmlStr.replace(/<img[^>]*alt="Signature"[^>]*>/gi, '')
           htmlStr = htmlStr.replace(/<img[^>]*alt="Org Signature"[^>]*>/gi, '')
 
-          // Normalize default signer & organization references to Clara Academy
-          htmlStr = htmlStr.replaceAll('Dr. Hamada', 'Clara Academy')
+          // Normalize default signer & organization references to Aksellearn Academy
+          htmlStr = htmlStr.replaceAll('Dr. Hamada', 'Aksellearn Academy')
           htmlStr = htmlStr.replaceAll('Head of Education', 'Verified Authority')
-          htmlStr = htmlStr.replaceAll('Madacore Board', 'Clara Board')
-          htmlStr = htmlStr.replaceAll('Madacore Academy', 'Clara Academy')
-          htmlStr = htmlStr.replaceAll('Madacore Governance', 'Clara Academy')
-          htmlStr = htmlStr.replaceAll('Akselerasi Indonesia', 'Clara Academy')
+          htmlStr = htmlStr.replaceAll('Madacore Board', 'Aksellearn Board')
+          htmlStr = htmlStr.replaceAll('Madacore Academy', 'Aksellearn Academy')
+          htmlStr = htmlStr.replaceAll('Madacore Governance', 'Aksellearn Academy')
+          htmlStr = htmlStr.replaceAll('Akselerasi Indonesia', 'Aksellearn Academy')
           htmlStr = htmlStr.replaceAll('<div class="seal">M</div>', '<div class="seal">C</div>')
 
           setSrcDoc(htmlStr)

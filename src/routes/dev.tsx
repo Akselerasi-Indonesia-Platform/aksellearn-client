@@ -6,7 +6,7 @@ export const Route = createFileRoute('/dev')({
   head: () => ({
     meta: [
       {
-        title: 'Clara | Core Learning App',
+        title: 'Aksellearn | Core Learning App',
       },
     ],
   }),

@@ -91,7 +91,7 @@ export function extractPaymentDetails(rawInput: any): ExtractedPaymentInfo | nul
       paymentCode: raw.payment_code,
       instructions: [
         `Go to the nearest ${store} outlet.`,
-        `Tell the cashier that you want to pay for a Midtrans/mc-clara transaction.`,
+        `Tell the cashier that you want to pay for a Midtrans/mc-aksellearn transaction.`,
         `Provide the Payment Code: ${raw.payment_code}`,
         `Pay the cashier the exact amount specified.`,
         `Keep the receipt as proof of payment.`,

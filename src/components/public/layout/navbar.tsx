@@ -117,7 +117,7 @@ export function PublicNavbar() {
                 className="text-sm font-medium transition-colors text-white/80 hover:text-white hover:border-b-2 hover:border-white"
                 to="/become-an-instructor"
               >
-                Teach on Clara
+                Teach on Aksellearn
               </Link>
             )}
             {isAuth && (
@@ -280,7 +280,7 @@ export function PublicNavbar() {
                         className="h-10 w-auto object-contain"
                       />
                     ) : (
-                      <span>{profile?.name?.toUpperCase() || 'CLARA LEARN'}</span>
+                      <span>{profile?.name?.toUpperCase() || 'AKSELLEARN LEARN'}</span>
                     )}
                   </Link>
                   <div className="flex flex-col gap-4">
@@ -326,7 +326,7 @@ export function PublicNavbar() {
                           variant="outline"
                         >
                           <Link to="/become-an-instructor">
-                            Teach on Clara
+                            Teach on Aksellearn
                           </Link>
                         </Button>
                       )}

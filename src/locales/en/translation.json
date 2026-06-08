@@ -243,7 +243,27 @@
     "endDate": "End Date",
     "selectStart": "Select start date",
     "selectEnd": "Select end date",
-    "refresh": "Refresh data"
+    "refresh": "Refresh data",
+    "earningsAndSalesTrends": "Earnings & Sales Trends",
+    "overviewPayouts": "Overview of your payouts and order frequencies",
+    "totalCompletedTransactions": "Total completed transactions",
+    "pickADate": "Pick a date",
+    "clear": "Clear",
+    "months": {
+      "allYear": "All Year",
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
   },
   "student": {
     "dashboard": {

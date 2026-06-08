@@ -16,7 +16,7 @@ import { useAuthStore } from '@/hooks/use-auth'
 
 export const Route = createFileRoute('/admin/promotion/$promotionId/edit')({
   head: () => ({
-    meta: [{ title: 'Clara | Edit Promotion' }],
+    meta: [{ title: 'Aksellearn | Edit Promotion' }],
   }),
   component: PromotionEditPage,
 })

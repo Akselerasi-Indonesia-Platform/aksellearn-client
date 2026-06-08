@@ -50,4 +50,17 @@ export const userPaymentService = {
     })
     return response.data.data || response.data
   },
+
+  /**
+   * Directly enroll in a free purchasable item, bypassing the cart
+   */
+  async checkoutDirect(
+    payload: { purchasable_type: string; purchasable_id: string },
+    idempotencyKey?: string,
+  ): Promise<{ uuid: string }> {
+    const response = await apiClient.post('/api/checkout/direct', payload, {
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
+    })
+    return response.data.data || response.data
+  },
 }

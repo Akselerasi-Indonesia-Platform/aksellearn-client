@@ -38,7 +38,7 @@ export const Route = createFileRoute('/admin/dashboard')({
   head: () => ({
     meta: [
       {
-        title: 'Admin Overview | Clara',
+        title: 'Admin Overview | Aksellearn',
       },
     ],
   }),
@@ -46,19 +46,19 @@ export const Route = createFileRoute('/admin/dashboard')({
 })
 
 const MONTHS = [
-  { value: 0, label: 'All Year' },
-  { value: 1, label: 'January' },
-  { value: 2, label: 'February' },
-  { value: 3, label: 'March' },
-  { value: 4, label: 'April' },
-  { value: 5, label: 'May' },
-  { value: 6, label: 'June' },
-  { value: 7, label: 'July' },
-  { value: 8, label: 'August' },
-  { value: 9, label: 'September' },
-  { value: 10, label: 'October' },
-  { value: 11, label: 'November' },
-  { value: 12, label: 'December' },
+  { value: 0, label: 'dashboard.months.allYear' },
+  { value: 1, label: 'dashboard.months.january' },
+  { value: 2, label: 'dashboard.months.february' },
+  { value: 3, label: 'dashboard.months.march' },
+  { value: 4, label: 'dashboard.months.april' },
+  { value: 5, label: 'dashboard.months.may' },
+  { value: 6, label: 'dashboard.months.june' },
+  { value: 7, label: 'dashboard.months.july' },
+  { value: 8, label: 'dashboard.months.august' },
+  { value: 9, label: 'dashboard.months.september' },
+  { value: 10, label: 'dashboard.months.october' },
+  { value: 11, label: 'dashboard.months.november' },
+  { value: 12, label: 'dashboard.months.december' },
 ]
 
 const YEARS = [2024, 2025, 2026, 2027]
@@ -67,10 +67,12 @@ function StandaloneDatePicker({
   value,
   onChange,
   placeholder,
+  clearText = 'Clear',
 }: {
   value?: string
   onChange: (val: string | undefined) => void
   placeholder?: string
+  clearText?: string
 }) {
   return (
     <Popover>
@@ -86,7 +88,7 @@ function StandaloneDatePicker({
             {value ? (
               format(new Date(value), 'dd MMM yyyy')
             ) : (
-              <span>{placeholder || 'Pick a date'}</span>
+              <span>{placeholder}</span>
             )}
           </span>
           <CalendarIcon className="h-4 w-4 opacity-50 ml-2 shrink-0 text-slate-400" />
@@ -110,7 +112,7 @@ function StandaloneDatePicker({
               className="text-xs text-red-500 font-bold hover:bg-red-50"
               onClick={() => onChange(undefined)}
             >
-              Clear
+              {clearText}
             </Button>
           </div>
         )}
@@ -200,7 +202,7 @@ function DashboardPage() {
           {/* Start Date */}
           <div className="flex flex-col">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">
-              Start Date
+              {t('dashboard.startDate')}
             </label>
             <StandaloneDatePicker
               value={params.date_from}
@@ -214,14 +216,15 @@ function DashboardPage() {
                   date_from: val,
                 }))
               }}
-              placeholder="Select start"
+              placeholder={t('dashboard.selectStart')}
+              clearText={t('dashboard.clear')}
             />
           </div>
 
           {/* End Date */}
           <div className="flex flex-col">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">
-              End Date
+              {t('dashboard.endDate')}
             </label>
             <StandaloneDatePicker
               value={params.date_to}
@@ -235,7 +238,8 @@ function DashboardPage() {
                   date_to: val,
                 }))
               }}
-              placeholder="Select end"
+              placeholder={t('dashboard.selectEnd')}
+              clearText={t('dashboard.clear')}
             />
           </div>
 
@@ -252,7 +256,7 @@ function DashboardPage() {
               <SelectTrigger className="w-[140px] h-10 rounded-xl border-slate-200 bg-white font-bold text-slate-600 shadow-sm focus:ring-indigo-500 disabled:opacity-50">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <SelectValue placeholder="Month" />
+                  <SelectValue placeholder={t('dashboard.month')} />
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl border-slate-100 shadow-xl">
@@ -262,7 +266,7 @@ function DashboardPage() {
                     value={String(m.value)}
                     className="font-bold py-2.5"
                   >
-                    {m.label}
+                    {t(m.label)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -280,7 +284,7 @@ function DashboardPage() {
               disabled={!!(params.date_from || params.date_to)}
             >
               <SelectTrigger className="w-[100px] h-10 rounded-xl border-slate-200 bg-white font-bold text-slate-600 shadow-sm focus:ring-indigo-500 disabled:opacity-50">
-                <SelectValue placeholder="Year" />
+                <SelectValue placeholder={t('dashboard.year')} />
               </SelectTrigger>
               <SelectContent className="rounded-xl border-slate-100 shadow-xl">
                 {YEARS.map((y) => (
@@ -348,7 +352,7 @@ function DashboardPage() {
           <OverviewCard
             title={t('dashboard.totalOrders')}
             value={(stats as any)?.orders?.total || 0}
-            subtitle="Total completed transactions"
+            subtitle={t('dashboard.totalCompletedTransactions')}
             icon={ShoppingBag}
             iconContainerClassName="bg-blue-100 text-blue-600"
             isLoading={isLoading}
@@ -376,10 +380,10 @@ function DashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
-                {showInstructorView ? 'Earnings & Sales Trends' : t('dashboard.courseAnalytics')}
+                {showInstructorView ? t('dashboard.earningsAndSalesTrends') : t('dashboard.courseAnalytics')}
               </h2>
               <p className="text-slate-500 font-medium">
-                {showInstructorView ? 'Overview of your payouts and order frequencies' : t('dashboard.viewAndEnrollment')}
+                {showInstructorView ? t('dashboard.overviewPayouts') : t('dashboard.viewAndEnrollment')}
               </p>
             </div>
           </div>

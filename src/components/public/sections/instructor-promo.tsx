@@ -13,7 +13,7 @@ export function InstructorPromo() {
               Join our community
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              Share your craft. Teach on Clara.
+              Share your craft. Teach on Aksellearn.
             </h2>
             <p className="text-sm md:text-base text-teal-50 max-w-lg leading-relaxed font-medium mx-auto md:mx-0">
               We accept expert curriculum developers who value visual discipline and educational clarity. Inspire millions of technologists across the globe.

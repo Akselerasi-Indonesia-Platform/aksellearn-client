@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/student/settings')({
   head: () => ({
-    meta: [{ title: 'Clara | Account Settings' }],
+    meta: [{ title: 'Aksellearn | Account Settings' }],
   }),
   component: StudentSettingsPage,
 })

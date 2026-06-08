@@ -7,7 +7,7 @@ interface VideoSecurityOverlayProps {
 
 export function VideoSecurityOverlay({
   className,
-  text = 'Protected Content - Clara Learning',
+  text = 'Protected Content - Aksellearn Learning',
 }: VideoSecurityOverlayProps) {
   return (
     <div

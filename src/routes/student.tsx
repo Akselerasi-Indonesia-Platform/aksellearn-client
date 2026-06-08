@@ -123,7 +123,7 @@ function UserLayout() {
                   {platformProfile?.platform_focus === 'article' ? <FileText className="size-5" /> : <BookOpen className="size-5" />}
                 </div>
                 <span className="text-xl font-black tracking-tight text-[#0D3A6E]">
-                  {platformProfile?.name?.toUpperCase() || 'CLARA'}
+                  {platformProfile?.name?.toUpperCase() || 'AKSELLEARN'}
                 </span>
               </>
             )}
@@ -231,7 +231,7 @@ function UserLayout() {
 
       <footer className="bg-gradient-to-br from-[#0A2E59] to-[#0D3A6E] py-8 px-6 text-center">
         <p className="text-[10px] font-bold text-[#F0F7FF]/60 uppercase tracking-widest">
-          © {new Date().getFullYear()} {platformProfile?.name || 'Clara Learning Platform'}. All rights reserved.
+          © {new Date().getFullYear()} {platformProfile?.name || 'Aksellearn Learning Platform'}. All rights reserved.
         </p>
       </footer>
     </div>

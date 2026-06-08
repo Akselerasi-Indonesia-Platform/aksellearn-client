@@ -26,7 +26,7 @@ export const Route = createFileRoute('/admin/quiz/$quizUuid')({
   head: () => ({
     meta: [
       {
-        title: `Clara | Quiz Management`,
+        title: `Aksellearn | Quiz Management`,
       },
     ],
   }),

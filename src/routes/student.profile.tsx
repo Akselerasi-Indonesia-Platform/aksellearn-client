@@ -15,6 +15,7 @@ import { getUser } from '@/lib/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 function StudentProfilePage() {
   const user = getUser()
@@ -33,7 +34,7 @@ function StudentProfilePage() {
       <div className="grid md:grid-cols-12 gap-8 px-4">
         <div className="md:col-span-7 space-y-8">
           <ProfessionalSummary bio={user.profile?.bio} />
-          <ExperienceIdentity email={user.email} phone={user.phone} />
+          <ExperienceIdentity email={user.email} phone={user.phone} isVerified={!!user.email_verified_at} />
         </div>
 
         <div className="md:col-span-5 space-y-8">
@@ -120,12 +121,55 @@ function ProfessionalSummary({ bio }: { bio?: string }) {
   )
 }
 
-function ExperienceIdentity({ email, phone }: { email: string; phone?: string | null }) {
+function ExperienceIdentity({ email, phone, isVerified }: { email: string; phone?: string | null; isVerified?: boolean }) {
+  const [isResending, setIsResending] = React.useState(false)
+  const [cooldown, setCooldown] = React.useState(0)
+
+  React.useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (cooldown > 0) {
+      timer = setInterval(() => setCooldown((c) => c - 1), 1000)
+    }
+    return () => clearInterval(timer)
+  }, [cooldown])
+
+  const handleResend = async () => {
+    if (cooldown > 0) return
+    try {
+      setIsResending(true)
+      const { authService } = await import('@/services/auth.service')
+      await authService.resendVerification()
+      import('sonner').then(({ toast }) => toast.success('Verification email sent! Please check your inbox.'))
+      setCooldown(60)
+    } catch (error: any) {
+      import('sonner').then(({ toast }) => toast.error(error?.response?.data?.message || 'Failed to send verification email'))
+      if (error?.response?.status === 429) {
+        setCooldown(60)
+      }
+    } finally {
+      setIsResending(false)
+    }
+  }
+
   return (
     <section className="space-y-4">
       <h4 className="text-[10px] font-semibold text-[#056FAE]/60 uppercase tracking-[0.2em] pl-1">
         Experience & Identity
       </h4>
+      {isVerified === false && (
+        <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Mail className="size-5 text-amber-600" />
+            <div>
+              <p className="text-sm font-semibold text-amber-900">Email Not Verified</p>
+              <p className="text-xs text-amber-700">Please verify your email to unlock checkout and enrollments.</p>
+            </div>
+          </div>
+          <Button onClick={handleResend} disabled={isResending || cooldown > 0} variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-100 min-w-[140px]">
+            {isResending ? 'Sending...' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend Email'}
+          </Button>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-[#F0F7FF]/50 p-6 rounded-2xl border border-[#056FAE]/10 space-y-3">
           <Mail className="size-5 text-[#056FAE]" />

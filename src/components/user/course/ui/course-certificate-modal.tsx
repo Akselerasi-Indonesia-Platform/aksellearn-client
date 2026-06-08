@@ -131,13 +131,13 @@ export function CourseCertificateModal({
           htmlStr = htmlStr.replace(/<img[^>]*alt="Signature"[^>]*>/gi, '')
           htmlStr = htmlStr.replace(/<img[^>]*alt="Org Signature"[^>]*>/gi, '')
 
-          // Normalize default signer & organization references to Clara Academy
-          htmlStr = htmlStr.replaceAll('Dr. Hamada', 'Clara Academy')
+          // Normalize default signer & organization references to Aksellearn Academy
+          htmlStr = htmlStr.replaceAll('Dr. Hamada', 'Aksellearn Academy')
           htmlStr = htmlStr.replaceAll('Head of Education', 'Verified Authority')
-          htmlStr = htmlStr.replaceAll('Madacore Board', 'Clara Board')
-          htmlStr = htmlStr.replaceAll('Madacore Academy', 'Clara Academy')
-          htmlStr = htmlStr.replaceAll('Madacore Governance', 'Clara Academy')
-          htmlStr = htmlStr.replaceAll('Akselerasi Indonesia', 'Clara Academy')
+          htmlStr = htmlStr.replaceAll('Madacore Board', 'Aksellearn Board')
+          htmlStr = htmlStr.replaceAll('Madacore Academy', 'Aksellearn Academy')
+          htmlStr = htmlStr.replaceAll('Madacore Governance', 'Aksellearn Academy')
+          htmlStr = htmlStr.replaceAll('Akselerasi Indonesia', 'Aksellearn Academy')
           htmlStr = htmlStr.replaceAll('<div class="seal">M</div>', '<div class="seal">C</div>')
 
           setSrcDoc(htmlStr)
@@ -178,7 +178,7 @@ export function CourseCertificateModal({
               size="sm"
               className="flex-1 sm:flex-none h-9 sm:h-10 rounded-xl font-black gap-2 bg-[#0077B5] hover:bg-[#0077B5]/90 shadow-lg shadow-[#0077B5]/20 text-[10px] sm:text-xs uppercase tracking-widest text-white"
               onClick={() => {
-                const issuedBy = issuingAuthority || 'Clara Academy'
+                const issuedBy = issuingAuthority || 'Aksellearn Academy'
                 const text = encodeURIComponent(
                   `I just completed the course "${courseTitle}" on ${issuedBy}! Check out my verified certificate here: ${finalCertUrl}`
                 )

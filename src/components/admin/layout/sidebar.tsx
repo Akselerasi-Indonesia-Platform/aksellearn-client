@@ -212,10 +212,6 @@ export function AdminSidebar({
             title: t('sidebar.paymentMethods', 'Payment Methods'),
             url: '/admin/setting/payment-method',
           },
-          {
-            title: t('sidebar.notificationPreferences', 'Notifications'),
-            url: '/admin/setting/notification-preferences',
-          },
         ],
       },
     ],
@@ -263,7 +259,7 @@ export function AdminSidebar({
                   )}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="font-semibold">{platformProfile?.name || 'Clara'}</span>
+                  <span className="font-semibold">{platformProfile?.name || 'Aksellearn'}</span>
                   <span className="text-xs">
                     {platformProfile?.tagline || t('sidebar.appDescription', 'Core Learning App')}
                   </span>

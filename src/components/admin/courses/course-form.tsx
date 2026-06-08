@@ -1036,7 +1036,7 @@ export function CourseForm({
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-xs text-slate-500 truncate">
                         <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-100 text-[10px] text-slate-600 font-bold">G</span>
-                        <span>mclara.test › course › {form.watch('slug') || (form.watch('title') || '').toLowerCase().replace(/\s+/g, '-')}</span>
+                        <span>maksellearn.test › course › {form.watch('slug') || (form.watch('title') || '').toLowerCase().replace(/\s+/g, '-')}</span>
                       </div>
                       <h3 className="text-[19px] text-[#1a0dab] font-normal hover:underline cursor-pointer transition-all leading-tight">
                         {form.watch('meta_title') ||
@@ -1068,7 +1068,7 @@ export function CourseForm({
                       </div>
                       <div className="p-4 bg-white space-y-1">
                         <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                          MCLARA.TEST
+                          MAKSELLEARN.TEST
                         </div>
                         <h4 className="font-bold text-sm text-slate-800 line-clamp-1 leading-snug">
                           {form.watch('meta_title') ||

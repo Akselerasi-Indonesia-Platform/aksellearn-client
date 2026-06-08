@@ -152,7 +152,7 @@ function UserLoginPage() {
               </div>
             )}
             <span className="text-2xl font-black text-slate-800 tracking-tight">
-              {profile?.name || 'Clara'}
+              {profile?.name || 'Aksellearn'}
             </span>
           </Link>
           <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
@@ -289,7 +289,7 @@ function UserLoginPage() {
             to="/register"
             className="text-indigo-600 hover:text-indigo-700 transition-colors"
           >
-            Join {profile?.name || 'Clara'} Academy
+            Join {profile?.name || 'Aksellearn'} Academy
           </Link>
         </p>
       </div>

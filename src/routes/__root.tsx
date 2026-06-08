@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Clara | Core Learning App',
+        title: 'Aksellearn | Core Learning App',
       },
     ],
     links: [
@@ -178,7 +178,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     if (profile?.name) {
       document.title = `${profile.name} | ${profile.tagline || 'Core Learning App'}`
     } else {
-      document.title = 'Clara | Core Learning App'
+      document.title = 'Aksellearn | Core Learning App'
     }
 
     if (profile?.favicon?.url) {

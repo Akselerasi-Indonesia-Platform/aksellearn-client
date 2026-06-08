@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import {
   ArrowLeft,
@@ -12,9 +12,10 @@ import { PublicLayout } from '@/components/public/layout/main-layout'
 import { userPaymentService } from '@/services/user/payment.service'
 import { useMidtrans } from '@/hooks/use-midtrans'
 import { useCart } from '@/hooks/use-cart'
+import { useRequireVerification } from '@/hooks/use-require-verification'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getUser } from '@/lib/auth'
+import { getUser, isAuthenticated } from '@/lib/auth'
 import { useAuthStore } from '@/hooks/use-auth'
 import { MailWarning, Mail, Loader2 } from 'lucide-react'
 import { authService } from '@/services/auth.service'
@@ -27,6 +28,7 @@ import { PaymentSelector } from '@/components/public/checkout/payment-selector'
 function CheckoutPage() {
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
+  const { verifyAndProceed } = useRequireVerification()
   const { cart, isLoading: isCartLoading, removeFromCart } = useCart()
   const { isReady: isSnapReady } = useMidtrans()
   const [selectedMethod, setSelectedMethod] = React.useState<string | number | null>(
@@ -287,7 +289,7 @@ function CheckoutPage() {
                   isSnapReady={isSnapReady}
                   canCheckout={true}
                   selectedMethodName={methods.find(m => m.id === selectedMethod)?.name}
-                  onCheckout={() => checkoutMutation.mutate()}
+                  onCheckout={() => verifyAndProceed(() => checkoutMutation.mutate())}
                 />
               </div>
             </div>
@@ -299,5 +301,14 @@ function CheckoutPage() {
 }
 
 export const Route = createFileRoute('/checkout')({
+  beforeLoad: () => {
+    // Only redirect on client to avoid SSR misinterpreting missing request context as unauthenticated
+    if (typeof window !== 'undefined' && !isAuthenticated()) {
+      throw redirect({
+        to: '/login',
+        search: { redirect: '/checkout' },
+      })
+    }
+  },
   component: CheckoutPage,
 })

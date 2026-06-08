@@ -20,7 +20,7 @@ function VerifyCertificatePage() {
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
   const issuedBy = verification?.issued_by && verification.issued_by !== 'Madacore Academy' && verification.issued_by !== 'Akselerasi Indonesia'
     ? verification.issued_by
-    : 'Clara Academy'
+    : 'Aksellearn Academy'
   const linkedInShareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=I just completed the course "${verification?.course_title}" on ${issuedBy}! Check out my verified certificate here: ${shareUrl}`
 
   return (
@@ -56,7 +56,7 @@ function VerifyCertificatePage() {
                   Certificate Authenticity
                 </h1>
                 <p className="text-slate-500 font-medium">
-                  This confirms the successful completion of a Clara Academy course.
+                  This confirms the successful completion of a Aksellearn Academy course.
                 </p>
               </div>
 

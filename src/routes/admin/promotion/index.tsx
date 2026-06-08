@@ -26,7 +26,7 @@ const promotionSearchSchema = z.object({
 export const Route = createFileRoute('/admin/promotion/')({
   validateSearch: promotionSearchSchema,
   head: () => ({
-    meta: [{ title: 'Clara | Promotions' }],
+    meta: [{ title: 'Aksellearn | Promotions' }],
   }),
   component: PromotionsPage,
 })

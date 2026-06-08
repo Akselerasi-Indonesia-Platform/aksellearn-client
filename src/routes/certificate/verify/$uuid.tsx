@@ -37,7 +37,7 @@ export function VerifyCertificatePage({ isPreview = false }: VerifyCertificatePa
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
   const issuedBy = verification?.issued_by && verification.issued_by !== 'Madacore Academy' && verification.issued_by !== 'Akselerasi Indonesia'
     ? verification.issued_by
-    : 'Clara Academy'
+    : 'Aksellearn Academy'
   const linkedInShareUrl = verification
     ? `https://www.linkedin.com/feed/?shareActive=true&text=I just completed the course "${verification.course_title}" on ${issuedBy}! Check out my verified certificate here: ${shareUrl}`
     : ''
@@ -134,10 +134,10 @@ export function VerifyCertificatePage({ isPreview = false }: VerifyCertificatePa
                   Official Verified Credential
                 </div>
                 <h1 className="text-3xl font-black text-[#0D3A6E] tracking-tight">
-                  Clara Certificate Verification
+                  Aksellearn Certificate Verification
                 </h1>
                 <p className="text-slate-500 text-sm font-medium max-w-md mx-auto">
-                  Clara Academy verified record confirming the successful completion of training.
+                  Aksellearn Academy verified record confirming the successful completion of training.
                 </p>
               </div>
 

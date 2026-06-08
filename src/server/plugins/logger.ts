@@ -26,7 +26,7 @@ export default function (nitroApp: any) {
     JSON.stringify({
       timestamp: new Date().toISOString(),
       level: 'INFO',
-      message: 'Clara Nitro Server Started',
+      message: 'Aksellearn Nitro Server Started',
       environment: process.env.NODE_ENV,
       node_version: process.version,
     }),

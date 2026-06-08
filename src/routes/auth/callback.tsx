@@ -148,7 +148,7 @@ function AuthCallbackPage() {
 
       {/* Decorative Branding */}
       <div className="absolute bottom-8 text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-30 select-none">
-        Clara Platforms &bull; Secure Authentication Gateway
+        Aksellearn Platforms &bull; Secure Authentication Gateway
       </div>
     </div>
   )

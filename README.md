@@ -1,4 +1,4 @@
-# MC-Clara Frontend
+# MC-Aksellearn Frontend
 
 This project uses **Bun** as its primary runtime and package manager.
 

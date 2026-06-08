@@ -6,7 +6,7 @@ import { NotificationSettingsForm } from '@/components/user/profile/notification
 
 export const Route = createFileRoute('/student/notification-settings')({
   head: () => ({
-    meta: [{ title: 'Clara | Notification Settings' }],
+    meta: [{ title: 'Aksellearn | Notification Settings' }],
   }),
   component: StudentNotificationSettingsPage,
 })

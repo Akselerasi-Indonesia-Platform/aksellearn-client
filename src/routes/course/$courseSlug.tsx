@@ -6,7 +6,7 @@ import {
   Link,
 } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Star,
@@ -50,8 +50,10 @@ import {
 import { discoveryCourseService } from '@/services/discovery/course.service'
 import { userCourseService } from '@/services/user/course.service'
 import { userWishlistService } from '@/services/user/wishlist.service'
+import { userPaymentService } from '@/services/user/payment.service'
 import { authService } from '@/services/auth.service'
 import { useCart } from '@/hooks/use-cart'
+import { useRequireVerification } from '@/hooks/use-require-verification'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -230,10 +232,15 @@ function CoursePublicDetails() {
   const { courseSlug } = useParams({ from: '/course/$courseSlug' })
   const navigate = useNavigate()
   const authenticated = isAuthenticated()
-  const isUserAdmin = isAdmin()
+  const isUserAdmin = authenticated && isAdmin()
   
   const user = useAuthStore((state) => state.user)
   const needsEmailVerification = !!user && !user.email_verified_at
+  const { verifyAndProceed } = useRequireVerification()
+
+  const idempotencyKey = React.useMemo(() => crypto.randomUUID(), [])
+
+  const [isPollingEnrollment, setIsPollingEnrollment] = React.useState(false)
 
   // 1. Fetch Course Public Data
   const {
@@ -243,6 +250,7 @@ function CoursePublicDetails() {
   } = useQuery({
     queryKey: ['public', 'course', courseSlug],
     queryFn: () => discoveryCourseService.getDetails(courseSlug),
+    refetchInterval: isPollingEnrollment ? 1000 : false,
   })
 
   // 2. Check Enrollment if Authenticated
@@ -276,8 +284,39 @@ function CoursePublicDetails() {
       return
     }
     if (!course?.uuid) return
-    addToCart({ id: course.uuid, type: 'course', quantity: 1 })
+    verifyAndProceed(() => {
+      addToCart({ id: course.uuid as string, type: 'course', quantity: 1 })
+    })
   }
+
+  const { mutate: handleFreeEnroll, isPending: isEnrollingFree } = useMutation({
+    mutationFn: async () => {
+      if (!course?.id) throw new Error('Course not found')
+      return userPaymentService.checkoutDirect({
+        purchasable_type: 'courses',
+        purchasable_id: course.id,
+      }, idempotencyKey)
+    },
+    onSuccess: () => {
+      setIsPollingEnrollment(true)
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || 'Failed to enroll. Please try again.')
+    },
+  })
+
+  React.useEffect(() => {
+    if (isPollingEnrollment && course?.is_enrolled) {
+      setIsPollingEnrollment(false)
+      toast.success('Enrolled successfully!')
+      if (course?.uuid) {
+        navigate({
+          to: '/student/learn/$courseUuid',
+          params: { courseUuid: course.uuid },
+        })
+      }
+    }
+  }, [course?.is_enrolled, isPollingEnrollment, navigate, course?.uuid])
 
   const [couponInput, setCouponInput] = React.useState('')
   const handleApplyCoupon = () => {
@@ -712,18 +751,30 @@ function CoursePublicDetails() {
                             : (course.price || 0) === 0
                           return (
                             <div className="flex flex-col gap-3">
-                              <Button
-                                onClick={() => {
-                                  handleAddToCart()
-                                  navigate({ to: '/checkout' })
-                                }}
-                                disabled={isAdding || isLoading || !course}
-                                variant={isFree ? "commerce" : "card-enroll"}
-                                size="xl"
-                                className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
-                              >
-                                {isFree ? 'Enroll for Free' : 'Checkout Now'}
-                              </Button>
+                              {/* Checkout Now hidden per user request, only show Enroll for Free if course is free */}
+                              {isFree && (
+                                <Button
+                                  onClick={() => {
+                                    if (!authenticated) {
+                                      navigate({
+                                        to: '/login',
+                                        search: { redirect: `/student/learn/${course?.uuid}` },
+                                      })
+                                      return
+                                    }
+                                    verifyAndProceed(() => handleFreeEnroll())
+                                  }}
+                                  disabled={isEnrollingFree || isPollingEnrollment || isLoading || !course}
+                                  variant="commerce"
+                                  size="xl"
+                                  className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
+                                >
+                                  {isEnrollingFree || isPollingEnrollment ? (
+                                    <Loader2 className="size-5 animate-spin" />
+                                  ) : null}
+                                  {isEnrollingFree || isPollingEnrollment ? "Processing Enrollment..." : "Enroll for Free"}
+                                </Button>
+                              )}
                               {!isFree && (
                                 <Button
                                   onClick={handleAddToCart}
@@ -1233,7 +1284,7 @@ export const Route = createFileRoute('/course/$courseSlug')({
       return {
         meta: [
           {
-            title: 'Course Not Found | Clara',
+            title: 'Course Not Found | Aksellearn',
           },
         ],
       }
@@ -1246,7 +1297,7 @@ export const Route = createFileRoute('/course/$courseSlug')({
     return {
       meta: [
         {
-          title: `${title} | Clara`,
+          title: `${title} | Aksellearn`,
         },
         {
           name: 'description',

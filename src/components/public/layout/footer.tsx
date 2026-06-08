@@ -141,7 +141,7 @@ export function PublicFooter() {
               {canApplyInstructor && (
                 <li>
                   <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all font-semibold" to="/become-an-instructor">
-                    Teach on Clara
+                    Teach on Aksellearn
                   </Link>
                 </li>
               )}
@@ -162,8 +162,8 @@ export function PublicFooter() {
             </Button>
             <p className="text-xs text-white/90 font-semibold tracking-widest drop-shadow-sm">
               © {currentYear} {name}. Powered by{" "}
-              <a className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" href="https://madacoda.dev" target="_blank" rel="noopener noreferrer">
-                madacoda.dev
+              <a className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" href="https://www.akselerasiindonesia.com" target="_blank" rel="noopener noreferrer">
+                Akselerasi Indonesia
               </a>
             </p>
           </div>

@@ -242,7 +242,7 @@ export function ArticleForm({
                   </h4>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-sm text-slate-500 truncate">
-                      www.mclara.test › article ›{' '}
+                      www.maksellearn.test › article ›{' '}
                       {(watch('title') || '')
                         .toLowerCase()
                         .replace(/\s+/g, '-')}

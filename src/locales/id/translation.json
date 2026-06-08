@@ -243,7 +243,27 @@
     "endDate": "Tanggal Selesai",
     "selectStart": "Pilih tanggal mulai",
     "selectEnd": "Pilih tanggal selesai",
-    "refresh": "Perbarui data"
+    "refresh": "Perbarui data",
+    "earningsAndSalesTrends": "Tren Pendapatan & Penjualan",
+    "overviewPayouts": "Ringkasan frekuensi pembayaran dan pesanan Anda",
+    "totalCompletedTransactions": "Total transaksi selesai",
+    "pickADate": "Pilih tanggal",
+    "clear": "Hapus",
+    "months": {
+      "allYear": "Sepanjang Tahun",
+      "january": "Januari",
+      "february": "Februari",
+      "march": "Maret",
+      "april": "April",
+      "may": "Mei",
+      "june": "Juni",
+      "july": "Juli",
+      "august": "Agustus",
+      "september": "September",
+      "october": "Oktober",
+      "november": "November",
+      "december": "Desember"
+    }
   },
   "student": {
     "dashboard": {
