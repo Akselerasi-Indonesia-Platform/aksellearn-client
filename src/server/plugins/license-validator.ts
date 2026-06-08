@@ -6,12 +6,12 @@ export default function (_nitroApp: any) {
     return
   }
 
-  const licenseKey = process.env.AKSELLEARN_LICENSE_KEY
+  const licenseKey = process.env.CLARA_LICENSE_KEY
 
   console.log('🔒 Verifying Aksellearn Local License Key...')
 
   if (!licenseKey) {
-    console.error('❌ FATAL: Missing AKSELLEARN_LICENSE_KEY environment variable.')
+    console.error('❌ FATAL: Missing CLARA_LICENSE_KEY environment variable.')
     console.error(
       'The application cannot start without a valid offline license.',
     )

@@ -96,7 +96,7 @@ export function generateSignature(method: string, url: string, data?: any) {
 
   // SSR: Check for multiple secret names for backward/backend compatibility
   const appSecret = isServer
-    ? process.env.AKSELLEARN_APP_SECRET ||
+    ? process.env.CLARA_APP_SECRET ||
       process.env.API_APP_SECRET ||
       process.env.VITE_API_APP_SECRET
     : undefined

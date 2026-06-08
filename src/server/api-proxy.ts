@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
   // 4. Security Signature Logic
   const appId = process.env.VITE_API_APP_ID
   const appSecret =
-    process.env.AKSELLEARN_APP_SECRET ||
+    process.env.CLARA_APP_SECRET ||
     process.env.API_APP_SECRET ||
     process.env.VITE_API_APP_SECRET
   const isEnabled = process.env.VITE_ENABLE_SIGNATURE === 'true'
