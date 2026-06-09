@@ -688,5 +688,38 @@
     "markAllRead": "Mark all as read",
     "unread": "Unread",
     "all": "All"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "login": {
+      "title": "Welcome back to {{name}}",
+      "subtitle": "Sign in to your account to continue",
+      "email": "Email Address",
+      "password": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "signIn": "Sign In",
+      "signingIn": "Signing In...",
+      "orContinueWith": "OR CONTINUE WITH",
+      "loginWithGoogle": "Sign in with Google",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "register": {
+      "title": "Create an account on {{name}}",
+      "subtitle": "Enter your details to get started",
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordConfirm": "Confirm Password",
+      "signUp": "Sign Up",
+      "signingUp": "Signing Up...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "successTitle": "Registration Successful!",
+      "successDesc": "Your account has been created successfully. You can now sign in.",
+      "returnLogin": "Return to Login"
+    }
   }
 }
