@@ -453,6 +453,7 @@
   },
   "publicHome": {
     "navbar": {
+      "browse": "Browse",
       "teachOn": "Teach on Aksellearn",
       "adminPanel": "Admin Panel",
       "myLearning": "My Learning",

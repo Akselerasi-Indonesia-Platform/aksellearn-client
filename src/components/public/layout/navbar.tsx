@@ -95,7 +95,12 @@ export function PublicNavbar() {
             )}
           </Link>
 
-
+          <Link 
+            to="/search" 
+            className="hidden lg:block text-sm font-bold text-white hover:text-white/80 transition-colors"
+          >
+            {t('publicHome.navbar.browse')}
+          </Link>
         </div>
 
         {/* Center: Search Bar (Desktop) */}

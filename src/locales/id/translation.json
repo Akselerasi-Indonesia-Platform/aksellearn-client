@@ -453,6 +453,7 @@
   },
   "publicHome": {
     "navbar": {
+      "browse": "Jelajahi",
       "teachOn": "Mengajar di Aksellearn",
       "adminPanel": "Panel Admin",
       "myLearning": "Pembelajaran Saya",
