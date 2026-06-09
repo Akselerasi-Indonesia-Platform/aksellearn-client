@@ -189,6 +189,7 @@ export const discoveryCourseService = {
     is_free?: boolean
     price_min?: number
     price_max?: number
+    rating?: number
     sort_by?: string
     page?: number
     limit?: number
@@ -202,6 +203,7 @@ export const discoveryCourseService = {
         is_free: params.is_free,
         price_min: params.price_min,
         price_max: params.price_max,
+        rating: params.rating,
         sort_by: params.sort_by,
         page: params.page,
         limit: params.limit,

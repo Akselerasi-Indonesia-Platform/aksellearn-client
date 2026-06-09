@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as StudentRouteImport } from './routes/student'
+import { Route as SearchOldRouteImport } from './routes/search-old'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginNewRouteImport } from './routes/login-new'
@@ -90,6 +91,11 @@ const VerifyEmailRoute = VerifyEmailRouteImport.update({
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchOldRoute = SearchOldRouteImport.update({
+  id: '/search-old',
+  path: '/search-old',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -468,6 +474,7 @@ export interface FileRoutesByFullPath {
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
@@ -541,6 +548,7 @@ export interface FileRoutesByTo {
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
@@ -616,6 +624,7 @@ export interface FileRoutesById {
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
@@ -692,6 +701,7 @@ export interface FileRouteTypes {
     | '/login-new'
     | '/register'
     | '/search'
+    | '/search-old'
     | '/student'
     | '/verify-email'
     | '/admin/banners'
@@ -765,6 +775,7 @@ export interface FileRouteTypes {
     | '/login-new'
     | '/register'
     | '/search'
+    | '/search-old'
     | '/student'
     | '/verify-email'
     | '/admin/banners'
@@ -839,6 +850,7 @@ export interface FileRouteTypes {
     | '/login-new'
     | '/register'
     | '/search'
+    | '/search-old'
     | '/student'
     | '/verify-email'
     | '/admin/banners'
@@ -914,6 +926,7 @@ export interface RootRouteChildren {
   LoginNewRoute: typeof LoginNewRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
+  SearchOldRoute: typeof SearchOldRoute
   StudentRoute: typeof StudentRouteWithChildren
   VerifyEmailRoute: typeof VerifyEmailRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -941,6 +954,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search-old': {
+      id: '/search-old'
+      path: '/search-old'
+      fullPath: '/search-old'
+      preLoaderRoute: typeof SearchOldRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -1565,6 +1585,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginNewRoute: LoginNewRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
+  SearchOldRoute: SearchOldRoute,
   StudentRoute: StudentRouteWithChildren,
   VerifyEmailRoute: VerifyEmailRoute,
   AuthCallbackRoute: AuthCallbackRoute,

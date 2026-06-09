@@ -18,10 +18,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
 import { PublicLayout } from '@/components/public/layout/main-layout'
-import { CourseCard, CourseCardSkeleton } from '@/components/public/ui/course-card'
+import { CourseListItem, CourseListItemSkeleton } from '@/components/public/ui/course-list-item'
 import { EmptyState } from '@/components/public/ui/empty-state'
 import { Button } from '@/components/ui/button'
-import { CourseFilterBar } from '@/components/public/ui/course-filter-bar'
+import { CourseSearchSidebar } from '@/components/public/ui/course-search-sidebar'
 import {
   usePublicCourseSearch,
   useCourseCategories,
@@ -35,6 +35,7 @@ const searchSchema = z.object({
   sort_by: z.string().optional(),
   price_min: z.number().optional(),
   price_max: z.number().optional(),
+  rating: z.number().optional(),
   page: z.number().optional().catch(1),
 })
 
@@ -45,7 +46,7 @@ export const Route = createFileRoute('/search')({
 
 function SearchPage() {
   const { t } = useTranslation()
-  const { q, category, difficulty, sort_by, price_min, price_max, page } = useSearch({ from: '/search' })
+  const { q, category, difficulty, sort_by, price_min, price_max, rating, page } = useSearch({ from: '/search' })
   const navigate = useNavigate()
 
   const { data: categories, isLoading: categoriesLoading } = useCourseCategories()
@@ -64,7 +65,9 @@ function SearchPage() {
     difficulty: difficulty,
     sort_by: sort_by,
     price_min: price_min,
+    price_min: price_min,
     price_max: price_max,
+    rating: rating,
     page: page || 1,
     limit: 12,
   })
@@ -72,18 +75,11 @@ function SearchPage() {
   const courses = courseResults?.data || []
   const total = courseResults?.meta?.total || courses.length
 
-  const handleCategoryChange = (slug: string | undefined) => {
-    if (slug) {
-      navigate({
-        to: '/categories/$slug',
-        params: { slug },
-      })
-    } else {
-      navigate({
-        to: '/search',
-        search: (prev) => ({ ...prev, category: undefined, page: 1 }),
-      })
-    }
+  const handleCategoryChange = (val: string | undefined) => {
+    navigate({
+      to: '/search',
+      search: (prev) => ({ ...prev, category: val || undefined, page: 1 }),
+    })
   }
 
   const handleSearchChange = (val: string | undefined) => {
@@ -119,10 +115,17 @@ function SearchPage() {
     })
   }
 
+  const handleRatingChange = (val: string | undefined) => {
+    navigate({
+      to: '/search',
+      search: (prev) => ({ ...prev, rating: val ? parseFloat(val) : undefined, page: 1 }),
+    })
+  }
+
   const clearFilters = () => {
     navigate({
       to: '/search',
-      search: { q: undefined, category: undefined, difficulty: undefined, sort_by: undefined, price_min: undefined, price_max: undefined, page: 1 },
+      search: { q: undefined, category: undefined, difficulty: undefined, sort_by: undefined, price_min: undefined, price_max: undefined, rating: undefined, page: 1 },
     })
   }
 
@@ -136,61 +139,109 @@ function SearchPage() {
   return (
     <PublicLayout>
       <div className="bg-[#fcfdfe] min-h-screen pb-20 flex flex-col">
-        {/* Zone 1: Brand-Aligned Hero Header */}
-        <div className="bg-gradient-to-br from-[#056FAE] via-[#1A7AB8] to-[#2AABAA] pt-32 pb-24 relative overflow-hidden shrink-0">
-          {/* Background Decorative Rings */}
-          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div className="absolute -bottom-1/2 -right-1/4 w-[800px] h-[800px] border-[60px] border-white/5 rounded-full"></div>
-            <div className="absolute -bottom-[30%] -right-[15%] w-[600px] h-[600px] border-[40px] border-white/5 rounded-full"></div>
-            <div className="absolute -bottom-[10%] -right-[5%] w-[400px] h-[400px] border-[20px] border-white/5 rounded-full"></div>
-          </div>
-          
-          <div className="container relative z-10 mx-auto px-4 max-w-7xl">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-black text-white backdrop-blur-xl shadow-lg shadow-black/5">
-                <Sparkles className="size-3 text-[#70C942]" />
-                <span>{t('search.badge')}</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
-                {q ? (
-                  <>{t('search.resultsFor')} <span className="text-[#70C942] italic">"{q}"</span></>
-                ) : category ? (
-                  <>{t('search.explore')} <span className="text-[#70C942]">{selectedCategory?.name || category}</span></>
-                ) : (
-                  <>{t('search.masterThe')} <span className="text-[#70C942] italic">{t('search.bestSkills')}</span></>
-                )}
-              </h1>
-              <p className="text-white/80 font-medium max-w-2xl text-lg">
-                {coursesLoading ? t('search.loading') : t('search.coursesAvailable', { total })}
-              </p>
-            </div>
+        {/* Zone 1: Minimal Header */}
+        <div className="bg-white border-b border-slate-200 py-8 shrink-0">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+              {q ? (
+                <>{t('search.resultsFor')} "{q}"</>
+              ) : category ? (
+                <>{selectedCategory?.name || category}</>
+              ) : (
+                <>{t('search.masterThe')} {t('search.bestSkills')}</>
+              )}
+            </h1>
           </div>
         </div>
 
-        {/* Zone 2: Sticky Filter Bar */}
-        <CourseFilterBar 
-          total={total}
-          searchQuery={q}
-          onSearchChange={handleSearchChange}
-          categories={categories}
-          categorySlug={category}
-          onCategoryChange={handleCategoryChange}
-          sortBy={sort_by}
-          onSortChange={handleSortChange}
-          difficulty={difficulty}
-          onDifficultyChange={handleDifficultyChange}
-          priceMin={price_min?.toString()}
-          priceMax={price_max?.toString()}
-          onPriceChange={handlePriceChange}
-          onClear={clearFilters}
-        />
+        {/* Zone 2: Main Layout (Sidebar + Results) */}
+        <div className="container mx-auto px-4 max-w-7xl flex flex-col md:flex-row gap-8 py-8 relative z-20 flex-1">
+          {/* Sidebar Area */}
+          <CourseSearchSidebar 
+            total={total}
+            searchQuery={q}
+            onSearchChange={handleSearchChange}
+            categories={categories}
+            categorySlug={category}
+            onCategoryChange={handleCategoryChange}
+            sortBy={sort_by}
+            onSortChange={handleSortChange}
+            difficulty={difficulty}
+            onDifficultyChange={handleDifficultyChange}
+            priceMin={price_min?.toString()}
+            priceMax={price_max?.toString()}
+            onPriceChange={handlePriceChange}
+            rating={rating?.toString()}
+            onRatingChange={handleRatingChange}
+            onClear={clearFilters}
+          />
 
-        {/* Zone 3: Full-Width Course Grid */}
-        <div className="container mx-auto px-4 max-w-7xl relative z-20 flex-1 pt-12">
+          {/* Results Area */}
+          <div className="flex-1 min-w-0">
+            {/* Sort & Count Header (Desktop) */}
+            <div className="hidden md:flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+              <div className="text-xl font-bold text-slate-900">{total} results</div>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-semibold text-slate-700">{t('search.sortBy', 'Sort By')}</label>
+                <select 
+                  className="h-10 px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  value={sort_by || 'newest'}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                >
+                  <option value="newest">{t('search.newest', 'Newest')}</option>
+                  <option value="popular">{t('search.popular', 'Most Popular')}</option>
+                  <option value="top_rated">{t('search.topRated', 'Top Rated')}</option>
+                  <option value="price_asc">{t('search.priceLow', 'Price: Low to High')}</option>
+                  <option value="price_desc">{t('search.priceHigh', 'Price: High to Low')}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Active Filter Pills */}
+            {(q || category || difficulty || price_min || price_max || rating) && (
+              <div className="flex flex-wrap items-center gap-2 mb-6">
+                <span className="text-sm font-medium text-slate-500 mr-2">{t('search.activeFilters', 'Active Filters:')}</span>
+                {q && (
+                  <Button variant="secondary" size="sm" className="h-7 px-3 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700" onClick={() => handleSearchChange(undefined)}>
+                    "{q}" <X className="size-3 ml-1.5" />
+                  </Button>
+                )}
+                {category && category.split(',').map(catSlug => (
+                  <Button key={`cat-${catSlug}`} variant="secondary" size="sm" className="h-7 px-3 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700" onClick={() => {
+                    const newCats = category.split(',').filter(c => c !== catSlug)
+                    handleCategoryChange(newCats.length > 0 ? newCats.join(',') : undefined)
+                  }}>
+                    {categories?.find(c => c.slug === catSlug)?.name || catSlug} <X className="size-3 ml-1.5" />
+                  </Button>
+                ))}
+                {difficulty && difficulty.split(',').map(diff => (
+                  <Button key={`diff-${diff}`} variant="secondary" size="sm" className="h-7 px-3 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700" onClick={() => {
+                    const newDiffs = difficulty.split(',').filter(d => d !== diff)
+                    handleDifficultyChange(newDiffs.length > 0 ? newDiffs.join(',') : undefined)
+                  }}>
+                    {diff} <X className="size-3 ml-1.5" />
+                  </Button>
+                ))}
+                {(price_min || price_max) && (
+                  <Button variant="secondary" size="sm" className="h-7 px-3 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700" onClick={() => handlePriceChange(undefined, undefined)}>
+                    Price: {price_min ? `Rp ${price_min}` : '0'} - {price_max ? `Rp ${price_max}` : 'Max'} <X className="size-3 ml-1.5" />
+                  </Button>
+                )}
+                {rating && (
+                  <Button variant="secondary" size="sm" className="h-7 px-3 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700" onClick={() => handleRatingChange(undefined)}>
+                    {rating} & up <X className="size-3 ml-1.5" />
+                  </Button>
+                )}
+                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50" onClick={clearFilters}>
+                  {t('search.clearAll', 'Clear All')}
+                </Button>
+              </div>
+            )}
+
           {coursesLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="flex flex-col gap-4">
               {[...Array(8)].map((_, i) => (
-                <CourseCardSkeleton key={i} />
+                <CourseListItemSkeleton key={i} />
               ))}
             </div>
           ) : isError ? (
@@ -213,8 +264,8 @@ function SearchPage() {
               </Button>
             </div>
           ) : courses.length > 0 ? (
-            <div className="space-y-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in fade-in duration-300">
+            <div className="space-y-8">
+              <div className="flex flex-col gap-4 animate-in fade-in duration-300">
                 <AnimatePresence mode="popLayout">
                   {courses.map((course: any, idx: number) => (
                     <motion.div
@@ -226,9 +277,9 @@ function SearchPage() {
                       <Link
                         to="/course/$courseSlug"
                         params={{ courseSlug: course.slug || course.uuid }}
-                        className="group block h-full flex flex-col"
+                        className="group block"
                       >
-                        <CourseCard course={course} />
+                        <CourseListItem course={course} />
                       </Link>
                     </motion.div>
                   ))}
@@ -283,6 +334,7 @@ function SearchPage() {
               action={{ label: t('search.resetFilters'), onClick: clearFilters }}
             />
           )}
+          </div>
         </div>
       </div>
     </PublicLayout>

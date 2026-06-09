@@ -458,9 +458,17 @@ function CoursePublicDetails() {
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 space-y-8">
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-primary/20 text-primary border-none font-bold px-3 py-1 text-[11px] uppercase tracking-wider">
-                  {course.category?.name || 'Development'}
-                </Badge>
+                {course.category?.slug ? (
+                  <Link to="/categories/$slug" params={{ slug: course.category.slug }}>
+                    <Badge className="bg-primary/20 text-primary border-none font-bold px-3 py-1 text-[11px] uppercase tracking-wider hover:bg-primary/30 transition-colors cursor-pointer">
+                      {course.category.name}
+                    </Badge>
+                  </Link>
+                ) : (
+                  <Badge className="bg-primary/20 text-primary border-none font-bold px-3 py-1 text-[11px] uppercase tracking-wider">
+                    {course.category?.name || 'Development'}
+                  </Badge>
+                )}
                 {course.badge_text && (
                     <Badge
                         variant="outline"
@@ -915,6 +923,19 @@ function CoursePublicDetails() {
                 <SyllabusAccordion modules={course.modules} />
               ) : null}
 
+              {/* Course Rendered Description (content column) */}
+              {course.content ? (
+                <div className="space-y-6 pt-8 border-t border-slate-100">
+                  <h2 className="text-2xl font-bold tracking-tight">
+                    {t('courseDetail.description', 'Description')}
+                  </h2>
+                  <div 
+                    className="prose prose-slate max-w-none text-slate-600 prose-headings:text-slate-900 prose-a:text-[#056FAE]"
+                    dangerouslySetInnerHTML={{ __html: course.content }} 
+                  />
+                </div>
+              ) : null}
+
               {/* Instructor Card — FE-10 anchor */}
               {course.instructor ? (
                 <div id="instructor-section" className="space-y-6 pt-8 border-t border-slate-100">
@@ -1216,8 +1237,8 @@ function CoursePublicDetails() {
                     <p className="text-slate-600 leading-relaxed text-sm line-clamp-4">
                       {review.comment}
                     </p>
-                    {/* FE-06: Helpful? thumbs */}
-                    <div className="flex items-center gap-3 pt-1">
+                    {/* FE-06: Helpful? thumbs (Hidden as requested) */}
+                    <div className="hidden items-center gap-3 pt-1">
                       <span className="text-xs font-medium text-slate-400">Helpful?</span>
                       <button className="flex items-center gap-1 text-slate-400 hover:text-slate-700 transition-colors">
                         <ThumbsUp className="size-3.5" />
