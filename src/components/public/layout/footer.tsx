@@ -5,8 +5,11 @@ import { usePlatformStore } from '@/hooks/use-platform'
 import { useAuthStore } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { PublicLanguageToggle } from './public-language-toggle'
 
 export function PublicFooter() {
+  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
   const { profile } = usePlatformStore()
   const { user } = useAuthStore()
@@ -125,11 +128,11 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Discovery</h3>
+            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">{t('publicHome.footer.discovery')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/search">
-                  Courses
+                  {t('publicHome.footer.courses')}
                 </Link>
               </li>
             </ul>
@@ -141,16 +144,9 @@ export function PublicFooter() {
       <div className="w-full bg-black/30 backdrop-blur-sm py-5 border-t border-white/10 relative z-10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
         <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            <Button
-              className="rounded-full gap-2 border-white/20 text-white hover:bg-white/10 shadow-sm drop-shadow-sm"
-              size="sm"
-              variant="outline-white"
-            >
-              <Globe className="h-4 w-4" />
-              English
-            </Button>
+            <PublicLanguageToggle />
             <p className="text-xs text-white/90 font-semibold tracking-widest drop-shadow-sm">
-              © {currentYear} {name}. Powered by{" "}
+              © {currentYear} {name}. {t('publicHome.footer.poweredBy')}{" "}
               <a className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" href="https://www.akselerasiindonesia.com" target="_blank" rel="noopener noreferrer">
                 Akselerasi Indonesia
               </a>

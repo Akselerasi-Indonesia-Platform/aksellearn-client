@@ -303,9 +303,122 @@
       }
     }
   },
+  "auth": {
+    "login": {
+      "title": "Masuk ke {{name}}",
+      "subtitle": "Selamat datang kembali, silakan masuk ke akun Anda",
+      "email": "Email",
+      "password": "Kata Sandi",
+      "hidePassword": "Sembunyikan kata sandi",
+      "showPassword": "Tampilkan kata sandi",
+      "signingIn": "Sedang masuk...",
+      "signIn": "Masuk",
+      "orContinueWith": "Atau lanjutkan dengan",
+      "loginWithGoogle": "Masuk dengan Google",
+      "noAccount": "Belum punya akun?",
+      "signUp": "Daftar"
+    },
+    "register": {
+      "title": "Buat akun",
+      "subtitle": "Bergabunglah dengan {{name}} dan mulai belajar hari ini",
+      "name": "Nama Lengkap",
+      "email": "Email",
+      "password": "Kata Sandi",
+      "passwordConfirm": "Konfirmasi Kata Sandi",
+      "signingUp": "Membuat akun...",
+      "signUp": "Daftar",
+      "hasAccount": "Sudah punya akun?",
+      "signIn": "Masuk",
+      "successTitle": "Cek Email Anda",
+      "successDesc": "Kami telah mengirimkan tautan verifikasi ke alamat email Anda. Silakan klik tautan tersebut untuk memverifikasi akun Anda sebelum masuk.",
+      "returnLogin": "Kembali ke halaman Masuk"
+    }
+  },
+  "categoryDetail": {
+    "breadcrumb": {
+      "categories": "Kategori"
+    },
+    "loading": "Memuat kategori...",
+    "explore": "Jelajahi koleksi kursus {{name}} kami.",
+    "errorTitle": "Terjadi kesalahan",
+    "errorDesc": "Kami tidak dapat memuat kursus. Silakan coba lagi.",
+    "tryAgain": "Coba Lagi",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya",
+    "noCourses": "Tidak ada kursus yang ditemukan di {{name}}",
+    "noCoursesDesc": "Coba sesuaikan filter Anda atau jelajahi semua kategori.",
+    "clearAll": "Bersihkan Semua Filter"
+  },
+  "courseDetail": {
+    "breadcrumb": {
+      "home": "Beranda",
+      "courses": "Kursus"
+    },
+    "stats": {
+      "reviews": "ulasan",
+      "students": "pelajar",
+      "lectures": "materi",
+      "totalLength": "total durasi",
+      "languages": "Bahasa Inggris & Indonesia",
+      "modules": "Modul",
+      "includesQuiz": "Termasuk Kuis",
+      "certificate": "Sertifikat Kelulusan",
+      "createdBy": "Dibuat oleh",
+      "lastUpdated": "Terakhir diperbarui"
+    },
+    "access": {
+      "daysAccess": "Akses {{days}} Hari",
+      "fullAccess": "Akses Penuh",
+      "lifetime": "Akses Seumur Hidup",
+      "accessUntil": "Akses hingga {{date}}",
+      "youOwnThis": "Anda memiliki ini (Seumur Hidup)",
+      "corporateOnly": "Hanya Akses Perusahaan",
+      "corporateHint": "Kurikulum ini dikhususkan untuk mitra perusahaan.",
+      "corporateLink": "Pelajari cara mendaftarkan tim Anda."
+    },
+    "admin": {
+      "adminAccess": "Akses Admin",
+      "warning": "Admin tidak dapat mendaftar kursus atau menggunakan sistem checkout. Silakan beralih ke akun pelajar untuk menguji alur pembelian."
+    },
+    "actions": {
+      "enrollFree": "Daftar Gratis",
+      "buyNow": "Beli Sekarang",
+      "addToCart": "Masukkan Keranjang",
+      "addedToCart": "Berada di Keranjang",
+      "goToClassroom": "Masuk Kelas",
+      "extendAccess": "Perpanjang Akses",
+      "applyCoupon": "Gunakan Kupon",
+      "addToWishlist": "Tambah ke Wishlist",
+      "removeFromWishlist": "Hapus dari wishlist"
+    },
+    "content": {
+      "courseContent": "Konten kursus",
+      "sections": "{{count}} bagian",
+      "expandAll": "Buka semua",
+      "collapseAll": "Tutup semua",
+      "lessons": "{{count}} materi",
+      "preview": "Pratinjau"
+    },
+    "instructor": {
+      "aboutInstructor": "Tentang Instruktur",
+      "showMore": "Tampilkan lebih banyak",
+      "showLess": "Tampilkan lebih sedikit"
+    },
+    "error": {
+      "unavailable": "Kursus Tidak Tersedia",
+      "archived": "Kurikulum ini saat ini tidak disiarkan atau telah diarsipkan.",
+      "backToHome": "Kembali ke Beranda"
+    }
+  },
   "search": {
     "title": "Temukan Kursus Anda",
     "badge": "Katalog Kursus",
+    "resultsFor": "Hasil untuk",
+    "explore": "Jelajahi",
+    "masterThe": "Kuasai",
+    "bestSkills": "Keahlian Terbaik",
+    "coursesAvailable": "{{total}} kursus tersedia.",
+    "errorHint": "Kami tidak dapat memuat kursus. Silakan coba lagi.",
     "placeholder": "Cari kursus...",
     "resultsCount": "Menampilkan {{count}} kursus",
     "categoryFilter": "Filter Kategori",
@@ -318,9 +431,20 @@
     "sortBy": "Urutkan",
     "newest": "Terbaru",
     "popular": "Paling Populer",
-    "topRated": "Nilai Tertinggi",
-    "priceLow": "Harga: Terendah",
-    "priceHigh": "Harga: Tertinggi",
+    "topRated": "Peringkat Teratas",
+    "priceLow": "Harga: Terendah ke Tertinggi",
+    "priceHigh": "Harga: Tertinggi ke Terendah",
+    "allLevels": "Semua Tingkatan",
+    "beginner": "Pemula",
+    "intermediate": "Menengah",
+    "advanced": "Mahir",
+    "anyMin": "Min Apapun",
+    "anyMax": "Maks Apapun",
+    "clear": "Bersihkan",
+    "showResults": "Tampilkan Hasil",
+    "filtersAndSort": "Filter & Urutkan",
+    "filters": "Filter",
+    "level": "Tingkat",
     "loading": "Mencari kursus...",
     "noResults": "Tidak ada kursus yang sesuai.",
     "noResultsHint": "Coba kata kunci lain atau hapus filter Anda.",
@@ -328,6 +452,42 @@
     "errorButton": "Coba Lagi"
   },
   "publicHome": {
+    "navbar": {
+      "teachOn": "Mengajar di Aksellearn",
+      "adminPanel": "Panel Admin",
+      "myLearning": "Pembelajaran Saya",
+      "startLearning": "Mulai Belajar",
+      "myProfile": "Profil Saya",
+      "accountSettings": "Pengaturan Akun",
+      "myCart": "Keranjang Saya",
+      "adminDashboard": "Dasbor Admin",
+      "learningPortal": "Portal Belajar",
+      "logout": "Keluar Sesi"
+    },
+    "footer": {
+      "discovery": "Jelajahi",
+      "courses": "Kursus",
+      "poweredBy": "Didukung oleh"
+    },
+    "popularCourses": {
+      "title": "Tingkatkan",
+      "titleAccent": "pembelajaran Anda",
+      "description": "Sertifikasi profesional dan kursus pilihan yang dirancang untuk mempercepat keahlian teknis dan bisnis Anda.",
+      "badge": "Koleksi Populer"
+    },
+    "latestCourses": {
+      "title": "Segera hadir",
+      "titleAccent": "kursus baru",
+      "description": "Jadilah yang pertama untuk mempelajari keterampilan terbaru dengan tambahan kursus terbaru kami.",
+      "badge": "Terbaru",
+      "empty": "Belum ada kursus baru saat ini."
+    },
+    "instructorPromo": {
+      "badge": "Bergabung dengan komunitas kami",
+      "title": "Bagikan keahlian Anda. Mengajar di Aksellearn.",
+      "description": "Kami menerima pengembang kurikulum ahli yang menghargai disiplin visual dan kejelasan edukasi. Inspirasi jutaan teknolog di seluruh dunia.",
+      "button": "Daftar sebagai Instruktur"
+    },
     "hero": {
       "badge": "Platform Belajar Terpercaya",
       "title": "Pelajari keahlian yang",

@@ -8,6 +8,7 @@ import {
 import { format } from 'date-fns'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import {
   Star,
   Users,
@@ -94,6 +95,7 @@ function RelativeDate({ dateStr }: { dateStr: string }) {
 function InstructorBio({ bio }: { bio: string }) {
   const [expanded, setExpanded] = React.useState(false)
   const isLong = bio.length > 300
+  const { t } = useTranslation()
   return (
     <div className="space-y-2">
       <p
@@ -109,7 +111,7 @@ function InstructorBio({ bio }: { bio: string }) {
           onClick={() => setExpanded((v) => !v)}
           className="text-sm font-bold text-[#056FAE] hover:underline flex items-center gap-1"
         >
-          {expanded ? 'Show less' : 'Show more'}
+          {expanded ? t('courseDetail.instructor.showLess') : t('courseDetail.instructor.showMore')}
           <ChevronDown className={cn('size-4 transition-transform', expanded && 'rotate-180')} />
         </button>
       )}
@@ -131,19 +133,21 @@ function SyllabusAccordion({ modules }: { modules: any[] }) {
     }
   }
 
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <h2 className="text-2xl font-bold tracking-tight">Course content</h2>
+        <h2 className="text-2xl font-bold tracking-tight">{t('courseDetail.content.courseContent')}</h2>
         <div className="flex items-center gap-4">
           <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-            {modules.length} sections
+            {t('courseDetail.content.sections', { count: modules.length })}
           </span>
           <button
             onClick={() => { setAllOpen((v) => !v); setOpenId(null) }}
             className="text-xs font-bold text-[#056FAE] hover:underline"
           >
-            {allOpen ? 'Collapse all' : 'Expand all'}
+            {allOpen ? t('courseDetail.content.collapseAll') : t('courseDetail.content.expandAll')}
           </button>
         </div>
       </div>
@@ -175,7 +179,7 @@ function SyllabusAccordion({ modules }: { modules: any[] }) {
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-4">
                   {m.lessons_count ? (
-                    <span className="text-[11px] font-bold text-slate-400">{m.lessons_count} lessons</span>
+                    <span className="text-[11px] font-bold text-slate-400">{t('courseDetail.content.lessons', { count: m.lessons_count })}</span>
                   ) : null}
                   {m.type === 'lesson' ? (
                     <PlayCircle className={cn('size-4 transition-colors', isOpen ? 'text-[#056FAE]' : 'text-slate-300 group-hover:text-[#056FAE]')} />
@@ -211,7 +215,7 @@ function SyllabusAccordion({ modules }: { modules: any[] }) {
                               <span className="text-[11px] text-slate-400 font-mono shrink-0">{lesson.duration}</span>
                             )}
                             {lesson.is_preview && (
-                              <span className="text-[10px] font-bold text-[#2AABAA] uppercase tracking-widest">Preview</span>
+                              <span className="text-[10px] font-bold text-[#2AABAA] uppercase tracking-widest">{t('courseDetail.content.preview')}</span>
                             )}
                           </div>
                         ))}
@@ -229,6 +233,7 @@ function SyllabusAccordion({ modules }: { modules: any[] }) {
 }
 
 function CoursePublicDetails() {
+  const { t } = useTranslation()
   const { courseSlug } = useParams({ from: '/course/$courseSlug' })
   const navigate = useNavigate()
   const authenticated = isAuthenticated()
@@ -410,12 +415,12 @@ function CoursePublicDetails() {
           <div className="size-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-500 mx-auto">
             <AlertCircle className="size-10" />
           </div>
-          <h2 className="text-3xl font-black">Course Unavailable</h2>
+          <h2 className="text-3xl font-black">{t('courseDetail.error.unavailable')}</h2>
           <p className="text-muted-foreground">
-            This curriculum is currently not broadcasted or has been archived.
+            {t('courseDetail.error.archived')}
           </p>
           <Button onClick={() => navigate({ to: '/' })} variant="outline">
-            Back to Home
+            {t('courseDetail.error.backToHome')}
           </Button>
         </div>
       </PublicLayout>
@@ -428,9 +433,9 @@ function CoursePublicDetails() {
       <div className="bg-white py-4 border-b shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center gap-2 text-sm font-bold">
-             <Link to="/" className="text-[#056FAE] hover:underline whitespace-nowrap">Home</Link>
+             <Link to="/" className="text-[#056FAE] hover:underline whitespace-nowrap">{t('courseDetail.breadcrumb.home')}</Link>
              <ChevronRight className="size-4 text-slate-400 shrink-0" />
-             <Link to="/search" className="text-[#056FAE] hover:underline whitespace-nowrap">Courses</Link>
+             <Link to="/search" className="text-[#056FAE] hover:underline whitespace-nowrap">{t('courseDetail.breadcrumb.courses')}</Link>
              <ChevronRight className="size-4 text-slate-400 shrink-0" />
              <span className="text-slate-500 truncate">{course.title}</span>
           </div>
@@ -485,13 +490,13 @@ function CoursePublicDetails() {
                     {course.summary?.stats?.average_rating}
                   </span>
                   <span className="text-slate-400 text-sm font-medium">
-                    ({course.summary?.stats?.total_reviews} reviews)
+                    ({course.summary?.stats?.total_reviews} {t('courseDetail.stats.reviews')})
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="size-4 text-slate-400" />
                   <span className="font-semibold text-slate-200">
-                    {course.summary?.stats?.total_students?.toLocaleString()} students
+                    {course.summary?.stats?.total_students?.toLocaleString()} {t('courseDetail.stats.students')}
                   </span>
                 </div>
               </div>
@@ -504,33 +509,33 @@ function CoursePublicDetails() {
                       course.summary?.stats?.total_lessons ||
                       course.summary?.stats?.total_modules ||
                       0}{' '}
-                    lectures
+                    {t('courseDetail.stats.lectures')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="size-4" />
-                  <span>{course.summary?.stats?.total_duration_human_full} total length</span>
+                  <span>{course.summary?.stats?.total_duration_human_full} {t('courseDetail.stats.totalLength')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Globe className="size-4" />
-                  <span>English & Indonesian</span>
+                  <span>{t('courseDetail.stats.languages')}</span>
                 </div>
                 {course.summary?.stats?.total_modules ? (
                   <div className="flex items-center gap-2">
                     <BookOpen className="size-4" />
-                    <span>{course.summary?.stats?.total_modules} Modules</span>
+                    <span>{course.summary?.stats?.total_modules} {t('courseDetail.stats.modules')}</span>
                   </div>
                 ) : null}
                 {course.summary?.stats?.total_quizzes ? (
                   <div className="flex items-center gap-2 text-emerald-400">
                     <Award className="size-4" />
-                    <span>Includes Quiz</span>
+                    <span>{t('courseDetail.stats.includesQuiz')}</span>
                   </div>
                 ) : null}
                 {course.certificate_config && course.certificate_config.title ? (
                   <div className="flex items-center gap-2 text-indigo-400">
                     <ShieldCheck className="size-4" />
-                    <span>Certificate of Completion</span>
+                    <span>{t('courseDetail.stats.certificate')}</span>
                   </div>
                 ) : null}
               </div>
@@ -540,7 +545,7 @@ function CoursePublicDetails() {
                 {course.instructor && (
                   <div className="flex items-center gap-1.5 text-slate-400 font-medium">
                     <UserCircle className="size-4" />
-                    <span>Created by</span>
+                    <span>{t('courseDetail.stats.createdBy')}</span>
                     <a
                       href="#instructor-section"
                       onClick={(e) => {
@@ -556,7 +561,7 @@ function CoursePublicDetails() {
                 {(course as any).last_updated_at && (
                   <div className="flex items-center gap-1.5 text-slate-400 font-medium">
                     <CalendarDays className="size-4" />
-                    <span>Last updated: {format(new Date((course as any).last_updated_at), 'MMMM yyyy')}</span>
+                    <span>{t('courseDetail.stats.lastUpdated')}: {format(new Date((course as any).last_updated_at), 'MMMM yyyy')}</span>
                   </div>
                 )}
               </div>
@@ -596,8 +601,8 @@ function CoursePublicDetails() {
                     <div>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
                         {course.access_duration_days
-                          ? `${course.access_duration_days} Days Access`
-                          : 'Full Access'}
+                          ? t('courseDetail.access.daysAccess', { days: course.access_duration_days })
+                          : t('courseDetail.access.fullAccess')}
                       </p>
                       <div className="flex items-baseline gap-2">
                         {course.price_discount !== null && course.price_discount !== undefined && course.price_discount < (course.price || 0) ? (
@@ -637,11 +642,10 @@ function CoursePublicDetails() {
                           disabled
                           className="w-full h-14 rounded-2xl bg-slate-100 text-slate-400 text-sm font-bold uppercase tracking-widest border border-slate-200"
                         >
-                          <ShieldCheck className="mr-2 size-4" /> Admin Access
+                          <ShieldCheck className="mr-2 size-4" /> {t('courseDetail.admin.adminAccess')}
                         </Button>
                         <p className="text-[10px] text-center font-bold text-slate-400 leading-relaxed">
-                          Admins cannot enroll in courses or use the checkout system.
-                          Please switch to a student account to test the purchase flow.
+                          {t('courseDetail.admin.warning')}
                         </p>
                       </div>
                     ) : isEnrolled && (course.access_duration_days || 0) <= 0 ? (
@@ -658,7 +662,7 @@ function CoursePublicDetails() {
                           </div>
                         </div>
                         <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-none font-bold text-center w-full justify-center text-[11px] py-1">
-                          You own this (Lifetime)
+                          {t('courseDetail.access.youOwnThis')}
                         </Badge>
                         <Button
                           onClick={() =>
@@ -671,7 +675,7 @@ function CoursePublicDetails() {
                           size="xl"
                           className="w-full rounded-xl text-lg font-bold uppercase tracking-widest shadow-lg hover:shadow-xl hover:shadow-primary/30 gap-2"
                         >
-                          Go to Classroom <ChevronRight className="size-5" />
+                          {t('courseDetail.actions.goToClassroom')} <ChevronRight className="size-5" />
                         </Button>
                       </div>
                     ) : isEnrolled && (course.access_duration_days || 0) > 0 ? (
@@ -689,8 +693,8 @@ function CoursePublicDetails() {
                         </div>
                         <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-none font-bold text-center w-full justify-center text-[11px] py-1">
                           {course.enrollment_expiry 
-                            ? `Access until ${format(new Date(course.enrollment_expiry), 'MMM dd, yyyy')}`
-                            : 'Lifetime Access'}
+                            ? t('courseDetail.access.accessUntil', { date: format(new Date(course.enrollment_expiry), 'MMM dd, yyyy') })
+                            : t('courseDetail.access.lifetime')}
                         </Badge>
                         <Button
                           onClick={() =>
@@ -703,7 +707,7 @@ function CoursePublicDetails() {
                           size="xl"
                           className="w-full rounded-xl text-lg font-bold uppercase tracking-widest shadow-sm gap-2 text-slate-800 hover:text-slate-900 border-slate-200"
                         >
-                          Go to Classroom <ChevronRight className="size-5" />
+                          {t('courseDetail.actions.goToClassroom')} <ChevronRight className="size-5" />
                         </Button>
                         {course.enrollment_expiry && (
                           <div className="grid gap-3 pt-4 border-t border-slate-100">
@@ -719,7 +723,7 @@ function CoursePublicDetails() {
                               ) : (
                                 <ShoppingBag className="size-5" />
                               )}
-                              Extend Access
+                              {t('courseDetail.actions.extendAccess')}
                             </Button>
                             <p className="text-xs text-slate-500 text-center font-medium leading-relaxed">
                               Your current access expires on {format(new Date(course.enrollment_expiry), 'MMM dd, yyyy')}. 
@@ -734,12 +738,12 @@ function CoursePublicDetails() {
                           disabled
                           className="w-full h-14 rounded-2xl bg-slate-100 text-slate-400 text-sm font-bold uppercase tracking-widest border border-slate-200"
                         >
-                          <Lock className="mr-2 size-4" /> Corporate Access Only
+                          <Lock className="mr-2 size-4" /> {t('courseDetail.access.corporateOnly')}
                         </Button>
                         <p className="text-[10px] text-center font-bold text-slate-400 leading-relaxed">
-                          This curriculum is reserved for enterprise partners.
+                          {t('courseDetail.access.corporateHint')}
                           <span className="text-primary underline cursor-pointer ml-1">
-                            Learn how to enroll your team.
+                            {t('courseDetail.access.corporateLink')}
                           </span>
                         </p>
                       </div>
@@ -772,7 +776,7 @@ function CoursePublicDetails() {
                                   {isEnrollingFree || isPollingEnrollment ? (
                                     <Loader2 className="size-5 animate-spin" />
                                   ) : null}
-                                  {isEnrollingFree || isPollingEnrollment ? "Processing Enrollment..." : "Enroll for Free"}
+                                  {isEnrollingFree || isPollingEnrollment ? "Processing Enrollment..." : t('courseDetail.actions.enrollFree')}
                                 </Button>
                               )}
                               {!isFree && (
@@ -805,7 +809,7 @@ function CoursePublicDetails() {
                                     ) : (
                                       <ShoppingBag className="size-5" />
                                     )}
-                                    Checkout Now
+                                    {t('courseDetail.actions.buyNow')}
                                   </Button>
                                   <Button
                                     onClick={handleAddToCart}
@@ -819,7 +823,7 @@ function CoursePublicDetails() {
                                     ) : (
                                       <ShoppingBag className="size-5" />
                                     )}
-                                    Add to Cart
+                                    {t('courseDetail.actions.addToCart')}
                                   </Button>
                                 </>
                               )}
@@ -914,7 +918,7 @@ function CoursePublicDetails() {
               {/* Instructor Card — FE-10 anchor */}
               {course.instructor ? (
                 <div id="instructor-section" className="space-y-6 pt-8 border-t border-slate-100">
-                  <h2 className="text-2xl font-bold tracking-tight">Your Instructor</h2>
+                  <h2 className="text-2xl font-bold tracking-tight">{t('courseDetail.instructor.aboutInstructor')}</h2>
 
                   <div className="rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden">
                     {/* Instructor header row */}

@@ -20,6 +20,7 @@ import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/hooks/use-auth'
 import { usePlatformStore } from '@/hooks/use-platform'
 import { PublicLayout } from '@/components/public/layout/main-layout'
+import { useTranslation } from 'react-i18next'
 
 const loginSearchSchema = z.object({
   redirect: z.string().optional(),
@@ -58,6 +59,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 function LoginPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { redirect: redirectUrl, message: searchMessage } = Route.useSearch()
   const [error, setError] = useState<string | null>(searchMessage || null)
@@ -169,10 +171,10 @@ function LoginPage() {
               )}
             </div>
             <CardTitle className="text-2xl font-bold tracking-tight text-center">
-              Sign in to {profile?.name || 'Platform'}
+              {t('auth.login.title', { name: profile?.name || 'Platform' })}
             </CardTitle>
             <CardDescription className="text-center">
-              Welcome back, please sign in to your account
+              {t('auth.login.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -190,7 +192,7 @@ function LoginPage() {
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.login.email')}</Label>
                 <Input
                   autoComplete="email"
                   id="email"
@@ -211,7 +213,7 @@ function LoginPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t('auth.login.password')}</Label>
                 </div>
                 <div className="relative">
                   <Input
@@ -234,7 +236,7 @@ function LoginPage() {
                       <Eye className="h-4 w-4" />
                     )}
                     <span className="sr-only">
-                      {showPassword ? 'Hide password' : 'Show password'}
+                      {showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
                     </span>
                   </Button>
                 </div>
@@ -252,17 +254,17 @@ function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {t('auth.login.signingIn')}
                   </>
                 ) : (
-                  'Sign in'
+                  t('auth.login.signIn')
                 )}
               </Button>
 
               <div className="relative flex items-center py-2">
                 <div className="grow border-t border-border" />
                 <span className="mx-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
-                  Or continue with
+                  {t('auth.login.orContinueWith')}
                 </span>
                 <div className="grow border-t border-border" />
               </div>
@@ -301,13 +303,13 @@ function LoginPage() {
                   />
                   <path fill="none" d="M0 0h48v48H0z" />
                 </svg>
-                Login with Google
+                {t('auth.login.loginWithGoogle')}
               </Button>
 
               <div className="mt-4 text-center text-sm text-slate-500">
-                Don&apos;t have an account?{' '}
+                {t('auth.login.noAccount')}{' '}
                 <Link to="/register" className="font-semibold text-primary hover:underline">
-                  Sign up
+                  {t('auth.login.signUp')}
                 </Link>
               </div>
             </form>

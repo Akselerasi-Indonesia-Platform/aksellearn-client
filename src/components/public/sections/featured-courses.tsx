@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Sparkles, ChevronRight } from 'lucide-react'
 import { useNavigate, Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { CourseCard, CourseCardSkeleton } from '@/components/public/ui/course-card'
 import { SectionHeader } from '@/components/public/ui/section-header'
@@ -42,6 +43,7 @@ export function FeaturedCourses({
   emptyStateMessage = "No courses found in this category.",
 }: FeaturedCoursesProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const handleViewAll = () => {
     if (viewAllSort) {
@@ -115,7 +117,7 @@ export function FeaturedCourses({
             size="lg"
             className="rounded-full px-8 font-bold border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all gap-2"
           >
-            Explore All Courses
+            {t('publicHome.featured.viewAll')}
             <ChevronRight className="size-4" />
           </Button>
         </div>

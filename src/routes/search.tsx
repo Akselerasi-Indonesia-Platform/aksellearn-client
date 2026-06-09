@@ -15,6 +15,7 @@ import {
 import * as React from 'react'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { CourseCard, CourseCardSkeleton } from '@/components/public/ui/course-card'
@@ -43,6 +44,7 @@ export const Route = createFileRoute('/search')({
 })
 
 function SearchPage() {
+  const { t } = useTranslation()
   const { q, category, difficulty, sort_by, price_min, price_max, page } = useSearch({ from: '/search' })
   const navigate = useNavigate()
 
@@ -147,19 +149,19 @@ function SearchPage() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-black text-white backdrop-blur-xl shadow-lg shadow-black/5">
                 <Sparkles className="size-3 text-[#70C942]" />
-                <span>Course Catalog</span>
+                <span>{t('search.badge')}</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
                 {q ? (
-                  <>Results for <span className="text-[#70C942] italic">"{q}"</span></>
+                  <>{t('search.resultsFor')} <span className="text-[#70C942] italic">"{q}"</span></>
                 ) : category ? (
-                  <>Explore <span className="text-[#70C942]">{selectedCategory?.name || category}</span></>
+                  <>{t('search.explore')} <span className="text-[#70C942]">{selectedCategory?.name || category}</span></>
                 ) : (
-                  <>Master the <span className="text-[#70C942] italic">Best Skills</span></>
+                  <>{t('search.masterThe')} <span className="text-[#70C942] italic">{t('search.bestSkills')}</span></>
                 )}
               </h1>
               <p className="text-white/80 font-medium max-w-2xl text-lg">
-                {coursesLoading ? "Searching for courses..." : `${total} courses available.`}
+                {coursesLoading ? t('search.loading') : t('search.coursesAvailable', { total })}
               </p>
             </div>
           </div>
@@ -196,10 +198,10 @@ function SearchPage() {
               <AlertCircle className="size-12 text-rose-500 mx-auto" />
               <div className="space-y-2">
                 <h3 className="text-xl font-bold text-slate-900">
-                  Something went wrong
+                  {t('search.error')}
                 </h3>
                 <p className="text-slate-500 text-sm font-medium">
-                  We couldn't load the courses. Please try again.
+                  {t('search.errorHint')}
                 </p>
               </div>
               <Button
@@ -207,7 +209,7 @@ function SearchPage() {
                 className="rounded-lg border-rose-200 text-rose-600 hover:bg-rose-50"
                 onClick={() => window.location.reload()}
               >
-                Try Again
+                {t('search.errorButton')}
               </Button>
             </div>
           ) : courses.length > 0 ? (
@@ -242,7 +244,7 @@ function SearchPage() {
                     disabled={(page || 1) <= 1}
                     className="h-10 px-4 rounded-lg font-semibold"
                   >
-                    Previous
+                    {t('common.previous')}
                   </Button>
                   
                   <div className="flex gap-1.5 hidden sm:flex">
@@ -267,7 +269,7 @@ function SearchPage() {
                     disabled={(page || 1) >= courseResults.meta.last_page}
                     className="h-10 px-4 rounded-lg font-semibold"
                   >
-                    Next
+                    {t('common.next')}
                   </Button>
                 </div>
               )}
@@ -275,10 +277,10 @@ function SearchPage() {
           ) : (
             <EmptyState
               icon={SearchIcon}
-              title="No courses found"
-              description="Try adjusting your filters, trying a different search term, or browsing categories."
+              title={t('search.noResults')}
+              description={t('search.noResultsHint')}
               variant="light"
-              action={{ label: 'Clear All Filters', onClick: clearFilters }}
+              action={{ label: t('search.resetFilters'), onClick: clearFilters }}
             />
           )}
         </div>

@@ -1,5 +1,6 @@
 import { Award, BarChart, ChevronRight, Layout, Users, Building2 } from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { APP_CONFIG } from '@/config/app'
@@ -10,6 +11,7 @@ import { SectionHeader } from '@/components/public/ui/section-header'
  * Rule: Inner card provides strong visual weight before the footer.
  */
 export function CTASection() {
+  const { t } = useTranslation()
   return (
     <section className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -20,9 +22,9 @@ export function CTASection() {
           <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
             <div className="space-y-8 text-white">
               <SectionHeader
-                badge={{ icon: Building2, label: 'For Teams & Business' }}
-                title="Train your team and track their progress"
-                description="Give your team access to professional courses, easy progress reports, and simple team management tools."
+                badge={{ icon: Building2, label: t('publicHome.cta.badge') }}
+                title={t('publicHome.cta.title')}
+                description={t('publicHome.cta.description')}
                 theme="dark"
               />
               <div className="flex flex-col sm:flex-row gap-4">
@@ -33,7 +35,7 @@ export function CTASection() {
                   className="w-full sm:w-auto"
                 >
                   <a href={`mailto:${APP_CONFIG.contact.email}`}>
-                    Talk to Us
+                    {t('publicHome.cta.primaryButton', 'Talk to Us')}
                     <ChevronRight className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
@@ -44,29 +46,29 @@ export function CTASection() {
                 {[
                   {
                     icon: BarChart,
-                    label: 'Analyze',
-                    sub: 'Performance Data',
+                    label: t('publicHome.cta.featureAnalyze', 'Analyze'),
+                    sub: t('publicHome.cta.featureAnalyzeSub', 'Performance Data'),
                     color: 'text-[#70C942]',
                     bg: 'bg-[#70C942]/10',
                   },
                   {
                     icon: Users,
-                    label: 'Manage',
-                    sub: 'Team Access',
+                    label: t('publicHome.cta.featureManage', 'Manage'),
+                    sub: t('publicHome.cta.featureManageSub', 'Team Access'),
                     color: 'text-white',
                     bg: 'bg-white/10',
                   },
                   {
                     icon: Layout,
-                    label: 'Curate',
-                    sub: 'Custom Paths',
+                    label: t('publicHome.cta.featureCurate', 'Curate'),
+                    sub: t('publicHome.cta.featureCurateSub', 'Custom Paths'),
                     color: 'text-emerald-400',
                     bg: 'bg-emerald-400/10',
                   },
                   {
                     icon: Award,
-                    label: 'Verify',
-                    sub: 'Certifications',
+                    label: t('publicHome.cta.featureVerify', 'Verify'),
+                    sub: t('publicHome.cta.featureVerifySub', 'Certifications'),
                     color: 'text-rose-400',
                     bg: 'bg-rose-400/10',
                   },

@@ -1,16 +1,18 @@
 import * as React from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Background Role: `bg-[#F0F7FF]` (Ice Blue)
  * Rule: Alternates between the dark Hero and the white Categories section.
  */
 export function TrustedBy() {
+  const { t } = useTranslation()
   return (
     <section className="border-b bg-[#F0F7FF] py-10 overflow-hidden">
       <div className="container mx-auto px-4 relative">
         <p className="text-center text-sm font-bold uppercase tracking-widest text-muted-foreground mb-8">
-          Used by learners from leading companies
+          {t('publicHome.trustedBy')}
         </p>
         {/* Fading Edges */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#F0F7FF] z-10 mt-12"></div>

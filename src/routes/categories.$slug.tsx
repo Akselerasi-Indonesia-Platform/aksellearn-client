@@ -8,6 +8,7 @@ import { AlertCircle, Search as SearchIcon } from 'lucide-react'
 import * as React from 'react'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { CourseCard, CourseCardSkeleton } from '@/components/public/ui/course-card'
@@ -44,6 +45,7 @@ export const Route = createFileRoute('/categories/$slug')({
 })
 
 function CategoryDetailsPage() {
+  const { t } = useTranslation()
   const { slug } = Route.useParams()
   const { q, sort_by, difficulty, price_min, price_max, page } = useSearch({ from: '/categories/$slug' })
   const navigate = useNavigate()
@@ -139,13 +141,13 @@ function CategoryDetailsPage() {
                 <BreadcrumbList className="text-white/70">
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                      <Link to="/" className="hover:text-white">Home</Link>
+                      <Link to="/" className="hover:text-white">{t('courseDetail.breadcrumb.home')}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="text-white/40" />
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                      <Link to="/search" className="hover:text-white">Categories</Link>
+                      <Link to="/search" className="hover:text-white">{t('categoryDetail.breadcrumb.categories')}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="text-white/40" />
@@ -169,10 +171,10 @@ function CategoryDetailsPage() {
               
               <p className="text-white/80 font-medium max-w-2xl text-lg">
                 {categoryLoading 
-                  ? "Loading category..." 
+                  ? t('categoryDetail.loading')
                   : category?.description 
                     ? category.description 
-                    : `Explore our collection of ${category?.name || slug} courses.`}
+                    : t('categoryDetail.explore', { name: category?.name || slug })}
               </p>
 
               <CategoryStatsBar 
@@ -214,10 +216,10 @@ function CategoryDetailsPage() {
               <AlertCircle className="size-12 text-rose-500 mx-auto" />
               <div className="space-y-2">
                 <h3 className="text-xl font-bold text-slate-900">
-                  Something went wrong
+                  {t('categoryDetail.errorTitle')}
                 </h3>
                 <p className="text-slate-500 text-sm font-medium">
-                  We couldn't load the courses. Please try again.
+                  {t('categoryDetail.errorDesc')}
                 </p>
               </div>
               <Button
@@ -225,7 +227,7 @@ function CategoryDetailsPage() {
                 className="rounded-lg border-rose-200 text-rose-600 hover:bg-rose-50"
                 onClick={() => window.location.reload()}
               >
-                Try Again
+                {t('categoryDetail.tryAgain')}
               </Button>
             </div>
           ) : courses.length > 0 ? (
@@ -260,7 +262,7 @@ function CategoryDetailsPage() {
                     disabled={(page || 1) <= 1}
                     className="h-10 px-4 rounded-lg font-semibold"
                   >
-                    Previous
+                    {t('categoryDetail.prev')}
                   </Button>
                   
                   <div className="flex gap-1.5 hidden sm:flex">
@@ -285,7 +287,7 @@ function CategoryDetailsPage() {
                     disabled={(page || 1) >= courseResults.meta.last_page}
                     className="h-10 px-4 rounded-lg font-semibold"
                   >
-                    Next
+                    {t('categoryDetail.next')}
                   </Button>
                 </div>
               )}
@@ -293,10 +295,10 @@ function CategoryDetailsPage() {
           ) : (
             <EmptyState
               icon={SearchIcon}
-              title={`No courses found in ${category?.name || slug}`}
-              description="Try adjusting your filters or explore all categories."
+              title={t('categoryDetail.noCourses', { name: category?.name || slug })}
+              description={t('categoryDetail.noCoursesDesc')}
               variant="light"
-              action={{ label: 'Clear All Filters', onClick: clearFilters }}
+              action={{ label: t('categoryDetail.clearAll'), onClick: clearFilters }}
             />
           )}
         </div>

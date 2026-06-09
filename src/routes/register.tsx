@@ -20,6 +20,7 @@ import { authService } from '@/services/auth.service'
 import { usePlatformStore } from '@/hooks/use-platform'
 import { useAuthStore } from '@/hooks/use-auth'
 import { PublicLayout } from '@/components/public/layout/main-layout'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/register')({
   beforeLoad: () => {
@@ -55,6 +56,7 @@ const calculatePasswordStrength = (password: string) => {
 }
 
 function RegisterPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [serverError, setServerError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -152,15 +154,15 @@ function RegisterPage() {
                 </div>
               </div>
               <CardTitle className="text-2xl font-bold tracking-tight text-center">
-                Check Your Email
+                {t('auth.register.successTitle')}
               </CardTitle>
               <CardDescription className="text-center text-base">
-                We've sent a verification link to your email address. Please click the link to verify your account before logging in.
+                {t('auth.register.successDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full font-semibold" variant="outline">
-                <Link to="/login">Return to Login</Link>
+                <Link to="/login">{t('auth.register.returnLogin')}</Link>
               </Button>
             </CardContent>
           </Card>
@@ -194,10 +196,10 @@ function RegisterPage() {
               )}
             </div>
             <CardTitle className="text-2xl font-bold tracking-tight text-center">
-              Create an account
+              {t('auth.register.title', { name: profile?.name || 'Platform' })}
             </CardTitle>
             <CardDescription className="text-center">
-              Join {profile?.name || 'Platform'} and start learning today
+              {t('auth.register.subtitle', { name: profile?.name || 'Platform' })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -212,7 +214,7 @@ function RegisterPage() {
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t('auth.register.name')}</Label>
                 <Input
                   autoComplete="name"
                   id="name"
@@ -226,7 +228,7 @@ function RegisterPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.register.email')}</Label>
                 <Input
                   autoComplete="email"
                   id="email"
@@ -241,7 +243,7 @@ function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t('auth.register.password')}</Label>
                 </div>
                 <div className="relative">
                   <Input
@@ -264,7 +266,7 @@ function RegisterPage() {
                       <Eye className="h-4 w-4" />
                     )}
                     <span className="sr-only">
-                      {showPassword ? 'Hide password' : 'Show password'}
+                      {showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
                     </span>
                   </Button>
                 </div>
@@ -282,7 +284,7 @@ function RegisterPage() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password_confirmation">Confirm Password</Label>
+                <Label htmlFor="password_confirmation">{t('auth.register.passwordConfirm')}</Label>
                 <div className="relative">
                   <Input
                     autoComplete="new-password"
@@ -304,7 +306,7 @@ function RegisterPage() {
                       <Eye className="h-4 w-4" />
                     )}
                     <span className="sr-only">
-                      {showConfirmPassword ? 'Hide password' : 'Show password'}
+                      {showConfirmPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
                     </span>
                   </Button>
                 </div>
@@ -317,17 +319,17 @@ function RegisterPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
+                    {t('auth.register.signingUp')}
                   </>
                 ) : (
-                  'Sign up'
+                  t('auth.register.signUp')
                 )}
               </Button>
 
               <div className="mt-4 text-center text-sm text-slate-500">
-                Already have an account?{' '}
+                {t('auth.register.hasAccount')}{' '}
                 <Link to="/login" className="font-semibold text-primary hover:underline">
-                  Sign in
+                  {t('auth.register.signIn')}
                 </Link>
               </div>
             </form>

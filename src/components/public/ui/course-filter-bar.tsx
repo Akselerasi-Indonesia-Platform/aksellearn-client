@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Filter, X, Search, Check, ChevronsUpDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   Popover,
   PopoverContent,
@@ -128,6 +129,7 @@ export function CourseFilterBar({
   onClear,
   className,
 }: CategoryFilterBarProps) {
+  const { t } = useTranslation()
   const isFiltersActive = !!difficulty || !!priceMin || !!priceMax || !!searchQuery || !!categorySlug
 
   const [localSearch, setLocalSearch] = React.useState(searchQuery || '')
@@ -155,27 +157,27 @@ export function CourseFilterBar({
   }
 
   const categoryOptions = [
-    { label: 'All Categories', value: 'all' },
+    { label: t('search.allCategories', 'All Categories'), value: 'all' },
     ...(categories?.map(c => ({ label: c.name, value: c.slug })) || [])
   ]
 
   const sortOptions = [
-    { label: 'Newest', value: 'newest' },
-    { label: 'Most Popular', value: 'popular' },
-    { label: 'Top Rated', value: 'top_rated' },
-    { label: 'Price: Low to High', value: 'price_asc' },
-    { label: 'Price: High to Low', value: 'price_desc' },
+    { label: t('search.newest', 'Newest'), value: 'newest' },
+    { label: t('search.popular', 'Most Popular'), value: 'popular' },
+    { label: t('search.topRated', 'Top Rated'), value: 'top_rated' },
+    { label: t('search.priceLow', 'Price: Low to High'), value: 'price_asc' },
+    { label: t('search.priceHigh', 'Price: High to Low'), value: 'price_desc' },
   ]
 
   const difficultyOptions = [
-    { label: 'All Levels', value: 'all' },
-    { label: 'Beginner', value: 'beginner' },
-    { label: 'Intermediate', value: 'intermediate' },
-    { label: 'Advanced', value: 'advanced' },
+    { label: t('search.allLevels', 'All Levels'), value: 'all' },
+    { label: t('search.beginner', 'Beginner'), value: 'beginner' },
+    { label: t('search.intermediate', 'Intermediate'), value: 'intermediate' },
+    { label: t('search.advanced', 'Advanced'), value: 'advanced' },
   ]
 
   const priceMinOptions = [
-    { label: 'Any Min', value: 'any' },
+    { label: t('search.anyMin', 'Any Min'), value: 'any' },
     { label: 'Rp 0', value: '0' },
     { label: 'Rp 50K', value: '50000' },
     { label: 'Rp 100K', value: '100000' },
@@ -185,7 +187,7 @@ export function CourseFilterBar({
   ]
 
   const priceMaxOptions = [
-    { label: 'Any Max', value: 'any' },
+    { label: t('search.anyMax', 'Any Max'), value: 'any' },
     { label: 'Rp 50K', value: '50000' },
     { label: 'Rp 100K', value: '100000' },
     { label: 'Rp 250K', value: '250000' },
@@ -200,7 +202,7 @@ export function CourseFilterBar({
       <div className="relative flex items-center">
         <Input 
           type="text"
-          placeholder="Search courses..."
+          placeholder={t('search.placeholder', 'Search courses...')}
           className="w-[180px] h-10 bg-white pr-10"
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
@@ -221,8 +223,8 @@ export function CourseFilterBar({
           options={categoryOptions}
           value={categorySlug || 'all'}
           onValueChange={(v) => onCategoryChange(v === 'all' ? undefined : v)}
-          placeholder="Category"
-          searchPlaceholder="Search category..."
+          placeholder={t('search.categoryFilter', 'Category')}
+          searchPlaceholder={t('search.placeholder', 'Search category...')}
           triggerClassName="w-[180px] h-10"
           contentClassName="w-[240px]"
         />
@@ -232,8 +234,8 @@ export function CourseFilterBar({
         options={sortOptions}
         value={sortBy || 'newest'}
         onValueChange={onSortChange}
-        placeholder="Sort By"
-        searchPlaceholder="Search options..."
+        placeholder={t('search.sortBy', 'Sort By')}
+        searchPlaceholder={t('search.placeholder', 'Search options...')}
         triggerClassName="w-[160px] h-10"
         contentClassName="w-[200px]"
       />
@@ -242,8 +244,8 @@ export function CourseFilterBar({
         options={difficultyOptions}
         value={difficulty || 'all'}
         onValueChange={(v) => onDifficultyChange(v === 'all' ? undefined : v)}
-        placeholder="Level"
-        searchPlaceholder="Search levels..."
+        placeholder={t('search.level', 'Level')}
+        searchPlaceholder={t('search.placeholder', 'Search levels...')}
         triggerClassName="w-[160px] h-10"
         contentClassName="w-[200px]"
       />
@@ -253,8 +255,8 @@ export function CourseFilterBar({
           options={priceMinOptions}
           value={localMin}
           onValueChange={handleMinChange}
-          placeholder="Min Rp"
-          searchPlaceholder="Search price..."
+          placeholder={t('search.priceMin', 'Min Rp')}
+          searchPlaceholder={t('search.placeholder', 'Search price...')}
           triggerClassName="w-[120px] h-10"
           contentClassName="w-[160px]"
         />
@@ -263,8 +265,8 @@ export function CourseFilterBar({
           options={priceMaxOptions}
           value={localMax}
           onValueChange={handleMaxChange}
-          placeholder="Max Rp"
-          searchPlaceholder="Search price..."
+          placeholder={t('search.priceMax', 'Max Rp')}
+          searchPlaceholder={t('search.placeholder', 'Search price...')}
           triggerClassName="w-[120px] h-10"
           contentClassName="w-[160px]"
         />
@@ -278,7 +280,7 @@ export function CourseFilterBar({
             className="text-slate-500 hover:text-rose-600 h-10"
           >
             <X className="size-4 mr-2" />
-            Clear
+            {t('search.clear', 'Clear')}
           </Button>
         )}
         <div className="text-sm font-semibold text-slate-500">
@@ -295,24 +297,24 @@ export function CourseFilterBar({
         <SheetTrigger asChild>
           <Button variant="outline" className="h-10 bg-white">
             <Filter className="size-4 mr-2" />
-            Filters {isFiltersActive && <span className="ml-1 flex h-2 w-2 rounded-full bg-primary"></span>}
+            {t('search.filters', 'Filters')} {isFiltersActive && <span className="ml-1 flex h-2 w-2 rounded-full bg-primary"></span>}
           </Button>
         </SheetTrigger>
         <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl sm:max-w-none w-full flex flex-col p-0 gap-0">
           <SheetHeader className="border-b p-4 shrink-0">
-            <SheetTitle className="text-left font-bold text-lg">Filters & Sort</SheetTitle>
+            <SheetTitle className="text-left font-bold text-lg">{t('search.filtersAndSort', 'Filters & Sort')}</SheetTitle>
           </SheetHeader>
           
           <div className="flex-1 p-4 space-y-8 overflow-y-auto no-scrollbar">
             {categories && categories.length > 0 && onCategoryChange && (
               <div className="space-y-3">
-                <label className="text-sm font-bold text-slate-900">Category</label>
+                <label className="text-sm font-bold text-slate-900">{t('search.categoryFilter', 'Category')}</label>
                 <FilterCombobox
                   options={categoryOptions}
                   value={categorySlug || 'all'}
                   onValueChange={(v) => onCategoryChange(v === 'all' ? undefined : v)}
-                  placeholder="Category"
-                  searchPlaceholder="Search category..."
+                  placeholder={t('search.categoryFilter', 'Category')}
+                  searchPlaceholder={t('search.placeholder', 'Search category...')}
                   triggerClassName="w-full h-12"
                   contentClassName="w-[calc(100vw-2rem)] sm:w-[380px]"
                 />
@@ -320,40 +322,40 @@ export function CourseFilterBar({
             )}
 
             <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-900">Sort By</label>
+              <label className="text-sm font-bold text-slate-900">{t('search.sortBy', 'Sort By')}</label>
               <FilterCombobox
                 options={sortOptions}
                 value={sortBy || 'newest'}
                 onValueChange={onSortChange}
-                placeholder="Sort By"
-                searchPlaceholder="Search options..."
+                placeholder={t('search.sortBy', 'Sort By')}
+                searchPlaceholder={t('search.placeholder', 'Search options...')}
                 triggerClassName="w-full h-12"
                 contentClassName="w-[calc(100vw-2rem)] sm:w-[380px]"
               />
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-900">Level</label>
+              <label className="text-sm font-bold text-slate-900">{t('search.level', 'Level')}</label>
               <FilterCombobox
                 options={difficultyOptions}
                 value={difficulty || 'all'}
                 onValueChange={(v) => onDifficultyChange(v === 'all' ? undefined : v)}
-                placeholder="Level"
-                searchPlaceholder="Search levels..."
+                placeholder={t('search.level', 'Level')}
+                searchPlaceholder={t('search.placeholder', 'Search levels...')}
                 triggerClassName="w-full h-12"
                 contentClassName="w-[calc(100vw-2rem)] sm:w-[380px]"
               />
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-900">Price Range</label>
+              <label className="text-sm font-bold text-slate-900">{t('search.priceFilter', 'Price Range')}</label>
               <div className="flex items-center gap-3">
                 <FilterCombobox
                   options={priceMinOptions}
                   value={localMin}
                   onValueChange={handleMinChange}
-                  placeholder="Min Rp"
-                  searchPlaceholder="Search price..."
+                  placeholder={t('search.priceMin', 'Min Rp')}
+                  searchPlaceholder={t('search.placeholder', 'Search price...')}
                   triggerClassName="w-full h-12 flex-1"
                   contentClassName="w-[200px]"
                 />
@@ -362,8 +364,8 @@ export function CourseFilterBar({
                   options={priceMaxOptions}
                   value={localMax}
                   onValueChange={handleMaxChange}
-                  placeholder="Max Rp"
-                  searchPlaceholder="Search price..."
+                  placeholder={t('search.priceMax', 'Max Rp')}
+                  searchPlaceholder={t('search.placeholder', 'Search price...')}
                   triggerClassName="w-full h-12 flex-1"
                   contentClassName="w-[200px]"
                 />
@@ -378,11 +380,11 @@ export function CourseFilterBar({
               onClick={onClear}
               disabled={!isFiltersActive}
             >
-              Clear
+              {t('search.clear', 'Clear')}
             </Button>
             <SheetClose asChild>
               <Button className="flex-1 h-12">
-                Show Results
+                {t('search.showResults', 'Show Results')}
               </Button>
             </SheetClose>
           </SheetFooter>

@@ -25,6 +25,8 @@ import { useCart } from '@/hooks/use-cart'
 import { useUIStore } from '@/hooks/use-ui-store'
 import { usePlatformStore } from '@/hooks/use-platform'
 import { MiniCart } from '@/components/public/cart/mini-cart'
+import { PublicLanguageToggle } from './public-language-toggle'
+import { useTranslation } from 'react-i18next'
 
 export function PublicNavbar() {
   const [mounted, setMounted] = React.useState(false)
@@ -37,6 +39,7 @@ export function PublicNavbar() {
   const { data: categories } = useCourseCategories()
   const { cart } = useCart()
   const cartItemCount = cart?.total_items || 0
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     setMounted(true)
@@ -117,7 +120,7 @@ export function PublicNavbar() {
                 className="text-sm font-medium transition-colors text-white/80 hover:text-white hover:border-b-2 hover:border-white"
                 to="/become-an-instructor"
               >
-                Teach on Aksellearn
+                {t('publicHome.navbar.teachOn')}
               </Link>
             )}
             {isAuth && (
@@ -125,9 +128,11 @@ export function PublicNavbar() {
                 className="text-sm font-medium transition-colors text-white/80 hover:text-white hover:border-b-2 hover:border-white"
                 to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}
               >
-                {userIsAdmin ? 'Admin Panel' : 'My Learning'}
+                {userIsAdmin ? t('publicHome.navbar.adminPanel') : t('publicHome.navbar.myLearning')}
               </Link>
             )}
+
+            <PublicLanguageToggle />
 
             <div
               onClick={(e) => {
@@ -152,19 +157,20 @@ export function PublicNavbar() {
 
           {!isAuth ? (
             <div className="hidden sm:flex items-center gap-2">
+              <PublicLanguageToggle />
               <Button
                 asChild
                 variant="ghost"
                 className="text-white hover:bg-white/10 hover:text-white"
               >
-                <Link to="/login">Log in</Link>
+                <Link to="/login">{t('auth.signIn')}</Link>
               </Button>
               <Button
                 asChild
                 variant="cta"
                 className="rounded-xl"
               >
-                <Link to="/login">Mulai Belajar</Link>
+                <Link to="/login">{t('publicHome.navbar.startLearning')}</Link>
               </Button>
             </div>
           ) : (
@@ -210,7 +216,7 @@ export function PublicNavbar() {
                       <Link to="/student/profile">
                         <User className="h-4 w-4 text-slate-500" />
                         <span className="font-bold text-xs uppercase tracking-widest">
-                          My Profile
+                          {t('publicHome.navbar.myProfile')}
                         </span>
                       </Link>
                     </DropdownMenuItem>
@@ -221,7 +227,7 @@ export function PublicNavbar() {
                       <Link to="/student/settings">
                         <Settings2 className="h-4 w-4 text-slate-500" />
                         <span className="font-bold text-xs uppercase tracking-widest">
-                          Account Settings
+                          {t('publicHome.navbar.accountSettings')}
                         </span>
                       </Link>
                     </DropdownMenuItem>
@@ -234,7 +240,7 @@ export function PublicNavbar() {
                   <Link to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}>
                     <LayoutDashboard className="h-4 w-4 text-slate-500" />
                     <span className="font-bold text-xs uppercase tracking-widest">
-                      {userIsAdmin ? 'Admin Dashboard' : 'Learning Portal'}
+                      {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
                     </span>
                   </Link>
                 </DropdownMenuItem>
@@ -245,7 +251,7 @@ export function PublicNavbar() {
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="font-black text-xs uppercase tracking-widest">
-                    Logout Session
+                    {t('publicHome.navbar.logout')}
                   </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -295,7 +301,7 @@ export function PublicNavbar() {
                       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                       <Input
                         className="w-full bg-muted/50 pl-11 h-12 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all text-base"
-                        placeholder="Search courses..."
+                        placeholder={t('search.placeholder')}
                         type="search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -330,7 +336,7 @@ export function PublicNavbar() {
                           variant="outline"
                         >
                           <Link to="/become-an-instructor">
-                            Teach on Aksellearn
+                            {t('publicHome.navbar.teachOn')}
                           </Link>
                         </Button>
                       )}
@@ -344,7 +350,7 @@ export function PublicNavbar() {
                                 variant="outline"
                               >
                                 <Link to="/student/profile">
-                                  <User className="h-4 w-4" /> My Profile
+                                  <User className="h-4 w-4" /> {t('publicHome.navbar.myProfile')}
                                 </Link>
                               </Button>
                               <Button
@@ -353,7 +359,7 @@ export function PublicNavbar() {
                                 variant="outline"
                               >
                                 <Link to="/student/settings">
-                                  <Settings2 className="h-4 w-4" /> Account Settings
+                                  <Settings2 className="h-4 w-4" /> {t('publicHome.navbar.accountSettings')}
                                 </Link>
                               </Button>
                             </>
@@ -364,7 +370,7 @@ export function PublicNavbar() {
                             variant="outline"
                           >
                             <Link to="/cart">
-                              <ShoppingCart className="h-4 w-4" /> My Cart
+                              <ShoppingCart className="h-4 w-4" /> {t('publicHome.navbar.myCart')}
                               {cartItemCount > 0 && (
                                 <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
                                   {cartItemCount}
@@ -379,23 +385,23 @@ export function PublicNavbar() {
                           >
                             <Link to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}>
                               <LayoutDashboard className="h-4 w-4" />{' '}
-                              {userIsAdmin ? 'Admin Panel' : 'Learning Portal'}
+                              {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
                             </Link>
                           </Button>
                           <Button
                             onClick={handleLogout}
                             className="w-full justify-start gap-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 border-none h-12 text-base"
                           >
-                            <LogOut className="h-4 w-4" /> Logout Session
+                            <LogOut className="h-4 w-4" /> {t('publicHome.navbar.logout')}
                           </Button>
                         </>
                       ) : (
                         <>
                           <Button asChild className="w-full h-12 text-base rounded-xl" variant="outline">
-                            <Link to="/login">Log in</Link>
+                            <Link to="/login">{t('auth.signIn')}</Link>
                           </Button>
                           <Button asChild className="w-full h-12 text-base rounded-xl">
-                            <Link to="/login">Sign up</Link>
+                            <Link to="/register">{t('auth.signUp')}</Link>
                           </Button>
                         </>
                       )}

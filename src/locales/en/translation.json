@@ -303,9 +303,122 @@
       }
     }
   },
+  "auth": {
+    "login": {
+      "title": "Sign in to {{name}}",
+      "subtitle": "Welcome back, please sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "signingIn": "Signing in...",
+      "signIn": "Sign in",
+      "orContinueWith": "Or continue with",
+      "loginWithGoogle": "Login with Google",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Join {{name}} and start learning today",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "passwordConfirm": "Confirm Password",
+      "signingUp": "Creating account...",
+      "signUp": "Sign up",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "successTitle": "Check Your Email",
+      "successDesc": "We've sent a verification link to your email address. Please click the link to verify your account before logging in.",
+      "returnLogin": "Return to Login"
+    }
+  },
+  "categoryDetail": {
+    "breadcrumb": {
+      "categories": "Categories"
+    },
+    "loading": "Loading category...",
+    "explore": "Explore our collection of {{name}} courses.",
+    "errorTitle": "Something went wrong",
+    "errorDesc": "We couldn't load the courses. Please try again.",
+    "tryAgain": "Try Again",
+    "prev": "Previous",
+    "next": "Next",
+    "noCourses": "No courses found in {{name}}",
+    "noCoursesDesc": "Try adjusting your filters or explore all categories.",
+    "clearAll": "Clear All Filters"
+  },
+  "courseDetail": {
+    "breadcrumb": {
+      "home": "Home",
+      "courses": "Courses"
+    },
+    "stats": {
+      "reviews": "reviews",
+      "students": "students",
+      "lectures": "lectures",
+      "totalLength": "total length",
+      "languages": "English & Indonesian",
+      "modules": "Modules",
+      "includesQuiz": "Includes Quiz",
+      "certificate": "Certificate of Completion",
+      "createdBy": "Created by",
+      "lastUpdated": "Last updated"
+    },
+    "access": {
+      "daysAccess": "{{days}} Days Access",
+      "fullAccess": "Full Access",
+      "lifetime": "Lifetime Access",
+      "accessUntil": "Access until {{date}}",
+      "youOwnThis": "You own this (Lifetime)",
+      "corporateOnly": "Corporate Access Only",
+      "corporateHint": "This curriculum is reserved for enterprise partners.",
+      "corporateLink": "Learn how to enroll your team."
+    },
+    "admin": {
+      "adminAccess": "Admin Access",
+      "warning": "Admins cannot enroll in courses or use the checkout system. Please switch to a student account to test the purchase flow."
+    },
+    "actions": {
+      "enrollFree": "Enroll for Free",
+      "buyNow": "Buy Now",
+      "addToCart": "Add to Cart",
+      "addedToCart": "Added to Cart",
+      "goToClassroom": "Go to Classroom",
+      "extendAccess": "Extend Access",
+      "applyCoupon": "Apply Coupon",
+      "addToWishlist": "Add to Wishlist",
+      "removeFromWishlist": "Remove from wishlist"
+    },
+    "content": {
+      "courseContent": "Course content",
+      "sections": "{{count}} sections",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all",
+      "lessons": "{{count}} lessons",
+      "preview": "Preview"
+    },
+    "instructor": {
+      "aboutInstructor": "About the Instructor",
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "error": {
+      "unavailable": "Course Unavailable",
+      "archived": "This curriculum is currently not broadcasted or has been archived.",
+      "backToHome": "Back to Home"
+    }
+  },
   "search": {
     "title": "Find Your Course",
     "badge": "Course Catalog",
+    "resultsFor": "Results for",
+    "explore": "Explore",
+    "masterThe": "Master the",
+    "bestSkills": "Best Skills",
+    "coursesAvailable": "{{total}} courses available.",
+    "errorHint": "We couldn't load the courses. Please try again.",
     "placeholder": "Search for a course...",
     "resultsCount": "Showing {{count}} course(s)",
     "categoryFilter": "Filter by Category",
@@ -321,6 +434,17 @@
     "topRated": "Top Rated",
     "priceLow": "Price: Low to High",
     "priceHigh": "Price: High to Low",
+    "allLevels": "All Levels",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "anyMin": "Any Min",
+    "anyMax": "Any Max",
+    "clear": "Clear",
+    "showResults": "Show Results",
+    "filtersAndSort": "Filters & Sort",
+    "filters": "Filters",
+    "level": "Level",
     "loading": "Searching courses...",
     "noResults": "No courses match your search.",
     "noResultsHint": "Try different keywords or clear your filters.",
@@ -328,6 +452,42 @@
     "errorButton": "Try Again"
   },
   "publicHome": {
+    "navbar": {
+      "teachOn": "Teach on Aksellearn",
+      "adminPanel": "Admin Panel",
+      "myLearning": "My Learning",
+      "startLearning": "Start Learning",
+      "myProfile": "My Profile",
+      "accountSettings": "Account Settings",
+      "myCart": "My Cart",
+      "adminDashboard": "Admin Dashboard",
+      "learningPortal": "Learning Portal",
+      "logout": "Logout Session"
+    },
+    "footer": {
+      "discovery": "Discovery",
+      "courses": "Courses",
+      "poweredBy": "Powered by"
+    },
+    "popularCourses": {
+      "title": "Jumpstart your",
+      "titleAccent": "learning",
+      "description": "Hand-picked professional certifications and courses designed to accelerate your technical and business expertise.",
+      "badge": "Popular Collection"
+    },
+    "latestCourses": {
+      "title": "Fresh",
+      "titleAccent": "new arrivals",
+      "description": "Be the first to learn the latest skills with our newest course additions.",
+      "badge": "Latest",
+      "empty": "No new courses at the moment."
+    },
+    "instructorPromo": {
+      "badge": "Join our community",
+      "title": "Share your craft. Teach on Aksellearn.",
+      "description": "We accept expert curriculum developers who value visual discipline and educational clarity. Inspire millions of technologists across the globe.",
+      "button": "Apply as Instructor"
+    },
     "hero": {
       "badge": "Trusted Learning Platform",
       "title": "Learn skills that",

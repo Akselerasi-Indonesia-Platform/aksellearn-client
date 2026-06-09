@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Play, Search } from 'lucide-react'
 import * as React from 'react'
 import { useNavigate, Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import type { PlatformStats } from '@/services/discovery/course.service'
 
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ interface HeroProps {
  * Rule: Hero sections should always use the brand gradient background.
  */
 export function Hero({ stats }: HeroProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = React.useState('')
 
@@ -45,19 +47,19 @@ export function Hero({ stats }: HeroProps) {
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-semibold text-slate-300 backdrop-blur-xl">
               <span className="flex h-2 w-2 rounded-full bg-primary"></span>
               <span>
-                Trusted Learning Platform
+                {t('publicHome.hero.badge')}
               </span>
             </div>
 
             <div className="space-y-6">
               <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold tracking-tight text-white leading-[1.1]">
-                Learn skills that <br className="hidden sm:block" />
+                {t('publicHome.hero.title')} <br className="hidden sm:block" />
                 <span className="text-[#70C942] italic">
-                  open new doors.
+                  {t('publicHome.hero.titleAccent')}
                 </span>
               </h1>
               <p className="max-w-[540px] text-lg leading-relaxed text-white/80 md:text-xl font-medium">
-                Grow your career with expert-led courses and professional certifications. Join thousands of learners today.
+                {t('publicHome.hero.description')}
               </p>
             </div>
 
@@ -68,7 +70,7 @@ export function Hero({ stats }: HeroProps) {
                 size="xl"
                 className="w-full sm:w-auto"
               >
-                <Link to="/search">Start for Free</Link>
+                <Link to="/search">{t('publicHome.hero.ctaPrimary')}</Link>
               </Button>
               <Button
                 asChild
@@ -76,26 +78,26 @@ export function Hero({ stats }: HeroProps) {
                 size="xl"
                 className="w-full sm:w-auto"
               >
-                <Link to="/search">Browse Courses</Link>
+                <Link to="/search">{t('publicHome.hero.ctaSecondary')}</Link>
               </Button>
             </div>
 
             <div className="flex flex-wrap items-center gap-4 pt-8">
               {[
                 {
-                  label: 'Learners',
+                  label: t('publicHome.hero.statLearners'),
                   value: stats?.total_students !== undefined
                     ? stats.total_students >= 1000 ? `${(stats.total_students / 1000).toFixed(1)}k+` : `${stats.total_students}`
                     : '0',
                 },
                 {
-                  label: 'Certifications',
+                  label: t('publicHome.hero.statCourses'),
                   value: stats?.total_courses !== undefined
                     ? `${stats.total_courses}+`
                     : '0+',
                 },
                 {
-                  label: 'Hours Delivered',
+                  label: t('publicHome.hero.statHours'),
                   value: stats?.total_hours_watched !== undefined
                     ? stats.total_hours_watched >= 1000 ? `${(stats.total_hours_watched / 1000).toFixed(0)}k+` : `${stats.total_hours_watched}`
                     : '0',

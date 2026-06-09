@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import * as React from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { CTASection } from '@/components/public/sections/cta-section'
 import { FeaturedCourses } from '@/components/public/sections/featured-courses'
@@ -14,6 +15,7 @@ import { homepageService } from '@/services/discovery/homepage.service'
 export const Route = createFileRoute('/')({ component: HomePage })
 
 function HomePage() {
+  const { t } = useTranslation()
   const { data: homepageData, isLoading: isLoadingHomepage } = useQuery({
     queryKey: ['public', 'homepage'],
     queryFn: () => homepageService.getHomepageData(),
@@ -38,10 +40,10 @@ function HomePage() {
           courses={popularCourses}
           isLoading={isLoadingHomepage}
           categories={[]}
-          title="Jumpstart your"
-          titleAccent="learning"
-          description="Hand-picked professional certifications and courses designed to accelerate your technical and business expertise."
-          badgeLabel="Popular Collection"
+          title={t('publicHome.popularCourses.title')}
+          titleAccent={t('publicHome.popularCourses.titleAccent')}
+          description={t('publicHome.popularCourses.description')}
+          badgeLabel={t('publicHome.popularCourses.badge')}
           viewAllSort="popular"
         />
       )}
@@ -51,12 +53,12 @@ function HomePage() {
         courses={latestCourses}
         isLoading={isLoadingHomepage}
         categories={[]} 
-        title="Fresh"
-        titleAccent="new arrivals"
-        description="Be the first to learn the latest skills with our newest course additions."
-        badgeLabel="Latest"
+        title={t('publicHome.latestCourses.title')}
+        titleAccent={t('publicHome.latestCourses.titleAccent')}
+        description={t('publicHome.latestCourses.description')}
+        badgeLabel={t('publicHome.latestCourses.badge')}
         viewAllSort="latest"
-        emptyStateMessage="No new courses at the moment."
+        emptyStateMessage={t('publicHome.latestCourses.empty')}
       />
 
       <InstructorPromo />
