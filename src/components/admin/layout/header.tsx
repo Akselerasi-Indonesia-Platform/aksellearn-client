@@ -68,8 +68,8 @@ export function AdminHeader() {
           </Breadcrumb>
         </div>
         <div className="flex items-center gap-3">
-          <LanguageToggle />
           <NotificationBell />
+          <LanguageToggle />
         </div>
       </div>
     </header>

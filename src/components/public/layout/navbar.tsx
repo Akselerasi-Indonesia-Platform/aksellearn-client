@@ -132,8 +132,6 @@ export function PublicNavbar() {
               </Link>
             )}
 
-            <PublicLanguageToggle />
-
             <div
               onClick={(e) => {
                 e.preventDefault()
@@ -157,7 +155,6 @@ export function PublicNavbar() {
 
           {!isAuth ? (
             <div className="hidden sm:flex items-center gap-2">
-              <PublicLanguageToggle />
               <Button
                 asChild
                 variant="ghost"
@@ -411,6 +408,8 @@ export function PublicNavbar() {
               </SheetContent>
             </Sheet>
           </div>
+
+          <PublicLanguageToggle />
         </div>
       </div>
       <MiniCart />

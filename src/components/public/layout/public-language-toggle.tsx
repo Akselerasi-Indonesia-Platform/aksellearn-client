@@ -1,4 +1,4 @@
-import { Languages } from 'lucide-react'
+import { Globe } from 'lucide-react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -31,7 +31,7 @@ export function PublicLanguageToggle() {
           className="relative h-10 w-10 rounded-full p-0 ring-2 ring-primary/10 hover:ring-primary/30 transition-all text-white hover:bg-white/10 hover:text-white"
           aria-label="Toggle language"
         >
-          <Languages className="h-5 w-5" />
+          <Globe className="h-5 w-5" />
           <span className="sr-only">Toggle language</span>
         </Button>
       </DropdownMenuTrigger>
