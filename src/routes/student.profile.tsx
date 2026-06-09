@@ -106,7 +106,7 @@ function ProfileHeader({ user }: { user: any }) {
   )
 }
 
-function ProfessionalSummary({ bio }: { bio?: string }) {
+function ProfessionalSummary({ bio }: { bio?: string | null }) {
   return (
     <section className="space-y-4">
       <h4 className="text-[10px] font-semibold text-[#056FAE]/60 uppercase tracking-[0.2em] pl-1">

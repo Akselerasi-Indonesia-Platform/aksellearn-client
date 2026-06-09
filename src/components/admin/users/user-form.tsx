@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { FormInput, FormSelect } from '@/components/admin/shared/form'
+import { FormInput, FormSelect, FormTextarea } from '@/components/admin/shared/form'
 import { Input } from '@/components/ui/input'
 import type { User } from '@/types/user'
 
@@ -25,6 +25,7 @@ const formSchema = z
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Invalid email address'),
     roles: z.array(z.string()).optional(),
+    bio: z.string().optional(),
     status: z.enum(['active', 'inactive']),
     password: z.string().optional(),
     password_confirmation: z.string().optional(),
@@ -64,6 +65,7 @@ export function UserForm({ user, onSubmit, onCancel, onDelete }: UserFormProps) 
       ? {
           name: user.name,
           email: user.email,
+          bio: user.bio || '',
           roles: user.roles || (user.role ? [user.role] : []),
           status: user.status,
           password: '',
@@ -72,6 +74,7 @@ export function UserForm({ user, onSubmit, onCancel, onDelete }: UserFormProps) 
       : {
           name: '',
           email: '',
+          bio: '',
           roles: [],
           status: 'active',
           password: '',
@@ -149,6 +152,13 @@ export function UserForm({ user, onSubmit, onCancel, onDelete }: UserFormProps) 
           placeholder="john@example.com"
           type="email"
           required
+        />
+
+        <FormTextarea
+          control={form.control}
+          label="Bio (Instructor Profile)"
+          name="bio"
+          placeholder="Enter biography here..."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

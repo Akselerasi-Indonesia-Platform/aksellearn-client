@@ -201,28 +201,32 @@ export function PublicNavbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="opacity-50" />
-                <DropdownMenuItem
-                  asChild
-                  className="rounded-xl px-3 py-2.5 cursor-pointer gap-2"
-                >
-                  <Link to="/student/profile">
-                    <User className="h-4 w-4 text-slate-500" />
-                    <span className="font-bold text-xs uppercase tracking-widest">
-                      My Profile
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="rounded-xl px-3 py-2.5 cursor-pointer gap-2"
-                >
-                  <Link to="/student/settings">
-                    <Settings2 className="h-4 w-4 text-slate-500" />
-                    <span className="font-bold text-xs uppercase tracking-widest">
-                      Account Settings
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
+                {!userIsAdmin && (
+                  <>
+                    <DropdownMenuItem
+                      asChild
+                      className="rounded-xl px-3 py-2.5 cursor-pointer gap-2"
+                    >
+                      <Link to="/student/profile">
+                        <User className="h-4 w-4 text-slate-500" />
+                        <span className="font-bold text-xs uppercase tracking-widest">
+                          My Profile
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      asChild
+                      className="rounded-xl px-3 py-2.5 cursor-pointer gap-2"
+                    >
+                      <Link to="/student/settings">
+                        <Settings2 className="h-4 w-4 text-slate-500" />
+                        <span className="font-bold text-xs uppercase tracking-widest">
+                          Account Settings
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 <DropdownMenuItem
                   asChild
                   className="rounded-xl px-3 py-2.5 cursor-pointer gap-2"
@@ -332,24 +336,28 @@ export function PublicNavbar() {
                       )}
                       {isAuth ? (
                         <>
-                          <Button
-                            asChild
-                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                            variant="outline"
-                          >
-                            <Link to="/student/profile">
-                              <User className="h-4 w-4" /> My Profile
-                            </Link>
-                          </Button>
-                          <Button
-                            asChild
-                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                            variant="outline"
-                          >
-                            <Link to="/student/settings">
-                              <Settings2 className="h-4 w-4" /> Account Settings
-                            </Link>
-                          </Button>
+                          {!userIsAdmin && (
+                            <>
+                              <Button
+                                asChild
+                                className="w-full justify-start gap-3 rounded-xl h-12 text-base"
+                                variant="outline"
+                              >
+                                <Link to="/student/profile">
+                                  <User className="h-4 w-4" /> My Profile
+                                </Link>
+                              </Button>
+                              <Button
+                                asChild
+                                className="w-full justify-start gap-3 rounded-xl h-12 text-base"
+                                variant="outline"
+                              >
+                                <Link to="/student/settings">
+                                  <Settings2 className="h-4 w-4" /> Account Settings
+                                </Link>
+                              </Button>
+                            </>
+                          )}
                           <Button
                             asChild
                             className="w-full justify-start gap-3 rounded-xl h-12 text-base"

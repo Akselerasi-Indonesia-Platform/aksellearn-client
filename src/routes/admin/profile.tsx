@@ -11,7 +11,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Shield, User as UserIcon, Mail, Lock, Camera } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
+import { Shield, User as UserIcon, Mail, Lock, Camera, Briefcase, FileText } from 'lucide-react'
 import { useAuthStore } from '@/hooks/use-auth'
 import { useState, useEffect, useRef } from 'react'
 import { authService } from '@/services/auth.service'
@@ -36,6 +37,8 @@ export function ProfilePage() {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [headline, setHeadline] = useState('')
+  const [bio, setBio] = useState('')
 
   // Initialize form with user data
   useEffect(() => {
@@ -43,6 +46,8 @@ export function ProfilePage() {
     if (user) {
       setName(user.name || '')
       setEmail(user.email || '')
+      setHeadline(user.profile?.headline || '')
+      setBio(user.profile?.bio || '')
     }
   }, [user])
 
@@ -50,13 +55,30 @@ export function ProfilePage() {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await authService.updateProfile({ name, email })
+      await authService.updateProfile({ 
+        name, 
+        email,
+        profile: {
+          ...user?.profile,
+          headline,
+          bio
+        }
+      })
       toast.success('Profile updated successfully')
 
       // Update global auth store
       if (user) {
         const token = localStorage.getItem('auth_token') || ''
-        setAuth({ ...user, name, email }, token)
+        setAuth({ 
+          ...user, 
+          name, 
+          email,
+          profile: {
+            ...user.profile,
+            headline,
+            bio
+          }
+        }, token)
       }
     } catch (error: any) {
       const message =
@@ -211,12 +233,12 @@ export function ProfilePage() {
                     Full Name
                   </Label>
                   <div className="relative group">
-                    <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10 pointer-events-none" />
                     <Input
                       id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background transition-all font-bold"
+                      className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all font-bold"
                       placeholder="e.g. John Doe"
                     />
                   </div>
@@ -229,14 +251,52 @@ export function ProfilePage() {
                     Email Address
                   </Label>
                   <div className="relative group">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10 pointer-events-none" />
                     <Input
                       id="email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background transition-all font-bold"
+                      className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all font-bold"
                       placeholder="e.g. john@aksellearn.dev"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="headline"
+                    className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground"
+                  >
+                    Headline / Job Title
+                  </Label>
+                  <div className="relative group">
+                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10 pointer-events-none" />
+                    <Input
+                      id="headline"
+                      value={headline}
+                      onChange={(e) => setHeadline(e.target.value)}
+                      className="pl-10 h-12 rounded-2xl bg-muted/20 border-border/50 focus:bg-background focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all font-bold"
+                      placeholder="e.g. Senior Instructor & Cloud Expert"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="bio"
+                    className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground"
+                  >
+                    Biography
+                  </Label>
+                  <div className="relative group">
+                    <FileText className="absolute left-3 top-4 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10 pointer-events-none" />
+                    <Textarea
+                      id="bio"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      className="pl-10 pt-3 min-h-[120px] rounded-2xl bg-muted/20 border-border/50 focus:bg-background focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all font-bold"
+                      placeholder="Tell us about your background, experience, and what you teach..."
                     />
                   </div>
                 </div>

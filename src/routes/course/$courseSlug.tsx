@@ -273,7 +273,7 @@ function CoursePublicDetails() {
     return enrollments.some((e: any) => e.uuid === course.uuid || e.id === course.uuid)
   }, [enrollments, course?.uuid, course?.is_enrolled])
 
-  const { addToCart, isAdding } = useCart()
+  const { addToCart, addToCartAsync, isAdding } = useCart()
 
   const handleAddToCart = () => {
     if (!authenticated) {
@@ -776,20 +776,52 @@ function CoursePublicDetails() {
                                 </Button>
                               )}
                               {!isFree && (
-                                <Button
-                                  onClick={handleAddToCart}
-                                  disabled={isAdding || isLoading || !course}
-                                  variant="outline"
-                                  size="xl"
-                                  className="w-full text-slate-800 hover:text-slate-900 text-lg uppercase tracking-widest gap-2 h-14"
-                                >
-                                  {isAdding || isLoading ? (
-                                    <Loader2 className="size-5 animate-spin" />
-                                  ) : (
-                                    <ShoppingBag className="size-5" />
-                                  )}
-                                  Add to Cart
-                                </Button>
+                                <>
+                                  <Button
+                                    onClick={() => {
+                                      if (!authenticated) {
+                                        navigate({
+                                          to: '/login',
+                                          search: { redirect: `/student/learn/${course?.uuid}` },
+                                        })
+                                        return
+                                      }
+                                      verifyAndProceed(async () => {
+                                        try {
+                                          await addToCartAsync({ id: course!.uuid as string, type: 'course', quantity: 1 })
+                                          navigate({ to: '/cart' })
+                                        } catch (e) {
+                                          // Error is handled by useCart toast
+                                        }
+                                      })
+                                    }}
+                                    disabled={isAdding || isLoading || !course}
+                                    variant="card-enroll"
+                                    size="xl"
+                                    className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
+                                  >
+                                    {isAdding || isLoading ? (
+                                      <Loader2 className="size-5 animate-spin" />
+                                    ) : (
+                                      <ShoppingBag className="size-5" />
+                                    )}
+                                    Checkout Now
+                                  </Button>
+                                  <Button
+                                    onClick={handleAddToCart}
+                                    disabled={isAdding || isLoading || !course}
+                                    variant="outline"
+                                    size="xl"
+                                    className="w-full text-slate-800 hover:text-slate-900 text-lg uppercase tracking-widest gap-2 h-14"
+                                  >
+                                    {isAdding || isLoading ? (
+                                      <Loader2 className="size-5 animate-spin" />
+                                    ) : (
+                                      <ShoppingBag className="size-5" />
+                                    )}
+                                    Add to Cart
+                                  </Button>
+                                </>
                               )}
                             </div>
                           )

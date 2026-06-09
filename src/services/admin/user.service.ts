@@ -13,6 +13,7 @@ interface RawApiUser {
   status?: string
   deleted_at?: string | null
   created_at?: string
+  bio?: string
 }
 
 function mapApiUserToUser(data: RawApiUser): User {
@@ -43,6 +44,7 @@ function mapApiUserToUser(data: RawApiUser): User {
     role: mainRole as User['role'],
     roles: mappedRoles,
     permissions: mappedPermissions,
+    bio: data.bio || '',
     status: (data.deleted_at ? 'inactive' : data.status || 'active') as
       | 'active'
       | 'inactive',

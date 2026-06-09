@@ -33,7 +33,7 @@ export function PublicFooter() {
       <div className="absolute inset-0 bg-slate-950/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 py-12 md:px-6 lg:py-16 relative z-10">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
           <div className="col-span-2 lg:col-span-2">
             <Link className="flex items-center space-x-2 mb-4 text-white drop-shadow-sm" to="/">
               <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-black/20 overflow-hidden">
@@ -135,18 +135,7 @@ export function PublicFooter() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Company</h3>
-            <ul className="space-y-2 text-sm">
-              {canApplyInstructor && (
-                <li>
-                  <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all font-semibold" to="/become-an-instructor">
-                    Teach on Aksellearn
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
+
         </div>
       </div>
       <div className="w-full bg-black/30 backdrop-blur-sm py-5 border-t border-white/10 relative z-10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">

@@ -52,7 +52,8 @@ export interface User {
   profile?: {
     display_name?: string
     username?: string
-    bio?: string
+    headline?: string | null
+    bio?: string | null
     avatar_url?: string
   }
   organizations?: {
