@@ -34,10 +34,10 @@ const categorySearchSchema = z.object({
   q: z.string().optional(),
   sort_by: z.string().optional(),
   difficulty: z.string().optional().catch(undefined),
-  price_min: z.number().optional(),
-  price_max: z.number().optional(),
-  rating: z.string().optional(),
-  page: z.number().optional().catch(1),
+  price_min: z.coerce.number().optional(),
+  price_max: z.coerce.number().optional(),
+  rating: z.coerce.number().optional(),
+  page: z.coerce.number().optional().catch(1),
 })
 
 export const Route = createFileRoute('/categories/$slug')({
@@ -113,7 +113,7 @@ function CategoryDetailsPage() {
     navigate({
       to: '/categories/$slug',
       params: { slug },
-      search: (prev) => ({ ...prev, rating: val, page: 1 }),
+      search: (prev) => ({ ...prev, rating: val ? parseFloat(val) : undefined, page: 1 }),
     })
   }
 

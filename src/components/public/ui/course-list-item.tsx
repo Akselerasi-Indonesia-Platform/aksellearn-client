@@ -71,6 +71,11 @@ export function CourseListItem({
       {/* Content */}
       <CardContent className="p-0 flex-1 flex flex-col sm:flex-row gap-4">
         <div className="flex-1 space-y-1.5">
+          {course.category?.name && (
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
+              {course.category.name}
+            </p>
+          )}
           <h3 className="font-bold text-lg text-slate-900 line-clamp-2 leading-tight transition-colors group-hover:text-primary tracking-tight">
             {course.title}
           </h3>

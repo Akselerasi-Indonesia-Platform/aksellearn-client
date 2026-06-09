@@ -33,10 +33,10 @@ const searchSchema = z.object({
   category: z.string().optional(),
   difficulty: z.string().optional().catch(undefined),
   sort_by: z.string().optional(),
-  price_min: z.number().optional(),
-  price_max: z.number().optional(),
-  rating: z.number().optional(),
-  page: z.number().optional().catch(1),
+  price_min: z.coerce.number().optional(),
+  price_max: z.coerce.number().optional(),
+  rating: z.coerce.number().optional(),
+  page: z.coerce.number().optional().catch(1),
 })
 
 export const Route = createFileRoute('/search')({
@@ -64,7 +64,6 @@ function SearchPage() {
     category: category,
     difficulty: difficulty,
     sort_by: sort_by,
-    price_min: price_min,
     price_min: price_min,
     price_max: price_max,
     rating: rating,
@@ -145,8 +144,6 @@ function SearchPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
               {q ? (
                 <>{t('search.resultsFor')} "{q}"</>
-              ) : category ? (
-                <>{selectedCategory?.name || category}</>
               ) : (
                 <>{t('search.masterThe')} {t('search.bestSkills')}</>
               )}

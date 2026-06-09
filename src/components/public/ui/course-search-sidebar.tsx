@@ -116,20 +116,28 @@ export function CourseSearchSidebar({
             <AccordionContent>
               <div className="space-y-3 pt-1 pb-3">
                 {categories.map((c) => {
+                  const selectedCats = categorySlug ? categorySlug.split(',') : []
+                  const isChecked = selectedCats.includes(c.slug)
                   return (
-                    <Link
-                      key={c.id} 
-                      to="/categories/$slug" 
-                      params={{ slug: c.slug }}
-                      className="flex items-center space-x-3 group"
-                    >
-                      <div className="size-4 border border-slate-300 rounded-[4px] flex items-center justify-center group-hover:border-primary transition-colors">
-                        {categorySlug === c.slug && <div className="size-2 bg-primary rounded-[1px]" />}
-                      </div>
-                      <span className="text-sm text-slate-700 cursor-pointer font-normal group-hover:text-primary transition-colors">
+                    <div key={c.id} className="flex items-center space-x-3">
+                      <Checkbox
+                        id={`cat-${c.slug}`}
+                        checked={isChecked}
+                        onCheckedChange={(checked) => {
+                          let newSelected = [...selectedCats]
+                          if (checked) {
+                            newSelected.push(c.slug)
+                          } else {
+                            newSelected = newSelected.filter(v => v !== c.slug)
+                          }
+                          onCategoryChange?.(newSelected.length > 0 ? newSelected.join(',') : undefined)
+                        }}
+                        className="rounded-[4px]"
+                      />
+                      <Label htmlFor={`cat-${c.slug}`} className="text-sm text-slate-700 cursor-pointer font-normal">
                         {c.name}
-                      </span>
-                    </Link>
+                      </Label>
+                    </div>
                   )
                 })}
               </div>
@@ -183,7 +191,7 @@ export function CourseSearchSidebar({
             </AccordionTrigger>
             <AccordionContent>
               <RadioGroup
-                value={rating || 'all'}
+                value={rating ? Number(rating).toFixed(1) : 'all'}
                 onValueChange={(v) => onRatingChange(v === 'all' ? undefined : v)}
                 className="space-y-3 pt-1 pb-3"
               >

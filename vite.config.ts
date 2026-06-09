@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        '/api': {
+        '^/api(?!-proxy)': {
           target,
           changeOrigin: true,
           secure: false,
