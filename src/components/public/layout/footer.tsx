@@ -148,13 +148,11 @@ export function PublicFooter() {
           <div>
             <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Jelajahi Aksellearn</h3>
             <ul className="space-y-2.5 text-sm">
-              {canApplyInstructor && (
-                <li>
-                  <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/become-an-instructor">
-                    Mengajar di Aksellearn
-                  </Link>
-                </li>
-              )}
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/become-an-instructor">
+                  Mengajar di Aksellearn
+                </Link>
+              </li>
               <li>
                 <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/search">
                   {t('publicHome.footer.courses')}

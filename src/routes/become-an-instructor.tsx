@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
 import { DollarSign, Globe, Users } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/become-an-instructor')({
   component: BecomeAnInstructorPage,
@@ -16,6 +17,11 @@ export const Route = createFileRoute('/become-an-instructor')({
 function BecomeAnInstructorPage() {
   const { isAuthenticated, user } = useAuthStore()
   const navigate = useNavigate()
+  const { i18n } = useTranslation()
+  const [isMounted, setIsMounted] = React.useState(false)
+  React.useEffect(() => setIsMounted(true), [])
+
+  const isID = !isMounted || !i18n.language.startsWith('en')
 
   const { data: statusData, isLoading } = useQuery({
     queryKey: ['instructor-status'],
@@ -45,7 +51,7 @@ function BecomeAnInstructorPage() {
     const baseClasses = `font-bold transition-all w-full md:w-auto shadow-md hover:shadow-xl ${className}`
 
     if (isLoading) {
-      return <Button disabled size={size} className={baseClasses}>Loading...</Button>
+      return <Button disabled size={size} className={baseClasses}>{isID ? 'Memuat...' : 'Loading...'}</Button>
     }
 
     if (isAuthenticated) {
@@ -53,9 +59,11 @@ function BecomeAnInstructorPage() {
         return (
           <div className="flex flex-col items-center gap-2">
             <Button disabled size={size} className={baseClasses} variant="secondary">
-              You are an Admin
+              {isID ? 'Anda adalah Admin' : 'You are an Admin'}
             </Button>
-            <p className="text-xs text-muted-foreground">Admins cannot apply.</p>
+            <p className="text-xs text-muted-foreground">
+              {isID ? 'Admin tidak dapat mendaftar.' : 'Admins cannot apply.'}
+            </p>
           </div>
         )
       }
@@ -63,7 +71,7 @@ function BecomeAnInstructorPage() {
       if (user?.roles?.includes('Instructor') || status === 'accepted') {
         return (
           <Button onClick={handleCtaClick} size={size} className={baseClasses}>
-            Go to Dashboard
+            {isID ? 'Buka Dashboard' : 'Go to Dashboard'}
           </Button>
         )
       }
@@ -72,10 +80,10 @@ function BecomeAnInstructorPage() {
         return (
           <div className="flex flex-col items-start gap-2">
             <Button disabled size={size} variant="secondary" className={`${baseClasses} opacity-80`}>
-              Application Submitted
+              {isID ? 'Pendaftaran Terkirim' : 'Application Submitted'}
             </Button>
             <Badge variant="outline" className="text-xs">
-              Status: {status === 'under_review' ? 'Under Review' : 'Pending'}
+              {isID ? 'Status' : 'Status'}: {status === 'under_review' ? (isID ? 'Sedang Ditinjau' : 'Under Review') : (isID ? 'Menunggu' : 'Pending')}
             </Badge>
           </div>
         )
@@ -84,7 +92,7 @@ function BecomeAnInstructorPage() {
 
     return (
       <Button onClick={handleCtaClick} size={size} className={baseClasses}>
-        Get started
+        {isID ? 'Mulai Sekarang' : 'Get started'}
       </Button>
     )
   }
@@ -98,10 +106,12 @@ function BecomeAnInstructorPage() {
           <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
             <div className="flex-1 space-y-6 md:space-y-8 text-center lg:text-left z-10">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-slate-900 leading-[1.1]">
-                Come teach<br />with us
+                {isID ? <>Mengajar bersama<br />kami</> : <>Come teach<br />with us</>}
               </h1>
               <p className="text-lg md:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Become an instructor and change lives — including your own.
+                {isID
+                  ? 'Jadilah instruktur dan ubah kehidupan orang lain — termasuk kehidupan Anda sendiri.'
+                  : 'Become an instructor and change lives — including your own.'}
               </p>
               <div className="pt-4 flex justify-center lg:justify-start">
                 {renderSmartCTA('xl')}
@@ -111,7 +121,7 @@ function BecomeAnInstructorPage() {
               <div className="aspect-[4/3] md:aspect-video lg:aspect-[4/3] relative rounded-2xl overflow-hidden shadow-2xl group">
                 <img 
                   src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/ko0CZTqiPwxKd3HNyLOQh6voJQDAlnIXxsVmRimh.jpg" 
-                  alt="Instructor teaching" 
+                  alt={isID ? 'Instruktur mengajar' : 'Instructor teaching'}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -124,34 +134,46 @@ function BecomeAnInstructorPage() {
         <section className="py-20 md:py-24 px-4 bg-slate-50 border-y border-slate-100">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-16 text-slate-900">
-              So many reasons to start
+              {isID ? 'Begitu banyak alasan untuk memulai' : 'So many reasons to start'}
             </h2>
             <div className="grid md:grid-cols-3 gap-12">
               <div className="flex flex-col items-center text-center space-y-5">
                 <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                   <Globe className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-xl text-slate-900">Teach your way</h3>
+                <h3 className="font-bold text-xl text-slate-900">
+                  {isID ? 'Ajar dengan cara Anda' : 'Teach your way'}
+                </h3>
                 <p className="text-slate-600 leading-relaxed text-lg">
-                  Publish the course you want, in the way you want, and always have control of your own content.
+                  {isID
+                    ? 'Publikasikan kursus yang Anda inginkan, dengan cara Anda sendiri, dan selalu kendalikan konten Anda.'
+                    : 'Publish the course you want, in the way you want, and always have control of your own content.'}
                 </p>
               </div>
               <div className="flex flex-col items-center text-center space-y-5">
                 <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                   <Users className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-xl text-slate-900">Inspire learners</h3>
+                <h3 className="font-bold text-xl text-slate-900">
+                  {isID ? 'Inspirasi para pelajar' : 'Inspire learners'}
+                </h3>
                 <p className="text-slate-600 leading-relaxed text-lg">
-                  Teach what you know and help learners explore their interests, gain new skills, and advance their careers.
+                  {isID
+                    ? 'Bagikan pengetahuan Anda dan bantu pelajar menjelajahi minat mereka, mendapatkan keterampilan baru, dan memajukan karier mereka.'
+                    : 'Teach what you know and help learners explore their interests, gain new skills, and advance their careers.'}
                 </p>
               </div>
               <div className="flex flex-col items-center text-center space-y-5">
                 <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                   <DollarSign className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-xl text-slate-900">Get rewarded</h3>
+                <h3 className="font-bold text-xl text-slate-900">
+                  {isID ? 'Dapatkan imbalan' : 'Get rewarded'}
+                </h3>
                 <p className="text-slate-600 leading-relaxed text-lg">
-                  Expand your professional network, build your expertise, and earn money on each paid enrollment.
+                  {isID
+                    ? 'Perluas jaringan profesional Anda, tingkatkan keahlian, dan hasilkan uang dari setiap pendaftaran berbayar.'
+                    : 'Expand your professional network, build your expertise, and earn money on each paid enrollment.'}
                 </p>
               </div>
             </div>
@@ -161,23 +183,33 @@ function BecomeAnInstructorPage() {
         {/* 3. Impact & Stats Section */}
         <section className="py-20 bg-primary text-primary-foreground px-4 text-center">
           <div className="max-w-7xl mx-auto space-y-12">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">Discover your potential</h2>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+              {isID ? 'Temukan potensi Anda' : 'Discover your potential'}
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               <div className="space-y-2">
                 <div className="text-4xl md:text-5xl font-black">73M</div>
-                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Students</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">
+                  {isID ? 'Pelajar' : 'Students'}
+                </div>
               </div>
               <div className="space-y-2">
                 <div className="text-4xl md:text-5xl font-black">75+</div>
-                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Languages</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">
+                  {isID ? 'Bahasa' : 'Languages'}
+                </div>
               </div>
               <div className="space-y-2">
                 <div className="text-4xl md:text-5xl font-black">830M</div>
-                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Enrollments</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">
+                  {isID ? 'Pendaftaran' : 'Enrollments'}
+                </div>
               </div>
               <div className="space-y-2">
                 <div className="text-4xl md:text-5xl font-black">15K+</div>
-                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Enterprise customers</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">
+                  {isID ? 'Pelanggan Bisnis' : 'Enterprise customers'}
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +218,7 @@ function BecomeAnInstructorPage() {
         {/* 4. How to begin (Tabs) */}
         <section className="py-24 px-4 bg-white max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-16 text-slate-900">
-            How to begin
+            {isID ? 'Cara memulai' : 'How to begin'}
           </h2>
           <Tabs defaultValue="plan" className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
             <div className="w-full lg:w-1/3">
@@ -195,19 +227,19 @@ function BecomeAnInstructorPage() {
                   value="plan" 
                   className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
                 >
-                  Plan your curriculum
+                  {isID ? 'Rencanakan kurikulum Anda' : 'Plan your curriculum'}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="record" 
                   className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
                 >
-                  Record your video
+                  {isID ? 'Rekam video Anda' : 'Record your video'}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="launch" 
                   className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
                 >
-                  Launch your course
+                  {isID ? 'Luncurkan kursus Anda' : 'Launch your course'}
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -217,18 +249,26 @@ function BecomeAnInstructorPage() {
                 <div className="flex flex-col md:flex-row gap-8 items-center">
                   <div className="flex-1 space-y-6">
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      You start with your passion and knowledge. Then choose a promising topic with the help of our Marketplace Insights tool.
+                      {isID
+                        ? 'Mulailah dengan passion dan pengetahuan Anda. Lalu pilih topik yang menjanjikan dengan bantuan alat Marketplace Insights kami.'
+                        : 'You start with your passion and knowledge. Then choose a promising topic with the help of our Marketplace Insights tool.'}
                     </p>
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      The way that you teach — what you bring to it — is up to you.
+                      {isID
+                        ? 'Cara Anda mengajar — apa yang Anda bawa ke dalamnya — sepenuhnya ada di tangan Anda.'
+                        : 'The way that you teach — what you bring to it — is up to you.'}
                     </p>
-                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <div className="pt-4 font-bold text-slate-900">
+                      {isID ? 'Bagaimana kami membantu Anda' : 'How we help you'}
+                    </div>
                     <p className="text-slate-600 leading-relaxed">
-                      We offer plenty of resources on how to create your first course. And, our instructor dashboard and curriculum pages help keep you organized.
+                      {isID
+                        ? 'Kami menyediakan banyak sumber daya tentang cara membuat kursus pertama Anda. Dashboard instruktur dan halaman kurikulum kami membantu Anda tetap terorganisir.'
+                        : 'We offer plenty of resources on how to create your first course. And, our instructor dashboard and curriculum pages help keep you organized.'}
                     </p>
                   </div>
                   <div className="flex-1 w-full">
-                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/taTmRmO2Tuj4sFmG6UkeiILZl3iznmYrKFEVLH4c.jpg" alt="Plan your curriculum" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/taTmRmO2Tuj4sFmG6UkeiILZl3iznmYrKFEVLH4c.jpg" alt={isID ? 'Rencanakan kurikulum' : 'Plan your curriculum'} className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
                   </div>
                 </div>
               </TabsContent>
@@ -237,18 +277,26 @@ function BecomeAnInstructorPage() {
                 <div className="flex flex-col md:flex-row gap-8 items-center">
                   <div className="flex-1 space-y-6">
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      Use basic tools like a smartphone or a DSLR camera. Add a good microphone and you're ready to start.
+                      {isID
+                        ? 'Gunakan alat dasar seperti smartphone atau kamera DSLR. Tambahkan mikrofon yang bagus dan Anda siap memulai.'
+                        : "Use basic tools like a smartphone or a DSLR camera. Add a good microphone and you're ready to start."}
                     </p>
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      If you don't like being on camera, just capture your screen. Either way, we recommend two hours or more of video for a paid course.
+                      {isID
+                        ? 'Jika Anda tidak suka tampil di kamera, cukup rekam layar Anda. Kami merekomendasikan dua jam atau lebih video untuk kursus berbayar.'
+                        : "If you don't like being on camera, just capture your screen. Either way, we recommend two hours or more of video for a paid course."}
                     </p>
-                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <div className="pt-4 font-bold text-slate-900">
+                      {isID ? 'Bagaimana kami membantu Anda' : 'How we help you'}
+                    </div>
                     <p className="text-slate-600 leading-relaxed">
-                      Our support team is available to help you throughout the process and provide feedback on test videos.
+                      {isID
+                        ? 'Tim dukungan kami siap membantu Anda sepanjang proses dan memberikan umpan balik pada video percobaan Anda.'
+                        : 'Our support team is available to help you throughout the process and provide feedback on test videos.'}
                     </p>
                   </div>
                   <div className="flex-1 w-full">
-                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/C4iow3NVo4YEy8v8TEFQzp3pMGltdRgc1qkeMJzP.jpg" alt="Record your video" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/C4iow3NVo4YEy8v8TEFQzp3pMGltdRgc1qkeMJzP.jpg" alt={isID ? 'Rekam video' : 'Record your video'} className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
                   </div>
                 </div>
               </TabsContent>
@@ -257,18 +305,26 @@ function BecomeAnInstructorPage() {
                 <div className="flex flex-col md:flex-row gap-8 items-center">
                   <div className="flex-1 space-y-6">
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      Gather your first ratings and reviews by promoting your course through social media and your professional networks.
+                      {isID
+                        ? 'Kumpulkan rating dan ulasan pertama Anda dengan mempromosikan kursus melalui media sosial dan jaringan profesional Anda.'
+                        : 'Gather your first ratings and reviews by promoting your course through social media and your professional networks.'}
                     </p>
                     <p className="text-slate-600 text-lg leading-relaxed">
-                      Your course will be discoverable in our marketplace where you earn revenue from each paid enrollment.
+                      {isID
+                        ? 'Kursus Anda akan dapat ditemukan di marketplace kami tempat Anda mendapatkan pendapatan dari setiap pendaftaran berbayar.'
+                        : 'Your course will be discoverable in our marketplace where you earn revenue from each paid enrollment.'}
                     </p>
-                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <div className="pt-4 font-bold text-slate-900">
+                      {isID ? 'Bagaimana kami membantu Anda' : 'How we help you'}
+                    </div>
                     <p className="text-slate-600 leading-relaxed">
-                      Our custom coupon tool lets you offer enrollment incentives while our global promotions drive traffic to courses.
+                      {isID
+                        ? 'Alat kupon khusus kami memungkinkan Anda menawarkan insentif pendaftaran sementara promosi global kami mendorong traffic ke kursus Anda.'
+                        : 'Our custom coupon tool lets you offer enrollment incentives while our global promotions drive traffic to courses.'}
                     </p>
                   </div>
                   <div className="flex-1 w-full">
-                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/hRrpeGueGB5IVBQ8Kj3sESKNPKeuN70lrP9mBA5J.jpg" alt="Launch your course" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/hRrpeGueGB5IVBQ8Kj3sESKNPKeuN70lrP9mBA5J.jpg" alt={isID ? 'Luncurkan kursus' : 'Launch your course'} className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
                   </div>
                 </div>
               </TabsContent>
@@ -282,20 +338,22 @@ function BecomeAnInstructorPage() {
             <div className="flex-1 w-full">
               <img 
                 src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/QjvYhrzN0H7BUBsJ5ZsWfnkaMinmI18EZSRcEKZY.jpg" 
-                alt="Support team" 
+                alt={isID ? 'Tim dukungan' : 'Support team'}
                 className="rounded-2xl shadow-xl w-full object-cover aspect-video"
               />
             </div>
             <div className="flex-1 space-y-6 text-center md:text-left">
               <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-slate-900">
-                You won't have to do it alone
+                {isID ? 'Anda tidak akan melakukannya sendirian' : "You won't have to do it alone"}
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed">
-                Our Instructor Support Team is here to answer your questions and review your test video, while our Teaching Center gives you plenty of resources to help you through the process. Plus, get the support of experienced instructors in our online community.
+                {isID
+                  ? 'Tim Dukungan Instruktur kami siap menjawab pertanyaan Anda dan meninjau video percobaan Anda, sementara Pusat Pengajaran kami menyediakan banyak sumber daya untuk membantu Anda. Selain itu, dapatkan dukungan dari instruktur berpengalaman di komunitas online kami.'
+                  : 'Our Instructor Support Team is here to answer your questions and review your test video, while our Teaching Center gives you plenty of resources to help you through the process. Plus, get the support of experienced instructors in our online community.'}
               </p>
               <div className="pt-4 flex justify-center md:justify-start">
                 <Button variant="outline" size="lg" className="font-bold border-primary text-primary hover:bg-primary/5">
-                  Need more details before you start?
+                  {isID ? 'Butuh info lebih lanjut sebelum mulai?' : 'Need more details before you start?'}
                 </Button>
               </div>
             </div>
@@ -306,9 +364,13 @@ function BecomeAnInstructorPage() {
         <section className="bg-slate-900 text-white py-24 px-4 text-center border-t-8 border-primary relative overflow-hidden">
           <div className="absolute inset-0 opacity-5 bg-[url('https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/bqZYk8TOUABRstx0gb2t0kbuG4JEzK6NDFG9sAkd.jpg')] bg-cover bg-center"></div>
           <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">Become an instructor today</h2>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">
+              {isID ? 'Jadilah instruktur hari ini' : 'Become an instructor today'}
+            </h2>
             <p className="text-xl text-slate-300 font-light max-w-2xl mx-auto leading-relaxed">
-              Join one of the world's largest online learning marketplaces.
+              {isID
+                ? 'Bergabunglah dengan salah satu marketplace pembelajaran online terbesar.'
+                : "Join one of the world's largest online learning marketplaces."}
             </p>
             <div className="pt-8 flex justify-center">
               {renderSmartCTA('xl')}
