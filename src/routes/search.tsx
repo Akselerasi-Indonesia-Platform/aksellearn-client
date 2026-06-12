@@ -16,12 +16,15 @@ import * as React from 'react'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
 
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { CourseListItem, CourseListItemSkeleton } from '@/components/public/ui/course-list-item'
 import { EmptyState } from '@/components/public/ui/empty-state'
 import { Button } from '@/components/ui/button'
 import { CourseSearchSidebar } from '@/components/public/ui/course-search-sidebar'
+import { CourseSwiper } from '@/components/public/sections/course-swiper'
+import { homepageService } from '@/services/discovery/homepage.service'
 import {
   usePublicCourseSearch,
   useCourseCategories,
@@ -54,6 +57,13 @@ function SearchPage() {
     () => categories?.find((c) => c.slug === category),
     [categories, category],
   )
+
+  const { data: homepageData, isLoading: isLoadingHomepage } = useQuery({
+    queryKey: ['public', 'homepage'],
+    queryFn: () => homepageService.getHomepageData(),
+  })
+
+  const popularCourses = homepageData?.popular?.map(item => item.course).filter(Boolean) || []
 
   const {
     data: courseResults,
@@ -150,6 +160,20 @@ function SearchPage() {
             </h1>
           </div>
         </div>
+
+        {/* Popular Courses */}
+        {!q && popularCourses.length > 0 && (
+          <div className="border-b border-slate-200">
+            <CourseSwiper
+              courses={popularCourses}
+              isLoading={isLoadingHomepage}
+              title={t('publicHome.popularCourses.title', 'Popular Courses')}
+              titleAccent={t('publicHome.popularCourses.titleAccent', 'Right Now')}
+              description={t('publicHome.popularCourses.description', 'Hand-picked professional certifications and courses designed to accelerate your technical and business expertise.')}
+              badgeLabel={t('publicHome.popularCourses.badge', 'Featured Collection')}
+            />
+          </div>
+        )}
 
         {/* Zone 2: Main Layout (Sidebar + Results) */}
         <div className="container mx-auto px-4 max-w-7xl flex flex-col md:flex-row gap-8 py-8 relative z-20 flex-1">

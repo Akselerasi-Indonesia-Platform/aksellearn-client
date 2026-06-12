@@ -22,6 +22,8 @@ interface FeaturedCoursesProps {
   isTrendingSection?: boolean
   viewAllSort?: 'popular' | 'latest' | 'trending' | 'recommended'
   emptyStateMessage?: string
+  layout?: 'grid' | 'swiper'
+  hideViewAll?: boolean
 }
 
 /**
@@ -41,6 +43,8 @@ export function FeaturedCourses({
   isTrendingSection = false,
   viewAllSort,
   emptyStateMessage = "No courses found in this category.",
+  layout = 'grid',
+  hideViewAll = false,
 }: FeaturedCoursesProps) {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -86,9 +90,11 @@ export function FeaturedCourses({
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className={layout === 'swiper' ? "flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"}>
             {[...Array(4)].map((_, i) => (
-              <CourseCardSkeleton key={i} />
+              <div key={i} className={layout === 'swiper' ? "min-w-[280px] md:min-w-[320px] snap-start" : ""}>
+                <CourseCardSkeleton />
+              </div>
             ))}
           </div>
         ) : courses.length === 0 ? (
@@ -96,13 +102,13 @@ export function FeaturedCourses({
             {emptyStateMessage}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className={layout === 'swiper' ? "flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"}>
             {courses.slice(0, 8).map((course) => (
               <Link
                 key={course.id}
                 to="/course/$courseSlug"
                 params={{ courseSlug: course.slug || course.uuid }}
-                className="group block h-full flex flex-col"
+                className={layout === 'swiper' ? "min-w-[280px] md:min-w-[320px] snap-start block h-full flex flex-col group" : "group block h-full flex flex-col"}
               >
                 <CourseCard course={course} isTrending={isTrendingSection} />
               </Link>
@@ -110,17 +116,19 @@ export function FeaturedCourses({
           </div>
         )}
 
-        <div className="flex justify-center mt-16">
-          <Button
-            onClick={handleViewAll}
-            variant="outline"
-            size="lg"
-            className="rounded-full px-8 font-bold border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all gap-2"
-          >
-            {t('publicHome.featured.viewAll')}
-            <ChevronRight className="size-4" />
-          </Button>
-        </div>
+        {!hideViewAll && (
+          <div className="flex justify-center mt-16">
+            <Button
+              onClick={handleViewAll}
+              variant="outline"
+              size="lg"
+              className="rounded-full px-8 font-bold border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all gap-2"
+            >
+              {t('publicHome.featured.viewAll')}
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )

@@ -8,6 +8,7 @@ import { FeaturedCourses } from '@/components/public/sections/featured-courses'
 import { InstructorPromo } from '@/components/public/sections/instructor-promo'
 import { Hero } from '@/components/public/sections/hero'
 import { TrustedBy } from '@/components/public/sections/trusted-by'
+import { Testimonials } from '@/components/public/sections/testimonials'
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { discoveryCourseService } from '@/services/discovery/course.service'
 import { homepageService } from '@/services/discovery/homepage.service'
@@ -61,6 +62,7 @@ function HomePage() {
         emptyStateMessage={t('publicHome.latestCourses.empty')}
       />
 
+      <Testimonials />
       <InstructorPromo />
       <CTASection />
     </PublicLayout>

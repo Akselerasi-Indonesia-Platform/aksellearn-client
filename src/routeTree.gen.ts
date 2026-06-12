@@ -10,18 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as TentangKamiRouteImport } from './routes/tentang-kami'
+import { Route as SyaratKetentuanRouteImport } from './routes/syarat-ketentuan'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SearchOldRouteImport } from './routes/search-old'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginNewRouteImport } from './routes/login-new'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KebijakanPrivasiRouteImport } from './routes/kebijakan-privasi'
+import { Route as HubungiKamiRouteImport } from './routes/hubungi-kami'
 import { Route as DevRouteImport } from './routes/dev'
 import { Route as DebugAuthRouteImport } from './routes/debug-auth'
+import { Route as ClientRouteImport } from './routes/client'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BecomeAnInstructorRouteImport } from './routes/become-an-instructor'
 import { Route as ArticleRouteImport } from './routes/article'
+import { Route as AksesibilitasRouteImport } from './routes/aksesibilitas'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -88,6 +94,16 @@ const VerifyEmailRoute = VerifyEmailRouteImport.update({
   path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TentangKamiRoute = TentangKamiRouteImport.update({
+  id: '/tentang-kami',
+  path: '/tentang-kami',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SyaratKetentuanRoute = SyaratKetentuanRouteImport.update({
+  id: '/syarat-ketentuan',
+  path: '/syarat-ketentuan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
@@ -118,6 +134,16 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KebijakanPrivasiRoute = KebijakanPrivasiRouteImport.update({
+  id: '/kebijakan-privasi',
+  path: '/kebijakan-privasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HubungiKamiRoute = HubungiKamiRouteImport.update({
+  id: '/hubungi-kami',
+  path: '/hubungi-kami',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevRoute = DevRouteImport.update({
   id: '/dev',
   path: '/dev',
@@ -126,6 +152,11 @@ const DevRoute = DevRouteImport.update({
 const DebugAuthRoute = DebugAuthRouteImport.update({
   id: '/debug-auth',
   path: '/debug-auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientRoute = ClientRouteImport.update({
+  id: '/client',
+  path: '/client',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -146,6 +177,11 @@ const BecomeAnInstructorRoute = BecomeAnInstructorRouteImport.update({
 const ArticleRoute = ArticleRouteImport.update({
   id: '/article',
   path: '/article',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AksesibilitasRoute = AksesibilitasRouteImport.update({
+  id: '/aksesibilitas',
+  path: '/aksesibilitas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -464,18 +500,24 @@ const AdminCourseGradebookCourseIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/aksesibilitas': typeof AksesibilitasRoute
   '/article': typeof ArticleRoute
   '/become-an-instructor': typeof BecomeAnInstructorRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/hubungi-kami': typeof HubungiKamiRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -538,18 +580,24 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aksesibilitas': typeof AksesibilitasRoute
   '/article': typeof ArticleRoute
   '/become-an-instructor': typeof BecomeAnInstructorRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/hubungi-kami': typeof HubungiKamiRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -614,18 +662,24 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/aksesibilitas': typeof AksesibilitasRoute
   '/article': typeof ArticleRoute
   '/become-an-instructor': typeof BecomeAnInstructorRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/hubungi-kami': typeof HubungiKamiRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
   '/verify-email': typeof VerifyEmailRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -691,18 +745,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/aksesibilitas'
     | '/article'
     | '/become-an-instructor'
     | '/cart'
     | '/checkout'
+    | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/hubungi-kami'
+    | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
     | '/search'
     | '/search-old'
     | '/student'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
     | '/verify-email'
     | '/admin/banners'
     | '/admin/dashboard'
@@ -765,18 +825,24 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aksesibilitas'
     | '/article'
     | '/become-an-instructor'
     | '/cart'
     | '/checkout'
+    | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/hubungi-kami'
+    | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
     | '/search'
     | '/search-old'
     | '/student'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
     | '/verify-email'
     | '/admin/banners'
     | '/admin/dashboard'
@@ -840,18 +906,24 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/aksesibilitas'
     | '/article'
     | '/become-an-instructor'
     | '/cart'
     | '/checkout'
+    | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/hubungi-kami'
+    | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
     | '/search'
     | '/search-old'
     | '/student'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
     | '/verify-email'
     | '/admin/banners'
     | '/admin/dashboard'
@@ -916,18 +988,24 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AksesibilitasRoute: typeof AksesibilitasRoute
   ArticleRoute: typeof ArticleRoute
   BecomeAnInstructorRoute: typeof BecomeAnInstructorRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
+  ClientRoute: typeof ClientRoute
   DebugAuthRoute: typeof DebugAuthRoute
   DevRoute: typeof DevRoute
+  HubungiKamiRoute: typeof HubungiKamiRoute
+  KebijakanPrivasiRoute: typeof KebijakanPrivasiRoute
   LoginRoute: typeof LoginRoute
   LoginNewRoute: typeof LoginNewRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
   SearchOldRoute: typeof SearchOldRoute
   StudentRoute: typeof StudentRouteWithChildren
+  SyaratKetentuanRoute: typeof SyaratKetentuanRoute
+  TentangKamiRoute: typeof TentangKamiRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
@@ -947,6 +1025,20 @@ declare module '@tanstack/react-router' {
       path: '/verify-email'
       fullPath: '/verify-email'
       preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tentang-kami': {
+      id: '/tentang-kami'
+      path: '/tentang-kami'
+      fullPath: '/tentang-kami'
+      preLoaderRoute: typeof TentangKamiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/syarat-ketentuan': {
+      id: '/syarat-ketentuan'
+      path: '/syarat-ketentuan'
+      fullPath: '/syarat-ketentuan'
+      preLoaderRoute: typeof SyaratKetentuanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/student': {
@@ -991,6 +1083,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kebijakan-privasi': {
+      id: '/kebijakan-privasi'
+      path: '/kebijakan-privasi'
+      fullPath: '/kebijakan-privasi'
+      preLoaderRoute: typeof KebijakanPrivasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hubungi-kami': {
+      id: '/hubungi-kami'
+      path: '/hubungi-kami'
+      fullPath: '/hubungi-kami'
+      preLoaderRoute: typeof HubungiKamiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev': {
       id: '/dev'
       path: '/dev'
@@ -1003,6 +1109,13 @@ declare module '@tanstack/react-router' {
       path: '/debug-auth'
       fullPath: '/debug-auth'
       preLoaderRoute: typeof DebugAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/client': {
+      id: '/client'
+      path: '/client'
+      fullPath: '/client'
+      preLoaderRoute: typeof ClientRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -1031,6 +1144,13 @@ declare module '@tanstack/react-router' {
       path: '/article'
       fullPath: '/article'
       preLoaderRoute: typeof ArticleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aksesibilitas': {
+      id: '/aksesibilitas'
+      path: '/aksesibilitas'
+      fullPath: '/aksesibilitas'
+      preLoaderRoute: typeof AksesibilitasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -1575,18 +1695,24 @@ const StudentRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AksesibilitasRoute: AksesibilitasRoute,
   ArticleRoute: ArticleRoute,
   BecomeAnInstructorRoute: BecomeAnInstructorRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
+  ClientRoute: ClientRoute,
   DebugAuthRoute: DebugAuthRoute,
   DevRoute: DevRoute,
+  HubungiKamiRoute: HubungiKamiRoute,
+  KebijakanPrivasiRoute: KebijakanPrivasiRoute,
   LoginRoute: LoginRoute,
   LoginNewRoute: LoginNewRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
   SearchOldRoute: SearchOldRoute,
   StudentRoute: StudentRouteWithChildren,
+  SyaratKetentuanRoute: SyaratKetentuanRoute,
+  TentangKamiRoute: TentangKamiRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,

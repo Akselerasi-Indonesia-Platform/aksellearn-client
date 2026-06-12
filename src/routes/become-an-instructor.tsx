@@ -6,7 +6,8 @@ import { useAuthStore } from '@/hooks/use-auth'
 import { instructorApplicationService } from '@/services/instructor-application.service'
 import { useQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
-import { DollarSign, Globe, Clock, Users, CheckCircle2 } from 'lucide-react'
+import { DollarSign, Globe, Users } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const Route = createFileRoute('/become-an-instructor')({
   component: BecomeAnInstructorPage,
@@ -40,34 +41,28 @@ function BecomeAnInstructorPage() {
     }
   }
 
-  const renderSmartCTA = (isHero: boolean = false) => {
-    const baseClasses = "px-8 py-6 text-lg shadow-lg font-bold transition-all"
-    const heroClasses = "bg-white text-primary hover:bg-white/90 hover:scale-105 hover:shadow-xl"
-    const defaultClasses = "hover:scale-105 hover:shadow-xl"
-    
-    const className = `${baseClasses} ${isHero ? heroClasses : defaultClasses}`
+  const renderSmartCTA = (size: 'default' | 'lg' | 'xl' = 'xl', className: string = '') => {
+    const baseClasses = `font-bold transition-all w-full md:w-auto shadow-md hover:shadow-xl ${className}`
 
     if (isLoading) {
-      return <Button disabled size="lg" className={className} variant={isHero ? "outline" : "default"}>Loading...</Button>
+      return <Button disabled size={size} className={baseClasses}>Loading...</Button>
     }
 
     if (isAuthenticated) {
       if (user?.roles?.includes('Admin') || user?.roles?.includes('Super Admin')) {
         return (
-          <div className="flex flex-col items-center gap-3">
-            <Button disabled size="lg" className={className} variant={isHero ? "outline" : "secondary"}>
+          <div className="flex flex-col items-center gap-2">
+            <Button disabled size={size} className={baseClasses} variant="secondary">
               You are an Admin
             </Button>
-            <p className={`text-sm font-medium ${isHero ? 'text-white/80' : 'text-muted-foreground'}`}>
-              Admins cannot apply as instructors.
-            </p>
+            <p className="text-xs text-muted-foreground">Admins cannot apply.</p>
           </div>
         )
       }
 
       if (user?.roles?.includes('Instructor') || status === 'accepted') {
         return (
-          <Button onClick={handleCtaClick} size="lg" className={className} variant={isHero ? "outline" : "default"}>
+          <Button onClick={handleCtaClick} size={size} className={baseClasses}>
             Go to Dashboard
           </Button>
         )
@@ -75,12 +70,12 @@ function BecomeAnInstructorPage() {
 
       if (status === 'pending' || status === 'under_review') {
         return (
-          <div className="flex flex-col items-center gap-3">
-            <Button disabled size="lg" variant={isHero ? "outline" : "secondary"} className={`${className} opacity-80`}>
+          <div className="flex flex-col items-start gap-2">
+            <Button disabled size={size} variant="secondary" className={`${baseClasses} opacity-80`}>
               Application Submitted
             </Button>
-            <Badge variant="outline" className={`text-sm font-medium px-3 py-1 ${isHero ? 'text-white border-white/30 bg-white/10' : 'bg-background/50 backdrop-blur-sm border-primary/20 text-foreground'}`}>
-              Application {status === 'under_review' ? 'Under Review' : 'Pending'}
+            <Badge variant="outline" className="text-xs">
+              Status: {status === 'under_review' ? 'Under Review' : 'Pending'}
             </Badge>
           </div>
         )
@@ -88,135 +83,239 @@ function BecomeAnInstructorPage() {
     }
 
     return (
-      <Button onClick={handleCtaClick} size="lg" className={className} variant={isHero ? "outline" : "default"}>
-        Get Started Now
+      <Button onClick={handleCtaClick} size={size} className={baseClasses}>
+        Get started
       </Button>
     )
   }
 
   return (
     <PublicLayout>
-      <div className="min-h-screen bg-gray-50/50">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-primary text-primary-foreground py-24 px-4 text-center">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-          <div className="relative max-w-4xl mx-auto space-y-6 z-10">
-            <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl mb-4">
-              Share what you know.<br className="hidden sm:block"/> Teach thousands.
-            </h1>
-            <p className="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto font-light leading-relaxed">
-              Join our community of expert instructors. Create courses, reach a global audience, and earn revenue doing what you love.
-            </p>
-            <div className="pt-10 flex justify-center min-h-[100px]">
-              {renderSmartCTA(true)}
+      <div className="bg-white min-h-screen">
+        
+        {/* 1. Split Hero Section */}
+        <section className="relative overflow-hidden bg-white py-12 md:py-20 px-4">
+          <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
+            <div className="flex-1 space-y-6 md:space-y-8 text-center lg:text-left z-10">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-slate-900 leading-[1.1]">
+                Come teach<br />with us
+              </h1>
+              <p className="text-lg md:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Become an instructor and change lives — including your own.
+              </p>
+              <div className="pt-4 flex justify-center lg:justify-start">
+                {renderSmartCTA('xl')}
+              </div>
+            </div>
+            <div className="flex-1 w-full max-w-2xl lg:max-w-none">
+              <div className="aspect-[4/3] md:aspect-video lg:aspect-[4/3] relative rounded-2xl overflow-hidden shadow-2xl group">
+                <img 
+                  src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/ko0CZTqiPwxKd3HNyLOQh6voJQDAlnIXxsVmRimh.jpg" 
+                  alt="Instructor teaching" 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Benefits Grid */}
-        <section className="py-24 px-4 max-w-7xl mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Why teach with us?</h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">Everything you need to build your personal brand and create a new revenue stream.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 flex flex-col items-center text-center space-y-4">
-              <div className="p-4 bg-primary/10 text-primary rounded-2xl shadow-sm">
-                <DollarSign size={32} />
+        {/* 2. So many reasons to start */}
+        <section className="py-20 md:py-24 px-4 bg-slate-50 border-y border-slate-100">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-16 text-slate-900">
+              So many reasons to start
+            </h2>
+            <div className="grid md:grid-cols-3 gap-12">
+              <div className="flex flex-col items-center text-center space-y-5">
+                <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                  <Globe className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-xl text-slate-900">Teach your way</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Publish the course you want, in the way you want, and always have control of your own content.
+                </p>
               </div>
-              <h3 className="font-semibold text-xl text-gray-900">Earn Revenue</h3>
-              <p className="text-gray-500 leading-relaxed">Get paid for every enrollment. Build a passive income stream with your expertise.</p>
+              <div className="flex flex-col items-center text-center space-y-5">
+                <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                  <Users className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-xl text-slate-900">Inspire learners</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Teach what you know and help learners explore their interests, gain new skills, and advance their careers.
+                </p>
+              </div>
+              <div className="flex flex-col items-center text-center space-y-5">
+                <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                  <DollarSign className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-xl text-slate-900">Get rewarded</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  Expand your professional network, build your expertise, and earn money on each paid enrollment.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Impact & Stats Section */}
+        <section className="py-20 bg-primary text-primary-foreground px-4 text-center">
+          <div className="max-w-7xl mx-auto space-y-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">Discover your potential</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+              <div className="space-y-2">
+                <div className="text-4xl md:text-5xl font-black">73M</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Students</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl md:text-5xl font-black">75+</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Languages</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl md:text-5xl font-black">830M</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Enrollments</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl md:text-5xl font-black">15K+</div>
+                <div className="text-primary-foreground/80 font-medium tracking-wide uppercase text-sm">Enterprise customers</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. How to begin (Tabs) */}
+        <section className="py-24 px-4 bg-white max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-16 text-slate-900">
+            How to begin
+          </h2>
+          <Tabs defaultValue="plan" className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
+            <div className="w-full lg:w-1/3">
+              <TabsList className="flex flex-col h-auto bg-transparent space-y-2 w-full">
+                <TabsTrigger 
+                  value="plan" 
+                  className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
+                >
+                  Plan your curriculum
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="record" 
+                  className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
+                >
+                  Record your video
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="launch" 
+                  className="w-full justify-start text-left text-xl font-bold py-4 px-6 border-l-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-slate-50 data-[state=active]:shadow-none rounded-none transition-all"
+                >
+                  Launch your course
+                </TabsTrigger>
+              </TabsList>
             </div>
             
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 flex flex-col items-center text-center space-y-4">
-              <div className="p-4 bg-primary/10 text-primary rounded-2xl shadow-sm">
-                <Globe size={32} />
-              </div>
-              <h3 className="font-semibold text-xl text-gray-900">Build Your Brand</h3>
-              <p className="text-gray-500 leading-relaxed">Showcase your skills to a global audience and establish yourself as an industry leader.</p>
-            </div>
+            <div className="w-full lg:w-2/3">
+              <TabsContent value="plan" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  <div className="flex-1 space-y-6">
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      You start with your passion and knowledge. Then choose a promising topic with the help of our Marketplace Insights tool.
+                    </p>
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      The way that you teach — what you bring to it — is up to you.
+                    </p>
+                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <p className="text-slate-600 leading-relaxed">
+                      We offer plenty of resources on how to create your first course. And, our instructor dashboard and curriculum pages help keep you organized.
+                    </p>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/taTmRmO2Tuj4sFmG6UkeiILZl3iznmYrKFEVLH4c.jpg" alt="Plan your curriculum" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                  </div>
+                </div>
+              </TabsContent>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 flex flex-col items-center text-center space-y-4">
-              <div className="p-4 bg-primary/10 text-primary rounded-2xl shadow-sm">
-                <Clock size={32} />
-              </div>
-              <h3 className="font-semibold text-xl text-gray-900">Flexible Schedule</h3>
-              <p className="text-gray-500 leading-relaxed">Create content on your own time. You have complete control over your schedule.</p>
-            </div>
+              <TabsContent value="record" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  <div className="flex-1 space-y-6">
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      Use basic tools like a smartphone or a DSLR camera. Add a good microphone and you're ready to start.
+                    </p>
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      If you don't like being on camera, just capture your screen. Either way, we recommend two hours or more of video for a paid course.
+                    </p>
+                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <p className="text-slate-600 leading-relaxed">
+                      Our support team is available to help you throughout the process and provide feedback on test videos.
+                    </p>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/C4iow3NVo4YEy8v8TEFQzp3pMGltdRgc1qkeMJzP.jpg" alt="Record your video" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                  </div>
+                </div>
+              </TabsContent>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 flex flex-col items-center text-center space-y-4">
-              <div className="p-4 bg-primary/10 text-primary rounded-2xl shadow-sm">
-                <Users size={32} />
+              <TabsContent value="launch" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  <div className="flex-1 space-y-6">
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      Gather your first ratings and reviews by promoting your course through social media and your professional networks.
+                    </p>
+                    <p className="text-slate-600 text-lg leading-relaxed">
+                      Your course will be discoverable in our marketplace where you earn revenue from each paid enrollment.
+                    </p>
+                    <div className="pt-4 font-bold text-slate-900">How we help you</div>
+                    <p className="text-slate-600 leading-relaxed">
+                      Our custom coupon tool lets you offer enrollment incentives while our global promotions drive traffic to courses.
+                    </p>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <img src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/hRrpeGueGB5IVBQ8Kj3sESKNPKeuN70lrP9mBA5J.jpg" alt="Launch your course" className="rounded-xl shadow-lg w-full aspect-[4/3] object-cover" />
+                  </div>
+                </div>
+              </TabsContent>
+            </div>
+          </Tabs>
+        </section>
+
+        {/* 5. Support Section */}
+        <section className="py-20 md:py-24 px-4 bg-slate-50 border-t border-slate-100">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <div className="flex-1 w-full">
+              <img 
+                src="https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/QjvYhrzN0H7BUBsJ5ZsWfnkaMinmI18EZSRcEKZY.jpg" 
+                alt="Support team" 
+                className="rounded-2xl shadow-xl w-full object-cover aspect-video"
+              />
+            </div>
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-slate-900">
+                You won't have to do it alone
+              </h2>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                Our Instructor Support Team is here to answer your questions and review your test video, while our Teaching Center gives you plenty of resources to help you through the process. Plus, get the support of experienced instructors in our online community.
+              </p>
+              <div className="pt-4 flex justify-center md:justify-start">
+                <Button variant="outline" size="lg" className="font-bold border-primary text-primary hover:bg-primary/5">
+                  Need more details before you start?
+                </Button>
               </div>
-              <h3 className="font-semibold text-xl text-gray-900">Expert Community</h3>
-              <p className="text-gray-500 leading-relaxed">Connect with other experienced professionals and share best teaching practices.</p>
             </div>
           </div>
         </section>
 
-        {/* How It Works */}
-        <section className="bg-white py-24 px-4 border-y border-gray-100">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 tracking-tight text-gray-900">How It Works</h2>
-            <div className="grid md:grid-cols-3 gap-12 relative">
-              <div className="hidden md:block absolute top-8 left-1/6 right-1/6 h-0.5 bg-gray-100 z-0"></div>
-              
-              <div className="text-center space-y-5 relative z-10">
-                <div className="w-16 h-16 bg-primary text-primary-foreground font-bold text-2xl rounded-2xl shadow-lg flex items-center justify-center mx-auto transform -rotate-3">1</div>
-                <h3 className="font-semibold text-xl text-gray-900">Submit Application</h3>
-                <p className="text-base text-gray-500 px-4 leading-relaxed">Fill out a short form detailing your professional background and teaching experience.</p>
-              </div>
-              
-              <div className="text-center space-y-5 relative z-10">
-                <div className="w-16 h-16 bg-primary text-primary-foreground font-bold text-2xl rounded-2xl shadow-lg flex items-center justify-center mx-auto transform rotate-3">2</div>
-                <h3 className="font-semibold text-xl text-gray-900">Review Process</h3>
-                <p className="text-base text-gray-500 px-4 leading-relaxed">Our team will review your profile to ensure quality standards. You'll hear back within 3-5 days.</p>
-              </div>
-              
-              <div className="text-center space-y-5 relative z-10">
-                <div className="w-16 h-16 bg-primary text-primary-foreground font-bold text-2xl rounded-2xl shadow-lg flex items-center justify-center mx-auto transform -rotate-3">3</div>
-                <h3 className="font-semibold text-xl text-gray-900">Start Teaching</h3>
-                <p className="text-base text-gray-500 px-4 leading-relaxed">Once approved, you get access to the Instructor Dashboard to create and publish your first course.</p>
-              </div>
+        {/* 6. High-Impact Final CTA */}
+        <section className="bg-slate-900 text-white py-24 px-4 text-center border-t-8 border-primary relative overflow-hidden">
+          <div className="absolute inset-0 opacity-5 bg-[url('https://akselerasiindonesia.s3.ap-southeast-1.amazonaws.com/course/bqZYk8TOUABRstx0gb2t0kbuG4JEzK6NDFG9sAkd.jpg')] bg-cover bg-center"></div>
+          <div className="relative z-10 max-w-3xl mx-auto space-y-8">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">Become an instructor today</h2>
+            <p className="text-xl text-slate-300 font-light max-w-2xl mx-auto leading-relaxed">
+              Join one of the world's largest online learning marketplaces.
+            </p>
+            <div className="pt-8 flex justify-center">
+              {renderSmartCTA('xl')}
             </div>
           </div>
         </section>
 
-        {/* Requirements */}
-        <section className="py-24 px-4 max-w-4xl mx-auto">
-          <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100">
-            <h2 className="text-3xl font-bold mb-8 tracking-tight text-gray-900 text-center">What we look for</h2>
-            <ul className="space-y-6 text-lg text-gray-700">
-              <li className="flex items-start bg-gray-50 p-4 rounded-xl">
-                <CheckCircle2 className="text-primary mr-4 mt-0.5 flex-shrink-0" size={24} />
-                <span className="leading-relaxed">Demonstrated expertise in your field (portfolio, open-source contributions, etc.)</span>
-              </li>
-              <li className="flex items-start bg-gray-50 p-4 rounded-xl">
-                <CheckCircle2 className="text-primary mr-4 mt-0.5 flex-shrink-0" size={24} />
-                <span className="leading-relaxed">Prior experience in teaching, mentoring, or creating educational content</span>
-              </li>
-              <li className="flex items-start bg-gray-50 p-4 rounded-xl">
-                <CheckCircle2 className="text-primary mr-4 mt-0.5 flex-shrink-0" size={24} />
-                <span className="leading-relaxed">Strong communication skills and passion for helping others learn</span>
-              </li>
-              <li className="flex items-start bg-gray-50 p-4 rounded-xl">
-                <CheckCircle2 className="text-primary mr-4 mt-0.5 flex-shrink-0" size={24} />
-                <span className="leading-relaxed">Commitment to creating high-quality, up-to-date course material</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        {/* Final CTA */}
-        <section className="bg-gray-900 text-white py-24 px-4 text-center border-t-8 border-primary">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Ready to inspire others?</h2>
-            <p className="text-xl text-gray-400 font-light leading-relaxed">Take the first step towards becoming a platform instructor today and join thousands of others.</p>
-            <div className="pt-6 flex justify-center min-h-[100px]">
-              {renderSmartCTA()}
-            </div>
-          </div>
-        </section>
       </div>
     </PublicLayout>
   )

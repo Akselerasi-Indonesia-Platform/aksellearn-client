@@ -169,9 +169,9 @@ export function CourseCard({
   )
 }
 
-export function CourseCardSkeleton() {
+export function CourseCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className="flex flex-col h-full border border-slate-100 shadow-sm overflow-hidden bg-white rounded-[6px]">
+    <div className={cn("flex flex-col h-full border border-slate-100 shadow-sm overflow-hidden bg-white rounded-[6px]", className)}>
       <div className="aspect-video relative overflow-hidden bg-slate-50">
         <Skeleton className="w-full h-full rounded-none" />
       </div>

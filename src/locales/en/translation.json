@@ -529,6 +529,35 @@
       "featureCurateSub": "Learning Paths",
       "featureVerify": "Issue",
       "featureVerifySub": "Certificates"
+    },
+    "testimonials": {
+      "title": "Join others transforming their lives through learning",
+      "items": [
+        {
+          "quote": "The course did a great job explaining AI - from development through application. I appreciated the varying perspectives presented.",
+          "name": "Cris M.",
+          "title": "Google AI Essentials graduate",
+          "avatar": "https://cms-images.udemycdn.com/96883mtakkm8/3RtbxhMUTMftb9PKczSTDW/f383a1effc2975968d2f87d9273c6e9d/cris-m.webp"
+        },
+        {
+          "quote": "Aksellearn was truly a game-changer and a great guide for me as we brought Dimensional to life.",
+          "name": "Alvin Lim",
+          "title": "Technical Co-Founder, CTO at Dimensional",
+          "avatar": "https://cms-images.udemycdn.com/96883mtakkm8/1Djz6c0gZLaCG5SQS3PgUY/54b6fb8c85d8da01da95cbb94fa6335f/Alvin_Lim.jpeg"
+        },
+        {
+          "quote": "Aksellearn gives you the ability to be persistent. I learned exactly what I needed to know in the real world. It helped me sell myself to get a new role.",
+          "name": "William A. Wachlin",
+          "title": "Partner Account Manager at Amazon Web Services",
+          "avatar": "https://cms-images.udemycdn.com/96883mtakkm8/6dT7xusLHYoOUizXeVqgUk/4317f63fe25b2e07ad8c70cda641014b/William_A_Wachlin.jpeg"
+        },
+        {
+          "quote": "I loved the course about AI Studio. I was not aware of this tool, but immediately after taking the course, I put it to use. Within 24 hours, I had a functional, highly useful app.",
+          "name": "Ben C.",
+          "title": "Google AI Professional Certificate graduate",
+          "avatar": "https://cms-images.udemycdn.com/96883mtakkm8/1AXU6146N5h3Ti9rGXytFv/4832b694a15fa19c4f0538ee0c71f55a/ben-c.webp"
+        }
+      ]
     }
   },
   "promotions": {

@@ -36,8 +36,8 @@ export function PublicFooter() {
       <div className="absolute inset-0 bg-slate-950/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 py-12 md:px-6 lg:py-16 relative z-10">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
-          <div className="col-span-2 lg:col-span-2">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="col-span-2 lg:col-span-2 xl:col-span-2">
             <Link className="flex items-center space-x-2 mb-4 text-white drop-shadow-sm" to="/">
               <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-black/20 overflow-hidden">
                 {profile?.logo?.url ? (
@@ -127,17 +127,68 @@ export function PublicFooter() {
             </div>
           </div>
 
+          {/* Tentang */}
           <div>
-            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">{t('publicHome.footer.discovery')}</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Tentang</h3>
+            <ul className="space-y-2.5 text-sm">
               <li>
-                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/search">
-                  {t('publicHome.footer.courses')}
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/tentang-kami">
+                  Tentang Kami
+                </Link>
+              </li>
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/hubungi-kami">
+                  Hubungi Kami
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Jelajahi Aksellearn */}
+          <div>
+            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Jelajahi Aksellearn</h3>
+            <ul className="space-y-2.5 text-sm">
+              {canApplyInstructor && (
+                <li>
+                  <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/become-an-instructor">
+                    Mengajar di Aksellearn
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/search">
+                  {t('publicHome.footer.courses')}
+                </Link>
+              </li>
+              <li>
+                <span className="text-white/40 cursor-not-allowed select-none">
+                  Bantuan dan Dukungan
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="font-bold mb-4 text-white drop-shadow-sm tracking-wide">Legal & Aksesibilitas</h3>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/aksesibilitas">
+                  Pernyataan Aksesibilitas
+                </Link>
+              </li>
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/syarat-ketentuan">
+                  Syarat dan Ketentuan
+                </Link>
+              </li>
+              <li>
+                <Link className="text-white/90 drop-shadow-sm hover:text-[#70C942] hover:drop-shadow-md transition-all" to="/kebijakan-privasi">
+                  Kebijakan Privasi
+                </Link>
+              </li>
+            </ul>
+          </div>
 
         </div>
       </div>

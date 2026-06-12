@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { CLIENT_LOGOS } from '@/config/clients'
 
 /**
  * Background Role: `bg-[#F0F7FF]` (Ice Blue)
@@ -22,29 +23,19 @@ export function TrustedBy() {
           <motion.div 
             className="flex w-max"
             animate={{ x: ["0%", "-50%"] }}
-            transition={{ ease: "linear", duration: 30, repeat: Infinity }}
+            transition={{ ease: "linear", duration: 300, repeat: Infinity }}
           >
             {/* We render two identical sets of logos side-by-side to create the seamless infinite loop */}
             {[...Array(2)].map((_, i) => (
               <div key={i} className="flex items-center gap-12 md:gap-24 px-6 md:px-12 w-max">
-                <span className="text-2xl font-black tracking-tighter text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  ORACLE
-                </span>
-                <span className="text-2xl font-black tracking-tighter italic text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  Cisco
-                </span>
-                <span className="text-2xl font-black tracking-tighter text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  intel.
-                </span>
-                <span className="text-2xl font-black tracking-tighter text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  Google
-                </span>
-                <span className="text-2xl font-black tracking-tighter text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  NETFLIX
-                </span>
-                <span className="text-2xl font-black tracking-tighter uppercase italic text-foreground shrink-0 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-default">
-                  SAP
-                </span>
+                {CLIENT_LOGOS.map((url, idx) => (
+                  <img 
+                    key={idx}
+                    src={url}
+                    alt={`Client ${idx + 1}`}
+                    className="h-12 w-auto object-contain opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300"
+                  />
+                ))}
               </div>
             ))}
           </motion.div>
