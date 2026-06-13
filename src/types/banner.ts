@@ -7,8 +7,10 @@ export interface Banner {
   subtitle?: string | null
   cta_label?: string | null
   cta_url?: string | null
-  image_id?: number | null
+  image_uuid?: string | null
   image_url?: string | null
+  mobile_image_uuid?: string | null
+  mobile_image_url?: string | null
   target_audience: TargetAudience
   sort_order: number
   start_at?: string | null
@@ -23,7 +25,8 @@ export interface BannerPayload {
   subtitle?: string | null
   cta_label?: string | null
   cta_url?: string | null
-  image_id?: number | null
+  image_uuid?: string | null
+  mobile_image_uuid?: string | null
   target_audience: TargetAudience
   sort_order?: number
   start_at?: string | null

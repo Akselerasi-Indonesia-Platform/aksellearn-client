@@ -139,7 +139,7 @@ function AdminBannersPage() {
 
       {/* Create / Edit Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6">
+        <DialogContent className="admin-theme sm:max-w-4xl lg:max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">
               {selectedBanner
@@ -151,7 +151,7 @@ function AdminBannersPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="pt-4">
+          <div className="pt-2">
             <BannerForm
               banner={selectedBanner}
               onSubmit={handleFormSubmit}

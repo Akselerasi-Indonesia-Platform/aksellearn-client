@@ -1,5 +1,6 @@
 import apiClient from '@/lib/api-client'
 import type { Course } from '@/types/course'
+import type { Banner } from '@/types/banner'
 import { mapApiToCourse } from './course.service'
 
 export interface PopularCourse {
@@ -15,6 +16,7 @@ export interface PopularCourse {
 export interface HomepageResponse {
   latest: Course[]
   popular: PopularCourse[]
+  banners?: Banner[]
 }
 
 export type HomepageData = HomepageResponse

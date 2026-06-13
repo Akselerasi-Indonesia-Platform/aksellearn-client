@@ -29,7 +29,7 @@ export function BannerTable({
       id: 'Image',
       header: t('common.thumbnail', 'Image'),
       cell: (item: Banner) => (
-        <div className="size-16 rounded-lg overflow-hidden border bg-muted flex items-center justify-center shrink-0">
+        <div className="relative size-16 rounded-lg overflow-hidden border bg-muted flex items-center justify-center shrink-0">
           {item.image_url ? (
             <img
               src={item.image_url}
@@ -38,6 +38,11 @@ export function BannerTable({
             />
           ) : (
             <ImageIcon className="size-6 text-muted-foreground" />
+          )}
+          {item.mobile_image_url && (
+            <div className="absolute top-1 right-1 bg-black/60 text-white text-[8px] font-bold px-1 rounded">
+              M
+            </div>
           )}
         </div>
       ),
@@ -48,32 +53,12 @@ export function BannerTable({
       accessorKey: 'title',
       className: 'font-medium max-w-[240px]',
       cell: (item: Banner) => (
-        <div className="space-y-1">
+        <div className="flex items-center h-full">
           <p className="font-bold text-sm text-slate-800 line-clamp-1">{item.title}</p>
-          {item.subtitle && (
-            <p className="text-xs text-muted-foreground line-clamp-2">{item.subtitle}</p>
-          )}
         </div>
       ),
     },
-    {
-      id: 'Audience',
-      header: t('banners.targetAudience', 'Audience'),
-      cell: (item: Banner) => {
-        const variant =
-          item.target_audience === 'all'
-            ? 'secondary'
-            : item.target_audience === 'guest'
-              ? 'outline'
-              : 'default'
 
-        return (
-          <Badge className="capitalize text-[10px] font-bold" variant={variant}>
-            {item.target_audience}
-          </Badge>
-        )
-      },
-    },
     {
       id: 'Order',
       header: t('banners.sortOrder', 'Order'),

@@ -23,8 +23,10 @@ const formSchema = z.object({
   subtitle: z.string().nullable().optional(),
   cta_label: z.string().nullable().optional(),
   cta_url: z.string().nullable().optional(),
-  image_id: z.number().nullable().optional(),
+  image_uuid: z.string().nullable().optional(),
   image_url: z.string().nullable().optional(),
+  mobile_image_uuid: z.string().nullable().optional(),
+  mobile_image_url: z.string().nullable().optional(),
   target_audience: z.enum(['all', 'guest', 'authenticated']),
   start_at: z.string().nullable().optional(),
   end_at: z.string().nullable().optional(),
@@ -47,6 +49,7 @@ export function BannerForm({
 }: BannerFormProps) {
   const { t } = useTranslation()
   const [isUploading, setIsUploading] = React.useState(false)
+  const [isUploadingMobile, setIsUploadingMobile] = React.useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema) as any,
@@ -55,8 +58,10 @@ export function BannerForm({
       subtitle: banner?.subtitle || '',
       cta_label: banner?.cta_label || '',
       cta_url: banner?.cta_url || '',
-      image_id: banner?.image_id || null,
+      image_uuid: banner?.image_uuid || null,
       image_url: banner?.image_url || '',
+      mobile_image_uuid: banner?.mobile_image_uuid || null,
+      mobile_image_url: banner?.mobile_image_url || '',
       target_audience: banner?.target_audience || 'all',
       start_at: banner?.start_at || null,
       end_at: banner?.end_at || null,
@@ -71,7 +76,8 @@ export function BannerForm({
       subtitle: values.subtitle || null,
       cta_label: values.cta_label || null,
       cta_url: values.cta_url || null,
-      image_id: values.image_id || null,
+      image_uuid: values.image_uuid || null,
+      mobile_image_uuid: values.mobile_image_uuid || null,
       target_audience: values.target_audience,
       start_at: values.start_at || null,
       end_at: values.end_at || null,
@@ -84,9 +90,8 @@ export function BannerForm({
     setIsUploading(true)
     try {
       const res = await adminMediaService.upload(file, 'platform')
-      const mediaId = (res as any).id || (res as any).ID
-      if (mediaId) {
-        form.setValue('image_id', mediaId, { shouldDirty: true })
+      if (res.uuid) {
+        form.setValue('image_uuid', res.uuid, { shouldDirty: true })
       }
       form.setValue('image_url', res.url || '', { shouldDirty: true })
     } catch {
@@ -97,93 +102,133 @@ export function BannerForm({
   }
 
   const handleClearImage = () => {
-    form.setValue('image_id', null, { shouldDirty: true })
+    form.setValue('image_uuid', null, { shouldDirty: true })
     form.setValue('image_url', '', { shouldDirty: true })
+  }
+
+  const handleUploadMobileImage = async (file: File) => {
+    setIsUploadingMobile(true)
+    try {
+      const res = await adminMediaService.upload(file, 'platform')
+      if (res.uuid) {
+        form.setValue('mobile_image_uuid', res.uuid, { shouldDirty: true })
+      }
+      form.setValue('mobile_image_url', res.url || '', { shouldDirty: true })
+    } catch {
+      // Handled globally or toast in calling page
+    } finally {
+      setIsUploadingMobile(false)
+    }
+  }
+
+  const handleClearMobileImage = () => {
+    form.setValue('mobile_image_uuid', null, { shouldDirty: true })
+    form.setValue('mobile_image_url', '', { shouldDirty: true })
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="space-y-4">
-        <FormInput
-          control={form.control}
-          label={t('banners.titleField', 'Banner Title')}
-          name="title"
-          placeholder="e.g. Mega Midyear Promotion"
-          required
-        />
+      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column: Details & Settings */}
+          <div className="space-y-8">
+            {/* General Information */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider border-b pb-2">General Information</h3>
+              
+              <FormInput
+                control={form.control}
+                label={t('banners.titleField', 'Banner Title')}
+                name="title"
+                placeholder="e.g. Mega Midyear Promotion"
+                required
+              />
 
-        <FormTextarea
-          control={form.control}
-          label={t('banners.subtitleField', 'Subtitle (optional)')}
-          name="subtitle"
-          placeholder="e.g. Get up to 50% discount on all development courses"
-        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            control={form.control}
-            label={t('banners.ctaLabel', 'Button Text')}
-            name="cta_label"
-            placeholder="e.g. Enroll Now"
-          />
-          <FormInput
-            control={form.control}
-            label={t('banners.ctaUrl', 'Button Link')}
-            name="cta_url"
-            placeholder="e.g. /search?category=development"
-          />
+            </div>
+
+            {/* Display Settings */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider border-b pb-2">Display Settings</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="pt-2">
+                  <FormSwitch
+                    control={form.control}
+                    label={t('banners.isActive', 'Set as Active')}
+                    name="is_active"
+                  />
+                </div>
+                <FormInput
+                  control={form.control}
+                  label={t('banners.sortOrder', 'Display Order')}
+                  name="sort_order"
+                  type="number"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormInputDateTime
+                  control={form.control}
+                  label={t('banners.startAt', 'Show From')}
+                  name="start_at"
+                />
+                <FormInputDateTime
+                  control={form.control}
+                  label={t('banners.endAt', 'Show Until')}
+                  name="end_at"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Media Assets */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider border-b pb-2">Media Assets</h3>
+            
+            <div className="space-y-6">
+              <div>
+                <FormInputImage
+                  control={form.control}
+                  name="image_url"
+                  label={t('banners.imageField', 'Desktop Banner Image')}
+                  isUploading={isUploading}
+                  onUpload={handleUploadImage}
+                  onClear={handleClearImage}
+                  aspect="video"
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Recommended: 1440×450 px (16:5 ratio), max 2 MB, JPG/WebP
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-dashed">
+                <FormInputImage
+                  control={form.control}
+                  name="mobile_image_url"
+                  label={t('banners.mobileImageField', 'Mobile Banner Image')}
+                  isUploading={isUploadingMobile}
+                  onUpload={handleUploadMobileImage}
+                  onClear={handleClearMobileImage}
+                  aspect="video"
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Recommended: 750×250 px (3:1 ratio), max 500 KB, JPG/WebP
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormSelect
-            control={form.control}
-            label={t('banners.targetAudience', 'Show To')}
-            name="target_audience"
-            options={[
-              { label: t('banners.audienceAll', 'Everyone'), value: 'all' },
-              { label: t('banners.audienceGuest', 'Visitors only'), value: 'guest' },
-              { label: t('banners.audienceAuth', 'Logged-in users only'), value: 'authenticated' },
-            ]}
-          />
-          <FormInput
-            control={form.control}
-            label={t('banners.sortOrder', 'Display Order')}
-            name="sort_order"
-            type="number"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInputDateTime
-            control={form.control}
-            label={t('banners.startAt', 'Show From')}
-            name="start_at"
-          />
-          <FormInputDateTime
-            control={form.control}
-            label={t('banners.endAt', 'Show Until')}
-            name="end_at"
-          />
-        </div>
-
-        <FormInputImage
-          control={form.control}
-          name="image_url"
-          label={t('banners.imageField', 'Banner Image')}
-          isUploading={isUploading}
-          onUpload={handleUploadImage}
-          onClear={handleClearImage}
-          aspect="video"
-        />
-
-        <div className="flex items-center justify-between pt-4 border-t">
+        {/* Action Buttons */}
+        <div className="flex items-center justify-between pt-6 mt-6 border-t">
           <div>
             {onDelete && (
               <Button
                 type="button"
                 variant="destructive"
                 onClick={onDelete}
-                className="gap-2 font-bold"
+                className="gap-2 font-bold shadow-sm"
               >
                 <Trash2 className="size-4" />
                 {t('common.delete', 'Delete')}
@@ -195,19 +240,19 @@ export function BannerForm({
               type="button"
               variant="outline"
               onClick={onCancel}
-              className="font-bold"
+              className="font-bold shadow-sm"
             >
               {t('common.cancel', 'Cancel')}
             </Button>
             <Button
               type="submit"
-              className="font-bold"
+              className="font-bold shadow-sm"
               disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting && (
                 <Loader2 className="mr-2 size-4 animate-spin" />
               )}
-              {banner ? t('common.save', 'Save') : t('common.create', 'Create')}
+              {banner ? t('common.save', 'Save Changes') : t('common.create', 'Create Banner')}
             </Button>
           </div>
         </div>

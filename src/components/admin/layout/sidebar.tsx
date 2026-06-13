@@ -185,6 +185,11 @@ export function AdminSidebar({
             url: '/admin/featured-courses',
             roles: ['Super Admin', 'Admin'],
           },
+          {
+            title: t('sidebar.banners', 'Banners'),
+            url: '/admin/banners',
+            roles: ['Super Admin', 'Admin'],
+          },
         ],
       },
       {

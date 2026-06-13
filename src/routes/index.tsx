@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { CTASection } from '@/components/public/sections/cta-section'
 import { FeaturedCourses } from '@/components/public/sections/featured-courses'
 import { InstructorPromo } from '@/components/public/sections/instructor-promo'
-import { Hero } from '@/components/public/sections/hero'
+import { Hero } from '@/components/public/sections/hero-old'
+import { BannerCarousel } from '@/components/public/sections/hero-carousel'
 import { TrustedBy } from '@/components/public/sections/trusted-by'
 import { Testimonials } from '@/components/public/sections/testimonials'
 import { PublicLayout } from '@/components/public/layout/main-layout'
@@ -32,7 +33,10 @@ function HomePage() {
 
   return (
     <PublicLayout>
-      <Hero stats={stats} />
+      {isLoadingHomepage || (homepageData?.banners && homepageData.banners.length > 0)
+        ? <BannerCarousel banners={homepageData?.banners ?? []} isLoading={isLoadingHomepage} />
+        : <Hero stats={stats} />
+      }
       <TrustedBy />
       
       {/* Popular Courses (Curated) */}
