@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Loader2, AlertCircle, CheckCircle, ArrowRight, Trophy, Award } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -12,6 +13,7 @@ interface VideoStatusOverlayProps {
   onNext?: () => void
   isLast?: boolean
   onFinish?: () => void
+  nextVideoTitle?: string
 }
 
 export function VideoStatusOverlay({
@@ -24,7 +26,30 @@ export function VideoStatusOverlay({
   onNext,
   isLast,
   onFinish,
+  nextVideoTitle,
 }: VideoStatusOverlayProps) {
+  const [countdown, setCountdown] = React.useState(5)
+
+  React.useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (status === 'completed' && !isLast && onNext) {
+      setCountdown(5)
+      timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            onNext()
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    }
+    return () => {
+      if (timer) clearInterval(timer)
+    }
+  }, [status, isLast, onNext])
+
   if (status === 'idle') {
     if (hdStatus === 'encoding') {
       return (
@@ -143,12 +168,14 @@ export function VideoStatusOverlay({
           </div>
           <div className="text-center space-y-2 mb-8">
             <h4 className="text-2xl font-black text-white tracking-tighter">
-              {isLast ? 'Mastery Achieved!' : 'Module Completed'}
+              {isLast ? 'Mastery Achieved!' : nextVideoTitle ? 'Video Completed' : 'Module Completed'}
             </h4>
             <p className="text-slate-400 font-medium text-xs uppercase tracking-[0.2em]">
               {isLast
                 ? 'You have conquered the entire curriculum'
-                : 'Ready for the next objective?'}
+                : nextVideoTitle
+                  ? `Next Video: ${nextVideoTitle}`
+                  : 'Ready for the next objective?'}
             </p>
           </div>
           {isLast ? (
@@ -159,12 +186,28 @@ export function VideoStatusOverlay({
               Claim Your Certificate <Award className="size-4" />
             </Button>
           ) : (
-            <Button
-              onClick={onNext}
-              className="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-xl shadow-primary/20 gap-3 active:scale-95 transition-all text-xs uppercase tracking-widest"
-            >
-              Proceed to Next Module <ArrowRight className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center gap-3">
+              <Button
+                onClick={onNext}
+                className="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-xl shadow-primary/20 gap-3 active:scale-95 transition-all text-xs uppercase tracking-widest relative overflow-hidden group"
+              >
+                {/* Progress bar background for countdown */}
+                <div 
+                  className="absolute inset-y-0 left-0 bg-black/10 transition-all duration-1000 ease-linear"
+                  style={{ width: `${(countdown / 5) * 100}%` }}
+                />
+                <span className="relative z-10 flex items-center gap-3">
+                  {nextVideoTitle ? `Play Next in ${countdown}s` : `Next Module in ${countdown}s`} <ArrowRight className="size-4" />
+                </span>
+              </Button>
+              <Button 
+                onClick={onNext} 
+                variant="ghost" 
+                className="text-slate-400 hover:text-white text-[10px] font-bold tracking-widest uppercase h-6"
+              >
+                Skip timer
+              </Button>
+            </div>
           )}
         </div>
       )}

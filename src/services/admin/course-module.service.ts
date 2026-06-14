@@ -62,6 +62,17 @@ function mapApiToModule(data: RawApiModule): CourseModule {
     // Extracting nested quiz uuid for easier form handling
     quiz_uuid: data.quiz_uuid || data.quiz?.uuid || '',
     quiz: data.quiz as any,
+    // Map videos array from API — each item may come back with uuid, title, stream_url, order_weight
+    videos: Array.isArray((data as any).videos)
+      ? (data as any).videos.map((v: any) => ({
+          uuid: v.uuid || v.media_uuid || '',
+          title: v.title || '',
+          order_weight: v.order_weight ?? 0,
+          stream_url: v.stream_url || v.video?.stream_url || '',
+          duration: v.duration,
+          watch_progress: v.watch_progress ?? null,
+        }))
+      : undefined,
   }
 }
 

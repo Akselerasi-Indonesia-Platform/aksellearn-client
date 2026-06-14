@@ -64,7 +64,7 @@ function CategoryDetailsPage() {
     difficulty: difficulty,
     price_min: price_min,
     price_max: price_max,
-    rating: rating ? parseFloat(rating) : undefined,
+    rating: rating,
     page: page || 1,
     limit: 12,
   })
@@ -212,6 +212,7 @@ function CategoryDetailsPage() {
             onPriceChange={handlePriceChange}
             rating={rating?.toString()}
             onRatingChange={handleRatingChange}
+            onSortChange={handleSortChange}
             onClear={clearFilters}
             hideCategory={true}
           />

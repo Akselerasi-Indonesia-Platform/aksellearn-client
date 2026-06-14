@@ -46,7 +46,7 @@ export function VideoUploadInput({
 
   const isProcessing =
     videoStatus?.status &&
-    !['completed', 'finished', 'failed'].includes(videoStatus.status)
+    !['completed', 'finished', 'failed', 'available'].includes(videoStatus.status)
 
   if (compact) {
     return (

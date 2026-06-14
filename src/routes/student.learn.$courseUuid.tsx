@@ -77,7 +77,13 @@ function CourseDetailPage() {
     activeModuleUuid,
     activeTitle,
     activeVideo,
+    activeVideoUuid,
+    setActiveVideoUuid,
     activeContent,
+    handleNextVideo,
+    canComplete,
+    markVideoCompleted,
+    sessionCompletedVideos,
   } = useCourseModuleNavigation({
     course,
     urlCourseId,
@@ -88,7 +94,12 @@ function CourseDetailPage() {
   const activeVideoData = isIntro
     ? course?.video_data
     : typeof activeModule !== 'string'
-      ? activeModule?.video_data
+      ? activeModule?.videos && activeModule.videos.length > 0
+        ? {
+            uuid: activeModule.videos.find((v: any) => v.uuid === activeVideoUuid)?.media_uuid || '',
+            status: activeModule.videos.find((v: any) => v.uuid === activeVideoUuid)?.status || 'available'
+          } as any
+        : activeModule?.video_data
       : undefined
 
   const videoStatus = activeVideoData?.status
@@ -209,13 +220,17 @@ function CourseDetailPage() {
             activeModule={activeModule}
             course={course}
             activeVideo={activeVideo}
+            activeVideoUuid={activeVideoUuid}
             activeTitle={activeTitle || ''}
             isLastModule={isLastModule}
             handleNextModule={handleNextModule}
+            handleNextVideo={handleNextVideo}
             handleModuleComplete={handleModuleComplete}
             courseUuid={courseUuid}
             setIsCertModalOpen={setIsCertModalOpen}
             setPlayerController={setPlayerController}
+            canComplete={canComplete}
+            markVideoCompleted={markVideoCompleted}
           />
 
           <Tabs defaultValue={tab} className="w-full">
@@ -357,6 +372,12 @@ function CourseDetailPage() {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               setActiveModule(m)
             }}
+            onSelectVideo={(m, videoUuid) => {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+              setActiveVideoUuid(videoUuid)
+            }}
+            activeVideoUuid={activeVideoUuid}
+            sessionCompletedVideos={sessionCompletedVideos}
             className="h-full"
           />
         </motion.div>

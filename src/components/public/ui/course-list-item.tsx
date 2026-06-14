@@ -80,7 +80,7 @@ export function CourseListItem({
             {course.title}
           </h3>
           <p className="text-sm text-slate-600 line-clamp-2 hidden sm:block">
-            {course.description || course.excerpt || 'A comprehensive course covering essential topics to help you master new skills.'}
+            {course.description || (course as any).excerpt || 'A comprehensive course covering essential topics to help you master new skills.'}
           </p>
           <p className="text-xs text-slate-500 font-medium">
             By {course.instructor?.name || 'Aksellearn Instructor'}
@@ -107,7 +107,7 @@ export function CourseListItem({
               {course.summary?.stats?.total_videos ?? course.summary?.stats?.total_lessons ?? course.summary?.stats?.total_modules ?? 0} lectures
             </span>
             <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-            <span>{course.difficulty_level || 'All Levels'}</span>
+            <span>{(course as any).difficulty_level || 'All Levels'}</span>
           </div>
         </div>
 

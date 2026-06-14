@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X } from 'lucide-react'
 import 'plyr/dist/plyr.css'
 import { cn } from '@/lib/utils'
 import { userCourseService } from '@/services/user/course.service'
@@ -16,6 +18,7 @@ export interface CourseVideoPlayerController {
 
 interface CourseVideoPlayerProps {
   moduleUuid: string
+  videoUuid?: string
   url: string
   poster?: string
   title?: string
@@ -27,10 +30,13 @@ interface CourseVideoPlayerProps {
   onFinish?: () => void
   onControllerReady?: (controller: CourseVideoPlayerController) => void
   videoData?: VideoResource
+  nextVideoTitle?: string
+  markVideoCompleted?: (uuid: string) => void
 }
 
 export function CourseVideoPlayer({
   moduleUuid,
+  videoUuid,
   url,
   poster,
   title,
@@ -42,6 +48,8 @@ export function CourseVideoPlayer({
   onFinish,
   onControllerReady,
   videoData,
+  nextVideoTitle,
+  markVideoCompleted,
 }: CourseVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playerRef = useRef<any>(null)
@@ -54,6 +62,22 @@ export function CourseVideoPlayer({
   const lastUrlRef = useRef<string | null>(null)
 
   const [liveVideoData, setLiveVideoData] = useState<VideoResource | undefined>(videoData)
+  
+  // YouTube-style Resume Chip
+  const [showResumeChip, setShowResumeChip] = useState(initialPosition > 10)
+
+  useEffect(() => {
+    if (showResumeChip) {
+      const timer = setTimeout(() => setShowResumeChip(false), 6000)
+      return () => clearTimeout(timer)
+    }
+  }, [showResumeChip])
+
+  const formatDuration = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = Math.floor(seconds % 60)
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
 
   useEffect(() => {
     setLiveVideoData(videoData)
@@ -62,7 +86,8 @@ export function CourseVideoPlayer({
   useEffect(() => {
     if (!liveVideoData?.uuid) return
     const status = liveVideoData.status
-    if (status === 'processing' || status === 'available') {
+    // Only poll when actively encoding — 'available' means watchable, no need to poll
+    if (status === 'pending' || status === 'processing') {
       let isMounted = true
       const poll = async () => {
         try {
@@ -105,6 +130,8 @@ export function CourseVideoPlayer({
     if (lastUrlRef.current === url && playerRef.current) return
     lastUrlRef.current = url
     setIsCompleted(false)
+    setIsLoading(true)
+    setError(null)
 
     let player: any
     let hls: any
@@ -210,7 +237,7 @@ export function CourseVideoPlayer({
               if (player.playing) {
                 saveProgress(player.currentTime, player.duration)
               }
-            }, 30000)
+            }, 15000)
           })
 
           player.on('pause', () => {
@@ -223,13 +250,30 @@ export function CourseVideoPlayer({
 
           player.on('ended', () => {
             if (moduleUuid !== 'intro') {
-              userCourseService.completeModule(moduleUuid, {
-                position: Math.floor(player.duration),
-                event: 'completed',
-              })
+              if (videoUuid) {
+                // Multi-video lesson: send 'video_complete' event.
+                // BE atomically marks this video as is_watched = true and auto-completes
+                // the module if ALL videos in the lesson are now watched.
+                // This event never returns a 422 — it's a per-video operation.
+                userCourseService.completeModule(moduleUuid, {
+                  event: 'video_complete',
+                  lesson_video_uuid: videoUuid,
+                  position: Math.floor(player.duration),
+                  duration: Math.floor(player.duration),
+                })
+                if (markVideoCompleted) {
+                  markVideoCompleted(videoUuid)
+                }
+              } else {
+                // Legacy single-video module — complete the module directly
+                userCourseService.completeModule(moduleUuid, {
+                  event: 'completed',
+                  position: Math.floor(player.duration),
+                  duration: Math.floor(player.duration),
+                })
+              }
             }
             setIsCompleted(true)
-            if (onCompleteRef.current) onCompleteRef.current()
           })
 
           player.on('qualitychange', (event: any) => {
@@ -256,11 +300,19 @@ export function CourseVideoPlayer({
 
         const saveProgress = (currentTime: number, duration: number) => {
           if (!duration || moduleUuid === 'intro') return
+          
+          const isWatched = (currentTime / duration) >= 0.9
+          
           userCourseService.completeModule(moduleUuid, {
             position: Math.floor(currentTime),
             duration: Math.floor(duration),
             event: 'heartbeat',
+            lesson_video_uuid: videoUuid,
           })
+          
+          if (isWatched && videoUuid && markVideoCompleted) {
+            markVideoCompleted(videoUuid)
+          }
         }
 
         if (isHls && Hls.isSupported()) {
@@ -331,16 +383,79 @@ export function CourseVideoPlayer({
 
     initPlyr()
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input/textarea (e.g. comments/notes)
+      const target = e.target as HTMLElement
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) {
+        return
+      }
+
+      if (!playerRef.current) return
+      const p = playerRef.current
+
+      switch (e.key.toLowerCase()) {
+        case 'k':
+        case ' ':
+          e.preventDefault()
+          p.playing ? p.pause() : p.play()
+          break
+        case 'j':
+        case 'arrowleft':
+          e.preventDefault()
+          p.currentTime = Math.max(0, p.currentTime - 10)
+          break
+        case 'l':
+        case 'arrowright':
+          e.preventDefault()
+          p.currentTime = Math.min(p.duration, p.currentTime + 10)
+          break
+        case 'f':
+          e.preventDefault()
+          p.fullscreen.toggle()
+          break
+        case 'm':
+          e.preventDefault()
+          p.muted = !p.muted
+          break
+        case 'n':
+          if (onNext) {
+            e.preventDefault()
+            onNext()
+          }
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
     return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      // Reset flags FIRST so the next init can proceed cleanly
+      isInitializing.current = false
+
       if (heartbeatTimer.current) {
         clearInterval(heartbeatTimer.current)
+        heartbeatTimer.current = null
       }
-      if (player) {
-        player.destroy()
-      }
+
+      // Destroy HLS before Plyr to avoid stale blob:// MediaSource URLs
       if (hls) {
         hls.destroy()
+        hls = null
       }
+
+      if (player) {
+        player.destroy()
+        player = null
+      }
+
+      // Clear the ref so createPlyr guard doesn't block the next video
+      playerRef.current = null
+      lastUrlRef.current = null
+
+      // Reset loading state so next video shows the spinner
+      setIsLoading(true)
+      setError(null)
     }
   }, [isClient, url, moduleUuid])
 
@@ -376,7 +491,40 @@ export function CourseVideoPlayer({
         onNext={onNext}
         isLast={isLast}
         onFinish={onFinish}
+        nextVideoTitle={nextVideoTitle}
       />
+
+      <AnimatePresence>
+        {showResumeChip && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="absolute bottom-[70px] left-4 z-20 flex items-center gap-2 bg-slate-900/90 backdrop-blur-md text-slate-200 text-xs px-3 py-2 rounded-full shadow-xl border border-slate-700/50"
+          >
+            <span>Resumed from {formatDuration(initialPosition)}</span>
+            <div className="w-[1px] h-3 bg-slate-600 mx-0.5" />
+            <button 
+              onClick={() => {
+                if (playerRef.current) {
+                  playerRef.current.currentTime = 0
+                  playerRef.current.play()
+                }
+                setShowResumeChip(false)
+              }}
+              className="font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              Start from beginning
+            </button>
+            <button 
+              onClick={() => setShowResumeChip(false)}
+              className="ml-1 text-slate-400 hover:text-white transition-colors p-0.5 rounded-full hover:bg-slate-800"
+            >
+              <X className="size-3.5" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <VideoSecurityOverlay />
 

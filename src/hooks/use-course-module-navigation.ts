@@ -20,6 +20,20 @@ export function useCourseModuleNavigation({
     CourseModule | 'intro' | null
   >(null)
 
+  const [activeVideoUuid, setActiveVideoUuid] = useState<string | null>(null)
+  
+  // Local state to instantly track videos that become completed during this session
+  // without waiting for a full course refetch
+  const [sessionCompletedVideos, setSessionCompletedVideos] = useState<Set<string>>(new Set())
+
+  const markVideoCompleted = useCallback((videoUuid: string) => {
+    setSessionCompletedVideos(prev => {
+      const next = new Set(prev)
+      next.add(videoUuid)
+      return next
+    })
+  }, [])
+
   useEffect(() => {
     if (course && !activeModule) {
       if (course.video && (course.progress_percentage || 0) < 5) {
@@ -33,6 +47,21 @@ export function useCourseModuleNavigation({
       }
     }
   }, [course, activeModule])
+
+  useEffect(() => {
+    if (activeModule && activeModule !== 'intro') {
+      const module = activeModule as CourseModule
+      if (module.videos && module.videos.length > 0) {
+        // Find first unwatched video, or default to first video
+        const unwatched = module.videos.find(v => !v.watch_progress?.is_watched)
+        setActiveVideoUuid(unwatched?.uuid || module.videos[0].uuid)
+      } else {
+        setActiveVideoUuid(null)
+      }
+    } else {
+      setActiveVideoUuid(null)
+    }
+  }, [activeModule])
 
   const isLastModule = useMemo(() => {
     if (!course || !course.modules || activeModule === 'intro') return false
@@ -83,6 +112,21 @@ export function useCourseModuleNavigation({
     }
   }, [course, activeModule, setIsCertModalOpen])
 
+  const handleNextVideo = useCallback(() => {
+    if (activeModule && activeModule !== 'intro') {
+      const module = activeModule as CourseModule
+      if (module.videos && module.videos.length > 0 && activeVideoUuid) {
+        const currentIndex = module.videos.findIndex(v => v.uuid === activeVideoUuid)
+        if (currentIndex !== -1 && currentIndex < module.videos.length - 1) {
+          setActiveVideoUuid(module.videos[currentIndex + 1].uuid)
+          return
+        }
+      }
+    }
+    // If no more videos in this module, move to next module
+    handleNextModule()
+  }, [activeModule, activeVideoUuid, handleNextModule])
+
   const isQuiz =
     typeof activeModule !== 'string' &&
     (activeModule?.type === 'quiz' || activeModule?.module_type === 'quiz')
@@ -99,12 +143,12 @@ export function useCourseModuleNavigation({
   const activeTitle = isIntro
     ? 'Course Introduction'
     : typeof activeModule !== 'string'
-      ? activeModule?.title
+      ? activeModule?.videos?.find(v => v.uuid === activeVideoUuid)?.title || activeModule?.title
       : 'Fetching...'
   const activeVideo = isIntro
     ? course?.video
     : typeof activeModule !== 'string'
-      ? activeModule?.video
+      ? activeModule?.videos?.find(v => v.uuid === activeVideoUuid)?.stream_url || activeModule?.video
       : ''
   const activeContent = isIntro
     ? course?.content
@@ -112,12 +156,31 @@ export function useCourseModuleNavigation({
       ? activeModule?.content
       : ''
 
+  const canComplete = useMemo(() => {
+    if (isIntro) return true
+    if (isQuiz || isAssignment) return true
+    if (typeof activeModule === 'string' || !activeModule) return false
+
+    // Lesson modules: if they have a multi-video playlist, ALL videos must be watched.
+    if (activeModule.videos && activeModule.videos.length > 0) {
+      return activeModule.videos.every(v => 
+        v.watch_progress?.is_watched || sessionCompletedVideos.has(v.uuid)
+      )
+    }
+
+    // Backward compatibility for single video or text-only lessons
+    return true
+  }, [isIntro, isQuiz, isAssignment, activeModule, sessionCompletedVideos])
+
   return {
     activeModule,
     setActiveModule,
+    activeVideoUuid,
+    setActiveVideoUuid,
     isLastModule,
     handleModuleComplete,
     handleNextModule,
+    handleNextVideo,
     isQuiz,
     isAssignment,
     isIntro,
@@ -125,5 +188,8 @@ export function useCourseModuleNavigation({
     activeTitle,
     activeVideo,
     activeContent,
+    canComplete,
+    markVideoCompleted,
+    sessionCompletedVideos,
   }
 }

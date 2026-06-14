@@ -191,6 +191,15 @@ export const userCourseService = {
           videoUrl = m.video.stream_url || m.video.url || ''
           videoData = m.video
         }
+        // DEBUG: Expose raw API module to verify videos[] is coming from BE
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[LearnExperience] Module "${m.title}" raw:`, {
+            uuid: m.uuid,
+            module_type: m.module_type,
+            videos: m.videos,
+            videos_count: m.videos?.length,
+          })
+        }
         return {
           ...m,
           id: m.uuid || m.id || '',
@@ -198,6 +207,10 @@ export const userCourseService = {
           type: m.module_type || m.type || 'lesson',
           video: appendTokenToUrl(videoUrl),
           video_data: videoData,
+          videos: m.videos ? m.videos.map((v: any) => ({
+            ...v,
+            stream_url: appendTokenToUrl(v.stream_url)
+          })) : undefined,
         }
       }),
     }
@@ -208,9 +221,9 @@ export const userCourseService = {
    */
   async completeModule(
     moduleUuid: string,
-    meta?: Record<string, any>,
+    payload?: Record<string, any>,
   ): Promise<void> {
-    await apiClient.post(`/api/course/module/${moduleUuid}/complete`, { meta })
+    await apiClient.post(`/api/course/module/${moduleUuid}/complete`, payload || {})
   },
 
   /**

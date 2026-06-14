@@ -52,6 +52,7 @@ import { Quiz } from '@/types/course'
 import { QuizModal } from '@/components/admin/quiz/quiz-modal'
 import { QuizBuilderSheet } from '@/components/admin/quiz/builder/quiz-builder-sheet'
 import { AssignmentEditor } from './assignment/assignment-editor'
+import { VideoPlaylistManager } from './video-playlist-manager'
 
 const moduleSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -64,6 +65,11 @@ const moduleSchema = z.object({
     .or(z.literal('')),
   video: z.string().optional(),
   video_uuid: z.string().optional(),
+  videos: z.array(z.object({
+    title: z.string(),
+    media_uuid: z.string().optional(),
+    stream_url: z.string().optional(),
+  })).optional(),
   is_active: z.boolean(),
   published_at: z.string().optional(),
   quiz_uuid: z.string().optional(),
@@ -389,6 +395,8 @@ function ModuleItem({
       content: module.content || '',
       video: module.video || '',
       video_uuid: (module as any).video_uuid || '',
+      videos: module.videos?.map(v => ({ title: v.title, media_uuid: v.uuid, stream_url: v.stream_url })) || 
+              ((module as any).video_uuid ? [{ title: 'Video 1', media_uuid: (module as any).video_uuid, stream_url: module.video }] : []),
       is_active: module.is_active ?? false,
       published_at: module.published_at
         ? new Date(module.published_at).toISOString()
@@ -413,6 +421,22 @@ function ModuleItem({
         quizUuid = quizzes[0].uuid
       }
 
+      // Handle initial videos
+      let initialVideos: {title: string, media_uuid: string, stream_url?: string}[] = []
+      if (module.videos && module.videos.length > 0) {
+        initialVideos = module.videos.map(v => ({
+          title: v.title,
+          media_uuid: v.uuid,
+          stream_url: v.stream_url
+        }))
+      } else if ((module as any).video_uuid || module.video) {
+        initialVideos = [{
+          title: 'Video 1',
+          media_uuid: (module as any).video_uuid || '',
+          stream_url: module.video || ''
+        }]
+      }
+
       form.reset({
         title: module.title,
         type: mType,
@@ -420,6 +444,7 @@ function ModuleItem({
         content: module.content || '',
         video: module.video || '',
         video_uuid: (module as any).video_uuid || '',
+        videos: initialVideos,
         is_active: module.is_active ?? false,
         published_at: module.published_at
           ? new Date(module.published_at).toISOString()
@@ -524,6 +549,16 @@ function ModuleItem({
       // Cleanup payload based on type to ensure backend integrity
       if (values.type === 'lesson') {
         delete (payload as any).quiz_uuid
+        
+        // Remove empty videos and ensure activation rules
+        if (payload.videos) {
+          payload.videos = payload.videos.filter((v: any) => v.media_uuid)
+        }
+        if (payload.is_active && (!payload.videos || payload.videos.length === 0)) {
+          toast.error('Cannot activate a lesson module without videos')
+          setIsSaving(false)
+          return
+        }
       } else if (values.type === 'quiz') {
         // Ensure quiz_uuid is present; if it's an empty string, we can send null if required,
         // but typically a required select ensures it's there
@@ -538,9 +573,30 @@ function ModuleItem({
         module.id,
         payload as any,
       )
-      onUpdate(updated as CourseModule)
+
+      // If the API response doesn't include the videos array (common),
+      // preserve the form's current video list so the isExpanded reset
+      // effect doesn't wipe the playlist on the next render.
+      const currentFormVideos = values.videos
+      const mergedModule: CourseModule = {
+        ...updated,
+        videos:
+          updated.videos && updated.videos.length > 0
+            ? updated.videos
+            : currentFormVideos
+                ?.filter((v) => v.media_uuid)
+                .map((v, i) => ({
+                  uuid: v.media_uuid || '',
+                  title: v.title || `Video ${i + 1}`,
+                  order_weight: i,
+                  stream_url: v.stream_url || '',
+                  watch_progress: null,
+                })) ?? [],
+      }
+
+      onUpdate(mergedModule)
       toast.success('Module saved')
-      // Removed onExpand() to keep module open after save as per user preference for staying on module properly
+      // Keep module open after save
     } catch (error: any) {
       if (error.response?.data?.errors) {
         Object.keys(error.response.data.errors).forEach((key) => {
@@ -865,53 +921,15 @@ function ModuleItem({
                               />
                             </div>
 
-                            {/* Row 2: Video (Centered) */}
-                            <div className="flex justify-center py-8 border-y border-border/50 bg-muted/20 -mx-6 px-6">
-                              <div className="w-full md:w-1/3 max-w-[420px]">
-                                <FormInputVideo
-                                  compact
-                                  control={form.control}
-                                  isUploading={isUploadingVideo}
-                                  label={t('common.video', 'Video')}
-                                  name="video"
-                                  videoStatus={videoStatus as any}
-                                  onClear={() => {
-                                    form.setValue('video', '')
-                                    form.setValue('video_uuid', '')
-                                    setVideoStatus({
-                                      status: null,
-                                      progress: 0,
-                                      uuid: null,
-                                    })
-                                  }}
-                                  onUpload={handleVideoUpload}
-                                />
-                                {videoStatus.status === 'failed' && videoStatus.uuid && (
-                                  <div className="mt-4 flex justify-center">
-                                    <Button
-                                      type="button"
-                                      variant="destructive"
-                                      size="sm"
-                                      className="w-full gap-2 font-bold uppercase tracking-widest text-xs"
-                                      onClick={async () => {
-                                        try {
-                                          await adminMediaService.reprocess(videoStatus.uuid!)
-                                          setVideoStatus(prev => ({ ...prev, status: 'pending', progress: 0 }))
-                                          toast.success('Video queued for re-encoding')
-                                        } catch (error: any) {
-                                          if (error.response?.status === 409) {
-                                            toast.error('Already processing. Please wait.')
-                                          } else {
-                                            toast.error('Failed to request re-encoding')
-                                          }
-                                        }
-                                      }}
-                                    >
-                                      Re-encode Video
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
+                            {/* Row 2: Video Playlist Manager */}
+                            <div className="py-8 border-y border-border/50 bg-muted/20 -mx-6 px-6">
+                              <VideoPlaylistManager 
+                                control={form.control} 
+                                setValue={form.setValue}
+                                name="videos" 
+                                label="Lesson Videos"
+                                description="Add one or more videos to this lesson. Drag to reorder."
+                              />
                             </div>
 
                             {/* Row 3: Content */}

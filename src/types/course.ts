@@ -7,6 +7,23 @@ export interface CourseCategory {
   createdAt: string
 }
 
+export interface LessonVideoProgress {
+  last_position_seconds: number
+  is_watched: boolean
+  watched_at: string | null
+}
+
+export interface LessonVideo {
+  uuid: string
+  title: string
+  order_weight: number
+  stream_url?: string
+  duration?: number
+  watch_progress?: LessonVideoProgress | null
+  media_uuid?: string
+  status?: 'pending' | 'processing' | 'available' | 'failed'
+}
+
 export interface CourseModule {
   id: string
   title: string
@@ -17,6 +34,7 @@ export interface CourseModule {
   video?: string
   video_uuid?: string
   video_data?: VideoResource
+  videos?: LessonVideo[]
   order_weight: number
   order?: number
   is_active: boolean
