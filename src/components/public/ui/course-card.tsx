@@ -28,7 +28,7 @@ export function CourseCard({
   return (
     <Card
       className={cn(
-        "flex flex-col h-full border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-[#056FAE]/10 hover:border-[#056FAE]/20 hover:-translate-y-1 transition-all duration-300 overflow-hidden bg-white p-0 rounded-[6px] group",
+        "flex flex-col h-full border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-slate-200/60 hover:border-slate-300 hover:-translate-y-1 transition-all duration-300 overflow-hidden bg-white p-0 rounded-lg group",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -171,7 +171,7 @@ export function CourseCard({
 
 export function CourseCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn("flex flex-col h-full border border-slate-100 shadow-sm overflow-hidden bg-white rounded-[6px]", className)}>
+    <div className={cn("flex flex-col h-full border border-slate-200 shadow-sm overflow-hidden bg-white rounded-lg", className)}>
       <div className="aspect-video relative overflow-hidden bg-slate-50">
         <Skeleton className="w-full h-full rounded-none" />
       </div>

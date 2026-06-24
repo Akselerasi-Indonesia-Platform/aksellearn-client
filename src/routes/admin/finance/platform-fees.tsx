@@ -86,6 +86,7 @@ const platformFeesSearchSchema = z.object({
 export const Route = createFileRoute('/admin/finance/platform-fees')({
   validateSearch: platformFeesSearchSchema,
   beforeLoad: () => {
+    if (typeof window === 'undefined') return
     const user = getUser()
     const isSuperAdminOrAdmin = user?.roles?.some((role: any) => {
       const name = typeof role === 'string' ? role : role.name

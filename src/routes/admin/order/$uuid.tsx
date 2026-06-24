@@ -240,43 +240,7 @@ function OrderDetailPage() {
           </div>
         </div>
 
-        {showAdminActions && (
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              className="h-10 w-10 p-0 rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10 transition-all"
-              onClick={() => setIsDeleteDialogOpen(true)}
-              title="Delete Order"
-            >
-              <Trash2 className="size-5" />
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-xl bg-white shadow-sm font-semibold"
-              onClick={() => refreshMutation.mutate(order.uuid)}
-              disabled={refreshMutation.isPending}
-            >
-              <RefreshCcw className={`mr-2 size-4 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
-              Sync Status
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 font-semibold border-red-200"
-              onClick={() => setIsCancelOpen(true)}
-              disabled={order.payment_status === 'paid' || order.payment_status === 'cancelled'}
-            >
-              <XCircle className="mr-2 size-4" /> Cancel Order
-            </Button>
-            <Button
-              variant="default"
-              className="rounded-xl bg-purple-600 hover:bg-purple-700 font-semibold shadow-md"
-              onClick={() => setIsRefundOpen(true)}
-              disabled={order.payment_status !== 'paid'}
-            >
-              <Undo2 className="mr-2 size-4" /> Issue Refund
-            </Button>
-          </div>
-        )}
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

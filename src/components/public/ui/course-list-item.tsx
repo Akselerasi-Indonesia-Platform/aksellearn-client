@@ -22,14 +22,14 @@ export function CourseListItem({
   return (
     <Card
       className={cn(
-        "flex flex-col sm:flex-row h-full border-b border-t-0 border-x-0 border-slate-200 shadow-none hover:bg-slate-50 transition-all duration-300 overflow-hidden bg-transparent p-0 rounded-none group py-4 gap-4",
+        "flex flex-col sm:flex-row h-full border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-slate-200/60 hover:-translate-y-1 hover:border-slate-300 transition-all duration-300 overflow-hidden bg-white p-3 rounded-xl group gap-4",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Thumbnail */}
-      <div className="sm:w-64 shrink-0 aspect-video relative overflow-hidden bg-slate-50 rounded-md">
+      <div className="sm:w-64 shrink-0 aspect-video relative overflow-hidden bg-slate-50 rounded-lg">
         <img
           src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop'}
           alt={course.title}
@@ -142,8 +142,8 @@ export function CourseListItem({
 
 export function CourseListItemSkeleton() {
   return (
-    <div className="flex flex-col sm:flex-row h-full border-b border-t-0 border-x-0 border-slate-200 overflow-hidden bg-transparent rounded-none py-4 gap-4">
-      <div className="sm:w-64 shrink-0 aspect-video relative overflow-hidden bg-slate-50 rounded-md">
+    <div className="flex flex-col sm:flex-row h-full border border-slate-200 shadow-sm overflow-hidden bg-white p-3 rounded-xl gap-4">
+      <div className="sm:w-64 shrink-0 aspect-video relative overflow-hidden bg-slate-50 rounded-lg">
         <Skeleton className="w-full h-full rounded-none" />
       </div>
       <div className="p-0 flex-1 flex flex-col sm:flex-row gap-4">

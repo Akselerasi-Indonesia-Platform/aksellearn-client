@@ -20,6 +20,7 @@ import { EmailVerificationBanner } from '@/components/auth/email-verification-ba
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async ({ location, context }) => {
+    if (typeof window === 'undefined') return
     const isClient = typeof window !== 'undefined'
 
     let authenticated = false
@@ -128,6 +129,10 @@ function AdminLayout() {
   
   React.useEffect(() => {
     setIsHydrated(true)
+    document.body.classList.add('admin-theme')
+    return () => {
+      document.body.classList.remove('admin-theme')
+    }
   }, [])
 
   // 🛡️ Prevent Hydration Mismatch:

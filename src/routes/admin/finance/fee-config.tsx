@@ -50,6 +50,7 @@ type FeeConfigFormValues = z.infer<typeof feeConfigSchema>
 
 export const Route = createFileRoute('/admin/finance/fee-config')({
   beforeLoad: () => {
+    if (typeof window === 'undefined') return
     const user = getUser()
     const isSuperAdminOrAdmin = user?.roles?.some((role: any) => {
       const name = typeof role === 'string' ? role : role.name

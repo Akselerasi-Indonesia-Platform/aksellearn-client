@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import {
   BookOpen,
+  BookMarked,
   Command,
   FileText,
   History,
@@ -92,9 +93,24 @@ export function AdminSidebar({
             roles: ['Super Admin', 'Teacher', 'Instructor'],
           },
           {
+            title: t('sidebar.myBankAccounts', 'Bank Accounts'),
+            url: '/admin/instructor/bank-accounts',
+            roles: ['Teacher', 'Instructor'],
+          },
+          {
+            title: t('sidebar.myWithdrawals', 'My Withdrawals'),
+            url: '/admin/instructor/withdrawals',
+            roles: ['Teacher', 'Instructor'],
+          },
+          {
             title: t('sidebar.feeConfig', 'Platform Fee'),
             url: '/admin/finance/platform-fees',
             roles: ['Super Admin'],
+          },
+          {
+            title: t('sidebar.withdrawals', 'Withdrawals'),
+            url: '/admin/finance/withdrawals',
+            roles: ['Super Admin', 'Admin'],
           },
         ],
       },
@@ -216,6 +232,21 @@ export function AdminSidebar({
           {
             title: t('sidebar.paymentMethods', 'Payment Methods'),
             url: '/admin/setting/payment-method',
+          },
+        ],
+      },
+      {
+        title: t('sidebar.guide', 'Guide'),
+        url: '/admin/guide',
+        icon: BookMarked,
+        items: [
+          {
+            title: t('sidebar.guideCourse', 'Course Management'),
+            url: '/admin/guide/course',
+          },
+          {
+            title: t('sidebar.guidePromotion', 'Promotion & Coupon'),
+            url: '/admin/guide/promotion',
           },
         ],
       },

@@ -156,16 +156,19 @@ export function CourseSyllabusSidebar({
             onClick={() => onSelectModule?.('intro')}
             className={cn(
               'w-full text-left transition-all group active:scale-[0.98] relative',
-              isCollapsed ? 'p-2 rounded-xl' : 'px-3 py-2.5 rounded-xl',
+              isCollapsed ? 'p-2 rounded-lg' : 'px-3 py-2.5 rounded-lg',
               activeModuleUuid === 'intro' && !isCollapsed
-                ? 'bg-primary/5 text-primary border-l-2 border-primary rounded-l-none'
+                ? 'bg-slate-100 text-primary font-medium'
                 : activeModuleUuid === 'intro' && isCollapsed
                   ? 'bg-slate-100 text-primary'
-                  : 'hover:bg-white bg-transparent',
+                  : 'hover:bg-slate-50 bg-transparent',
             )}
           >
             {activeModuleUuid === 'intro' && isCollapsed && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md shadow-[2px_0_8px_rgba(5,111,174,0.4)]" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md" />
+            )}
+            {activeModuleUuid === 'intro' && !isCollapsed && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md" />
             )}
             <div className={cn("flex w-full", isCollapsed ? "justify-center items-center" : "items-center gap-3")}>
               <div
@@ -265,19 +268,22 @@ export function CourseSyllabusSidebar({
                 aria-expanded={hasVideos ? isOpen : undefined}
                 className={cn(
                   'w-full text-left transition-all group active:scale-[0.98] relative',
-                  isCollapsed ? 'p-2 rounded-xl' : 'px-3 py-3 w-full rounded-xl',
+                  isCollapsed ? 'p-2 rounded-lg' : 'px-3 py-3 w-full rounded-lg',
                   isActive && !isCollapsed
-                    ? 'bg-primary/5 border-l-2 border-primary rounded-l-none'
+                    ? 'bg-slate-100 text-primary font-medium'
                     : isActive && isCollapsed
                       ? 'bg-slate-100 text-primary'
                       : isCompleted && !isCollapsed
-                        ? 'hover:bg-slate-100/80 bg-transparent'
-                        : 'hover:bg-white bg-transparent',
+                        ? 'hover:bg-slate-100/60 bg-transparent'
+                        : 'hover:bg-slate-50 bg-transparent',
                   isLocked && 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent',
                 )}
               >
                 {isActive && isCollapsed && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md shadow-[2px_0_8px_rgba(5,111,174,0.4)]" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md" />
+                )}
+                {isActive && !isCollapsed && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md" />
                 )}
                 <div className={cn("flex w-full", isCollapsed ? "justify-center items-center" : "items-center gap-3")}>
                   {/* Status Icon */}
@@ -378,7 +384,7 @@ export function CourseSyllabusSidebar({
                             'w-full text-left flex items-start gap-2.5 px-3 py-2 rounded-lg transition-all relative overflow-hidden',
                             isVideoActive
                               ? 'bg-primary/10 text-primary'
-                              : 'text-slate-600 hover:bg-white hover:text-slate-900',
+                              : 'text-slate-600 hover:bg-slate-100/60 hover:text-slate-900',
                           )}
                         >
                           {/* Video status icon */}

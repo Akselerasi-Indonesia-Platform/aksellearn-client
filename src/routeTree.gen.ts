@@ -56,6 +56,7 @@ import { Route as AdminPromotionIndexRouteImport } from './routes/admin/promotio
 import { Route as AdminOrganizationIndexRouteImport } from './routes/admin/organization/index'
 import { Route as AdminOrderIndexRouteImport } from './routes/admin/order/index'
 import { Route as AdminInstructorApplicationsIndexRouteImport } from './routes/admin/instructor-applications/index'
+import { Route as AdminGuideIndexRouteImport } from './routes/admin/guide/index'
 import { Route as AdminCourseIndexRouteImport } from './routes/admin/course/index'
 import { Route as AdminArticleIndexRouteImport } from './routes/admin/article/index'
 import { Route as StudentOrderUuidRouteImport } from './routes/student.order.$uuid'
@@ -75,8 +76,11 @@ import { Route as AdminPromotionCouponRouteImport } from './routes/admin/promoti
 import { Route as AdminOrganizationTagRouteImport } from './routes/admin/organization/tag'
 import { Route as AdminOrganizationOrgUuidRouteImport } from './routes/admin/organization/$orgUuid'
 import { Route as AdminOrderUuidRouteImport } from './routes/admin/order/$uuid'
+import { Route as AdminInstructorWithdrawalsRouteImport } from './routes/admin/instructor/withdrawals'
 import { Route as AdminInstructorRevenueRouteImport } from './routes/admin/instructor/revenue'
+import { Route as AdminInstructorBankAccountsRouteImport } from './routes/admin/instructor/bank-accounts'
 import { Route as AdminInstructorApplicationsUuidRouteImport } from './routes/admin/instructor-applications/$uuid'
+import { Route as AdminFinanceWithdrawalsRouteImport } from './routes/admin/finance/withdrawals'
 import { Route as AdminFinancePlatformFeesRouteImport } from './routes/admin/finance/platform-fees'
 import { Route as AdminFinancePayoutsRouteImport } from './routes/admin/finance/payouts'
 import { Route as AdminFinanceFeeConfigRouteImport } from './routes/admin/finance/fee-config'
@@ -86,6 +90,8 @@ import { Route as AdminCourseCourseIdRouteImport } from './routes/admin/course/$
 import { Route as AdminArticleCreateRouteImport } from './routes/admin/article/create'
 import { Route as AdminArticleCategoryRouteImport } from './routes/admin/article/category'
 import { Route as AdminArticleArticleIdRouteImport } from './routes/admin/article/$articleId'
+import { Route as AdminGuidePromotionIndexRouteImport } from './routes/admin/guide/promotion/index'
+import { Route as AdminGuideCourseIndexRouteImport } from './routes/admin/guide/course/index'
 import { Route as AdminPromotionPromotionIdEditRouteImport } from './routes/admin/promotion/$promotionId.edit'
 import { Route as AdminCourseGradebookCourseIdRouteImport } from './routes/admin/course/gradebook.$courseId'
 
@@ -326,6 +332,11 @@ const AdminInstructorApplicationsIndexRoute =
     path: '/instructor-applications/',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminGuideIndexRoute = AdminGuideIndexRouteImport.update({
+  id: '/guide/',
+  path: '/guide/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCourseIndexRoute = AdminCourseIndexRouteImport.update({
   id: '/course/',
   path: '/course/',
@@ -427,17 +438,34 @@ const AdminOrderUuidRoute = AdminOrderUuidRouteImport.update({
   path: '/order/$uuid',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminInstructorWithdrawalsRoute =
+  AdminInstructorWithdrawalsRouteImport.update({
+    id: '/instructor/withdrawals',
+    path: '/instructor/withdrawals',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminInstructorRevenueRoute = AdminInstructorRevenueRouteImport.update({
   id: '/instructor/revenue',
   path: '/instructor/revenue',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminInstructorBankAccountsRoute =
+  AdminInstructorBankAccountsRouteImport.update({
+    id: '/instructor/bank-accounts',
+    path: '/instructor/bank-accounts',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminInstructorApplicationsUuidRoute =
   AdminInstructorApplicationsUuidRouteImport.update({
     id: '/instructor-applications/$uuid',
     path: '/instructor-applications/$uuid',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminFinanceWithdrawalsRoute = AdminFinanceWithdrawalsRouteImport.update({
+  id: '/finance/withdrawals',
+  path: '/finance/withdrawals',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFinancePlatformFeesRoute =
   AdminFinancePlatformFeesRouteImport.update({
     id: '/finance/platform-fees',
@@ -482,6 +510,17 @@ const AdminArticleCategoryRoute = AdminArticleCategoryRouteImport.update({
 const AdminArticleArticleIdRoute = AdminArticleArticleIdRouteImport.update({
   id: '/article/$articleId',
   path: '/article/$articleId',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGuidePromotionIndexRoute =
+  AdminGuidePromotionIndexRouteImport.update({
+    id: '/guide/promotion/',
+    path: '/guide/promotion/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminGuideCourseIndexRoute = AdminGuideCourseIndexRouteImport.update({
+  id: '/guide/course/',
+  path: '/guide/course/',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPromotionPromotionIdEditRoute =
@@ -545,8 +584,11 @@ export interface FileRoutesByFullPath {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
+  '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
   '/admin/instructor/revenue': typeof AdminInstructorRevenueRoute
+  '/admin/instructor/withdrawals': typeof AdminInstructorWithdrawalsRoute
   '/admin/order/$uuid': typeof AdminOrderUuidRoute
   '/admin/organization/$orgUuid': typeof AdminOrganizationOrgUuidRoute
   '/admin/organization/tag': typeof AdminOrganizationTagRoute
@@ -566,6 +608,7 @@ export interface FileRoutesByFullPath {
   '/student/order/$uuid': typeof StudentOrderUuidRoute
   '/admin/article/': typeof AdminArticleIndexRoute
   '/admin/course/': typeof AdminCourseIndexRoute
+  '/admin/guide/': typeof AdminGuideIndexRoute
   '/admin/instructor-applications/': typeof AdminInstructorApplicationsIndexRoute
   '/admin/order/': typeof AdminOrderIndexRoute
   '/admin/organization/': typeof AdminOrganizationIndexRoute
@@ -577,6 +620,8 @@ export interface FileRoutesByFullPath {
   '/student/order/': typeof StudentOrderIndexRoute
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
+  '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -625,8 +670,11 @@ export interface FileRoutesByTo {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
+  '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
   '/admin/instructor/revenue': typeof AdminInstructorRevenueRoute
+  '/admin/instructor/withdrawals': typeof AdminInstructorWithdrawalsRoute
   '/admin/order/$uuid': typeof AdminOrderUuidRoute
   '/admin/organization/$orgUuid': typeof AdminOrganizationOrgUuidRoute
   '/admin/organization/tag': typeof AdminOrganizationTagRoute
@@ -646,6 +694,7 @@ export interface FileRoutesByTo {
   '/student/order/$uuid': typeof StudentOrderUuidRoute
   '/admin/article': typeof AdminArticleIndexRoute
   '/admin/course': typeof AdminCourseIndexRoute
+  '/admin/guide': typeof AdminGuideIndexRoute
   '/admin/instructor-applications': typeof AdminInstructorApplicationsIndexRoute
   '/admin/order': typeof AdminOrderIndexRoute
   '/admin/organization': typeof AdminOrganizationIndexRoute
@@ -657,6 +706,8 @@ export interface FileRoutesByTo {
   '/student/order': typeof StudentOrderIndexRoute
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
+  '/admin/guide/course': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/promotion': typeof AdminGuidePromotionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -707,8 +758,11 @@ export interface FileRoutesById {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
+  '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
   '/admin/instructor/revenue': typeof AdminInstructorRevenueRoute
+  '/admin/instructor/withdrawals': typeof AdminInstructorWithdrawalsRoute
   '/admin/order/$uuid': typeof AdminOrderUuidRoute
   '/admin/organization/$orgUuid': typeof AdminOrganizationOrgUuidRoute
   '/admin/organization/tag': typeof AdminOrganizationTagRoute
@@ -728,6 +782,7 @@ export interface FileRoutesById {
   '/student/order/$uuid': typeof StudentOrderUuidRoute
   '/admin/article/': typeof AdminArticleIndexRoute
   '/admin/course/': typeof AdminCourseIndexRoute
+  '/admin/guide/': typeof AdminGuideIndexRoute
   '/admin/instructor-applications/': typeof AdminInstructorApplicationsIndexRoute
   '/admin/order/': typeof AdminOrderIndexRoute
   '/admin/organization/': typeof AdminOrganizationIndexRoute
@@ -739,6 +794,8 @@ export interface FileRoutesById {
   '/student/order/': typeof StudentOrderIndexRoute
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
+  '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -790,8 +847,11 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
+    | '/admin/instructor/bank-accounts'
     | '/admin/instructor/revenue'
+    | '/admin/instructor/withdrawals'
     | '/admin/order/$uuid'
     | '/admin/organization/$orgUuid'
     | '/admin/organization/tag'
@@ -811,6 +871,7 @@ export interface FileRouteTypes {
     | '/student/order/$uuid'
     | '/admin/article/'
     | '/admin/course/'
+    | '/admin/guide/'
     | '/admin/instructor-applications/'
     | '/admin/order/'
     | '/admin/organization/'
@@ -822,6 +883,8 @@ export interface FileRouteTypes {
     | '/student/order/'
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
+    | '/admin/guide/course/'
+    | '/admin/guide/promotion/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -870,8 +933,11 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
+    | '/admin/instructor/bank-accounts'
     | '/admin/instructor/revenue'
+    | '/admin/instructor/withdrawals'
     | '/admin/order/$uuid'
     | '/admin/organization/$orgUuid'
     | '/admin/organization/tag'
@@ -891,6 +957,7 @@ export interface FileRouteTypes {
     | '/student/order/$uuid'
     | '/admin/article'
     | '/admin/course'
+    | '/admin/guide'
     | '/admin/instructor-applications'
     | '/admin/order'
     | '/admin/organization'
@@ -902,6 +969,8 @@ export interface FileRouteTypes {
     | '/student/order'
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
+    | '/admin/guide/course'
+    | '/admin/guide/promotion'
   id:
     | '__root__'
     | '/'
@@ -951,8 +1020,11 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
+    | '/admin/instructor/bank-accounts'
     | '/admin/instructor/revenue'
+    | '/admin/instructor/withdrawals'
     | '/admin/order/$uuid'
     | '/admin/organization/$orgUuid'
     | '/admin/organization/tag'
@@ -972,6 +1044,7 @@ export interface FileRouteTypes {
     | '/student/order/$uuid'
     | '/admin/article/'
     | '/admin/course/'
+    | '/admin/guide/'
     | '/admin/instructor-applications/'
     | '/admin/order/'
     | '/admin/organization/'
@@ -983,6 +1056,8 @@ export interface FileRouteTypes {
     | '/student/order/'
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
+    | '/admin/guide/course/'
+    | '/admin/guide/promotion/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1349,6 +1424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInstructorApplicationsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide/': {
+      id: '/admin/guide/'
+      path: '/guide'
+      fullPath: '/admin/guide/'
+      preLoaderRoute: typeof AdminGuideIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/course/': {
       id: '/admin/course/'
       path: '/course'
@@ -1482,6 +1564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrderUuidRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/instructor/withdrawals': {
+      id: '/admin/instructor/withdrawals'
+      path: '/instructor/withdrawals'
+      fullPath: '/admin/instructor/withdrawals'
+      preLoaderRoute: typeof AdminInstructorWithdrawalsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/instructor/revenue': {
       id: '/admin/instructor/revenue'
       path: '/instructor/revenue'
@@ -1489,11 +1578,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInstructorRevenueRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/instructor/bank-accounts': {
+      id: '/admin/instructor/bank-accounts'
+      path: '/instructor/bank-accounts'
+      fullPath: '/admin/instructor/bank-accounts'
+      preLoaderRoute: typeof AdminInstructorBankAccountsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/instructor-applications/$uuid': {
       id: '/admin/instructor-applications/$uuid'
       path: '/instructor-applications/$uuid'
       fullPath: '/admin/instructor-applications/$uuid'
       preLoaderRoute: typeof AdminInstructorApplicationsUuidRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/finance/withdrawals': {
+      id: '/admin/finance/withdrawals'
+      path: '/finance/withdrawals'
+      fullPath: '/admin/finance/withdrawals'
+      preLoaderRoute: typeof AdminFinanceWithdrawalsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/finance/platform-fees': {
@@ -1559,6 +1662,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticleArticleIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide/promotion/': {
+      id: '/admin/guide/promotion/'
+      path: '/guide/promotion'
+      fullPath: '/admin/guide/promotion/'
+      preLoaderRoute: typeof AdminGuidePromotionIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/guide/course/': {
+      id: '/admin/guide/course/'
+      path: '/guide/course'
+      fullPath: '/admin/guide/course/'
+      preLoaderRoute: typeof AdminGuideCourseIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/promotion/$promotionId/edit': {
       id: '/admin/promotion/$promotionId/edit'
       path: '/promotion/$promotionId/edit'
@@ -1593,8 +1710,11 @@ interface AdminRouteChildren {
   AdminFinanceFeeConfigRoute: typeof AdminFinanceFeeConfigRoute
   AdminFinancePayoutsRoute: typeof AdminFinancePayoutsRoute
   AdminFinancePlatformFeesRoute: typeof AdminFinancePlatformFeesRoute
+  AdminFinanceWithdrawalsRoute: typeof AdminFinanceWithdrawalsRoute
   AdminInstructorApplicationsUuidRoute: typeof AdminInstructorApplicationsUuidRoute
+  AdminInstructorBankAccountsRoute: typeof AdminInstructorBankAccountsRoute
   AdminInstructorRevenueRoute: typeof AdminInstructorRevenueRoute
+  AdminInstructorWithdrawalsRoute: typeof AdminInstructorWithdrawalsRoute
   AdminOrderUuidRoute: typeof AdminOrderUuidRoute
   AdminOrganizationOrgUuidRoute: typeof AdminOrganizationOrgUuidRoute
   AdminOrganizationTagRoute: typeof AdminOrganizationTagRoute
@@ -1608,6 +1728,7 @@ interface AdminRouteChildren {
   AdminSettingPlatformRoute: typeof AdminSettingPlatformRoute
   AdminArticleIndexRoute: typeof AdminArticleIndexRoute
   AdminCourseIndexRoute: typeof AdminCourseIndexRoute
+  AdminGuideIndexRoute: typeof AdminGuideIndexRoute
   AdminInstructorApplicationsIndexRoute: typeof AdminInstructorApplicationsIndexRoute
   AdminOrderIndexRoute: typeof AdminOrderIndexRoute
   AdminOrganizationIndexRoute: typeof AdminOrganizationIndexRoute
@@ -1617,6 +1738,8 @@ interface AdminRouteChildren {
   AdminUserIndexRoute: typeof AdminUserIndexRoute
   AdminCourseGradebookCourseIdRoute: typeof AdminCourseGradebookCourseIdRoute
   AdminPromotionPromotionIdEditRoute: typeof AdminPromotionPromotionIdEditRoute
+  AdminGuideCourseIndexRoute: typeof AdminGuideCourseIndexRoute
+  AdminGuidePromotionIndexRoute: typeof AdminGuidePromotionIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -1636,8 +1759,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFinanceFeeConfigRoute: AdminFinanceFeeConfigRoute,
   AdminFinancePayoutsRoute: AdminFinancePayoutsRoute,
   AdminFinancePlatformFeesRoute: AdminFinancePlatformFeesRoute,
+  AdminFinanceWithdrawalsRoute: AdminFinanceWithdrawalsRoute,
   AdminInstructorApplicationsUuidRoute: AdminInstructorApplicationsUuidRoute,
+  AdminInstructorBankAccountsRoute: AdminInstructorBankAccountsRoute,
   AdminInstructorRevenueRoute: AdminInstructorRevenueRoute,
+  AdminInstructorWithdrawalsRoute: AdminInstructorWithdrawalsRoute,
   AdminOrderUuidRoute: AdminOrderUuidRoute,
   AdminOrganizationOrgUuidRoute: AdminOrganizationOrgUuidRoute,
   AdminOrganizationTagRoute: AdminOrganizationTagRoute,
@@ -1652,6 +1778,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingPlatformRoute: AdminSettingPlatformRoute,
   AdminArticleIndexRoute: AdminArticleIndexRoute,
   AdminCourseIndexRoute: AdminCourseIndexRoute,
+  AdminGuideIndexRoute: AdminGuideIndexRoute,
   AdminInstructorApplicationsIndexRoute: AdminInstructorApplicationsIndexRoute,
   AdminOrderIndexRoute: AdminOrderIndexRoute,
   AdminOrganizationIndexRoute: AdminOrganizationIndexRoute,
@@ -1661,6 +1788,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminUserIndexRoute: AdminUserIndexRoute,
   AdminCourseGradebookCourseIdRoute: AdminCourseGradebookCourseIdRoute,
   AdminPromotionPromotionIdEditRoute: AdminPromotionPromotionIdEditRoute,
+  AdminGuideCourseIndexRoute: AdminGuideCourseIndexRoute,
+  AdminGuidePromotionIndexRoute: AdminGuidePromotionIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

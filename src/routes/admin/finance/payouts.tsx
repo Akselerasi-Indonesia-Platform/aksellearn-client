@@ -45,6 +45,7 @@ import { format } from 'date-fns'
 
 export const Route = createFileRoute('/admin/finance/payouts')({
   beforeLoad: () => {
+    if (typeof window === 'undefined') return
     const user = getUser()
     const isSuperAdminOrAdmin = user?.roles?.some((role: any) => {
       const name = typeof role === 'string' ? role : role.name

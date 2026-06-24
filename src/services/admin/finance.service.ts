@@ -57,6 +57,32 @@ export const adminFinanceService = {
     return response.data.data || response.data
   },
 
+  // --- NEW Admin Withdrawals (Super Admin / Admin) ---
+  async getAdminWithdrawals(params?: {
+    page?: number
+    limit?: number
+    status?: 'pending' | 'completed' | 'rejected'
+  }): Promise<{ data: any[]; meta: any }> {
+    const response = await apiClient.get('/api/admin/withdrawals', { params })
+    return response.data
+  },
+
+  async approveAdminWithdrawal(id: string, formData: FormData): Promise<any> {
+    const response = await apiClient.post(`/api/admin/withdrawals/${id}/approve`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data.data || response.data
+  },
+
+  async rejectAdminWithdrawal(id: string, rejectedReason: string): Promise<any> {
+    const response = await apiClient.post(`/api/admin/withdrawals/${id}/reject`, {
+      rejected_reason: rejectedReason,
+    })
+    return response.data.data || response.data
+  },
+
   // --- NEW Instructor Self-Service Payouts ---
   async getInstructorPayoutsSummary(): Promise<{
     total_earnings: number

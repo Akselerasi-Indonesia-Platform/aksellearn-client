@@ -63,7 +63,12 @@ export const adminOrderService = {
     meta: any
   }> {
     const response = await apiClient.get('/api/admin/order', { params })
-    return response.data
+    
+    // FIX: Map the Goravel pagination envelope correctly
+    return {
+      orders: response.data.data,
+      meta: response.data.meta,
+    }
   },
 
   /**

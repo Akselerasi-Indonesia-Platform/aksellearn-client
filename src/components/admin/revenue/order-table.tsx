@@ -157,85 +157,19 @@ export function OrderTable({
       header: 'Actions',
       headerClassName: 'text-center',
       cell: (item: any) => {
-        const user = getUser()
-        const isSuperAdmin = user?.roles?.some((role: any) => {
-          const name = typeof role === 'string' ? role : role.name
-          return name === 'Super Admin' || name === 'Admin'
-        })
-        const showAdminActions = isSuperAdmin || can('order.refund')
-
-        if (!showAdminActions) {
-          return (
-            <div className="flex justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="rounded-xl h-8 px-3 flex items-center gap-1.5 text-xs font-bold text-primary hover:bg-primary/10 border border-primary/20 transition-all duration-300"
-              >
-                <Link to={`/admin/order/${item.uuid}` as any}>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  View Details
-                </Link>
-              </Button>
-            </div>
-          )
-        }
-
         return (
           <div className="flex justify-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-48 admin-theme"
-              >
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Admin Intervention
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => onRefresh(item.uuid)}
-                  className="text-xs"
-                >
-                  <RefreshCcw className="mr-2 h-3.5 w-3.5" /> Force Sync
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => onRefund(item.uuid)}
-                  disabled={
-                    item.status === 'refunded' ||
-                    item.status === 'cancelled'
-                  }
-                  className="text-purple-600 focus:text-purple-600 text-xs"
-                >
-                  <Undo2 className="mr-2 h-3.5 w-3.5" /> Execute Refund
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onCancel(item.uuid)}
-                  disabled={
-                    item.status === 'cancelled' ||
-                    item.status === 'paid'
-                  }
-                  className="text-red-600 focus:text-red-600 text-xs"
-                >
-                  <XCircle className="mr-2 h-3.5 w-3.5" /> Terminate Order
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-xs p-0">
-                  <Link to={`/admin/order/${item.uuid}` as any} className="flex items-center px-2 py-1.5 w-full">
-                    <ExternalLink className="mr-2 h-3.5 w-3.5" /> View
-                    Details
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="rounded-xl h-8 px-3 flex items-center gap-1.5 text-xs font-bold text-primary hover:bg-primary/10 border border-primary/20 transition-all duration-300"
+            >
+              <Link to={`/admin/order/${item.uuid}` as any}>
+                <ExternalLink className="h-3.5 w-3.5" />
+                View Details
+              </Link>
+            </Button>
           </div>
         )
       },
