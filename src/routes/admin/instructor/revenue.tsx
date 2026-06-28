@@ -11,7 +11,7 @@ import {
 import { adminInstructorService } from '@/services/admin/instructor.service'
 import { AdminPage } from '@/components/admin/shared/layout/admin-page'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatCurrency } from '@/lib/utils'
+import { formatIDR } from '@/lib/currency'
 
 export const Route = createFileRoute('/admin/instructor/revenue')({
   component: InstructorRevenuePage,
@@ -58,7 +58,7 @@ function InstructorRevenuePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-black text-foreground tracking-tight">
-              {formatCurrency(stats?.total_revenue || 0)}
+              {formatIDR(stats?.total_revenue || 0)}
             </div>
           </CardContent>
         </Card>
@@ -138,7 +138,7 @@ function InstructorRevenuePage() {
                         {item.sales_count}
                       </td>
                       <td className="px-6 py-4 text-right font-bold text-primary">
-                        {formatCurrency(item.revenue)}
+                        {formatIDR(item.revenue)}
                       </td>
                     </tr>
                   ))

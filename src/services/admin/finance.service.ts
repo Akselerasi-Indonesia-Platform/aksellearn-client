@@ -2,6 +2,25 @@ import apiClient from '@/lib/api-client'
 
 export const adminFinanceService = {
 
+  // --- Platform Finance Summary ---
+  async getPlatformFinanceSummary(): Promise<{
+    financials: {
+      total_gmv: number
+      total_platform_fees: number
+      total_instructor_earnings: number
+      total_pending_withdrawals: number
+      total_completed_withdrawals: number
+    }
+    metrics: {
+      total_courses: number
+      total_orders: number
+      total_enrollments: number
+    }
+  }> {
+    const response = await apiClient.get('/api/admin/finance/revenue')
+    return response.data.data || response.data
+  },
+
   // --- NEW Platform Fee Configs CRUD (Super Admin / Admin) ---
   async getPlatformFeeConfigs(params?: {
     page?: number

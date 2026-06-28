@@ -48,6 +48,7 @@ function OrderDetailPage() {
 
   const { user } = useAuthStore()
   const isSuperAdmin = user?.permissions?.includes('super.admin') || user?.roles?.includes('Super Admin')
+  const canViewPlatformFinance = can('platform_finance.read', user) || isSuperAdmin
 
   const showAdminActions = React.useMemo(() => {
     if (!user) return false
@@ -371,7 +372,7 @@ function OrderDetailPage() {
         {/* Section C: Activity Timeline */}
         <div className="space-y-6">
           {/* Revenue Split Card */}
-          {isSuperAdmin && (
+          {canViewPlatformFinance && (
             <div className="bg-card rounded-2xl border shadow-sm p-6 bg-gradient-to-br from-indigo-50/50 to-transparent">
               <h3 className="text-lg font-bold mb-4 flex items-center justify-between text-slate-800">
                 <span className="flex items-center gap-2">
@@ -400,10 +401,16 @@ function OrderDetailPage() {
                     <span>- {formatIDR(derivedFlatFee)}</span>
                   </div>
                 )}
-                <div className="h-px bg-slate-200/60 my-2" />
-                <div className="flex justify-between items-center text-sm font-bold text-slate-900">
-                  <span>Instructor Net Share</span>
-                  <span className="text-emerald-600 font-black">{formatIDR(actualNetShare)}</span>
+                
+                <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-200/60">
+                  <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Instructor Net Share</span>
+                    <span className="text-emerald-600 font-black text-lg leading-none truncate">{formatIDR(actualNetShare)}</span>
+                  </div>
+                  <div className="bg-white p-3 rounded-xl border border-blue-100 shadow-sm flex flex-col justify-center bg-blue-50/30">
+                    <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">Platform Earning</span>
+                    <span className="text-blue-600 font-black text-lg leading-none truncate">{formatIDR(actualPlatformFee)}</span>
+                  </div>
                 </div>
               </div>
             </div>

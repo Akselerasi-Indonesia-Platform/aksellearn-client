@@ -173,7 +173,7 @@ function LoginPage() {
             <CardTitle className="text-2xl font-bold tracking-tight text-center">
               {t('auth.login.title', { name: profile?.name || 'Platform' })}
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription className="text-center mb-3">
               {t('auth.login.subtitle')}
             </CardDescription>
           </CardHeader>

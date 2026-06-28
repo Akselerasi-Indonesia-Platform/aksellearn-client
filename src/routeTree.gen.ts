@@ -81,6 +81,7 @@ import { Route as AdminInstructorRevenueRouteImport } from './routes/admin/instr
 import { Route as AdminInstructorBankAccountsRouteImport } from './routes/admin/instructor/bank-accounts'
 import { Route as AdminInstructorApplicationsUuidRouteImport } from './routes/admin/instructor-applications/$uuid'
 import { Route as AdminFinanceWithdrawalsRouteImport } from './routes/admin/finance/withdrawals'
+import { Route as AdminFinanceRevenueRouteImport } from './routes/admin/finance/revenue'
 import { Route as AdminFinancePlatformFeesRouteImport } from './routes/admin/finance/platform-fees'
 import { Route as AdminFinancePayoutsRouteImport } from './routes/admin/finance/payouts'
 import { Route as AdminFinanceFeeConfigRouteImport } from './routes/admin/finance/fee-config'
@@ -466,6 +467,11 @@ const AdminFinanceWithdrawalsRoute = AdminFinanceWithdrawalsRouteImport.update({
   path: '/finance/withdrawals',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFinanceRevenueRoute = AdminFinanceRevenueRouteImport.update({
+  id: '/finance/revenue',
+  path: '/finance/revenue',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFinancePlatformFeesRoute =
   AdminFinancePlatformFeesRouteImport.update({
     id: '/finance/platform-fees',
@@ -584,6 +590,7 @@ export interface FileRoutesByFullPath {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/revenue': typeof AdminFinanceRevenueRoute
   '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
   '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
@@ -670,6 +677,7 @@ export interface FileRoutesByTo {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/revenue': typeof AdminFinanceRevenueRoute
   '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
   '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
@@ -758,6 +766,7 @@ export interface FileRoutesById {
   '/admin/finance/fee-config': typeof AdminFinanceFeeConfigRoute
   '/admin/finance/payouts': typeof AdminFinancePayoutsRoute
   '/admin/finance/platform-fees': typeof AdminFinancePlatformFeesRoute
+  '/admin/finance/revenue': typeof AdminFinanceRevenueRoute
   '/admin/finance/withdrawals': typeof AdminFinanceWithdrawalsRoute
   '/admin/instructor-applications/$uuid': typeof AdminInstructorApplicationsUuidRoute
   '/admin/instructor/bank-accounts': typeof AdminInstructorBankAccountsRoute
@@ -847,6 +856,7 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/revenue'
     | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
     | '/admin/instructor/bank-accounts'
@@ -933,6 +943,7 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/revenue'
     | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
     | '/admin/instructor/bank-accounts'
@@ -1020,6 +1031,7 @@ export interface FileRouteTypes {
     | '/admin/finance/fee-config'
     | '/admin/finance/payouts'
     | '/admin/finance/platform-fees'
+    | '/admin/finance/revenue'
     | '/admin/finance/withdrawals'
     | '/admin/instructor-applications/$uuid'
     | '/admin/instructor/bank-accounts'
@@ -1599,6 +1611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFinanceWithdrawalsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/finance/revenue': {
+      id: '/admin/finance/revenue'
+      path: '/finance/revenue'
+      fullPath: '/admin/finance/revenue'
+      preLoaderRoute: typeof AdminFinanceRevenueRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/finance/platform-fees': {
       id: '/admin/finance/platform-fees'
       path: '/finance/platform-fees'
@@ -1710,6 +1729,7 @@ interface AdminRouteChildren {
   AdminFinanceFeeConfigRoute: typeof AdminFinanceFeeConfigRoute
   AdminFinancePayoutsRoute: typeof AdminFinancePayoutsRoute
   AdminFinancePlatformFeesRoute: typeof AdminFinancePlatformFeesRoute
+  AdminFinanceRevenueRoute: typeof AdminFinanceRevenueRoute
   AdminFinanceWithdrawalsRoute: typeof AdminFinanceWithdrawalsRoute
   AdminInstructorApplicationsUuidRoute: typeof AdminInstructorApplicationsUuidRoute
   AdminInstructorBankAccountsRoute: typeof AdminInstructorBankAccountsRoute
@@ -1759,6 +1779,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFinanceFeeConfigRoute: AdminFinanceFeeConfigRoute,
   AdminFinancePayoutsRoute: AdminFinancePayoutsRoute,
   AdminFinancePlatformFeesRoute: AdminFinancePlatformFeesRoute,
+  AdminFinanceRevenueRoute: AdminFinanceRevenueRoute,
   AdminFinanceWithdrawalsRoute: AdminFinanceWithdrawalsRoute,
   AdminInstructorApplicationsUuidRoute: AdminInstructorApplicationsUuidRoute,
   AdminInstructorBankAccountsRoute: AdminInstructorBankAccountsRoute,

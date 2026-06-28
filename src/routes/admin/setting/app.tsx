@@ -16,6 +16,7 @@ import {
   Terminal,
   ChevronLeft,
   ChevronRight,
+  Wallet,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -119,6 +120,15 @@ function AppSettingsPage() {
     }
   }
 
+  const handleGlobalSync = async () => {
+    try {
+      await apiClient.post('/api/admin/finance/wallets/sync')
+      toast.success("Global synchronization started in the background. Balances will update shortly.")
+    } catch (e) {
+      toast.error("Failed to start sync")
+    }
+  }
+
   const envMode = import.meta.env.MODE
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -192,6 +202,30 @@ function AppSettingsPage() {
               >
                 <Mail className="h-4 w-4" />
                 Send Test Email
+              </Button>
+            </div>
+
+            <Separator className="opacity-50" />
+
+            {/* Global Wallet Sync */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-1">
+                <h4 className="text-sm font-semibold flex items-center gap-2">
+                  <Wallet className="size-3.5 text-muted-foreground" />
+                  Global Wallet Synchronization
+                </h4>
+                <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+                  Triggers a background job to recalculate and synchronize all instructor and platform wallet balances.
+                </p>
+              </div>
+              <Button
+                className="shrink-0 gap-2 shadow-sm transition-all active:scale-95"
+                size="sm"
+                variant="outline"
+                onClick={handleGlobalSync}
+              >
+                <RefreshCw className="h-4 w-4" />
+                Sync Wallets
               </Button>
             </div>
           </CardContent>

@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { adminOrderService } from '@/services/admin/order.service'
 
-import { getUser } from '@/lib/auth'
+import { getUser, can } from '@/lib/auth'
 import { useAuthStore } from '@/hooks/use-auth'
 import { usePlatformStore } from '@/hooks/use-platform'
 
@@ -79,8 +79,14 @@ export function AdminSidebar({
         url: '#',
         icon: DollarSign,
         roles: ['Super Admin', 'Admin', 'Teacher', 'Instructor'],
+        permissions: ['platform_finance.read'],
         feature: 'revenue',
         items: [
+          {
+            title: 'Platform Finance',
+            url: '/admin/finance/revenue',
+            permissions: ['platform_finance.read'],
+          },
           {
             title: t('sidebar.orders', 'Orders'),
             url: '/admin/order/',
@@ -276,6 +282,93 @@ export function AdminSidebar({
     ],
   }
 
+  const filterNavItems = React.useCallback((navItems: any[]) => {
+    return navItems
+      .filter((item) => {
+        // 1. Feature Toggle Check
+        if (item.feature && !(APP_CONFIG.features as any)[item.feature])
+          return false
+
+        // 1.5. Platform Focus Check
+        if (platformProfile?.platform_focus) {
+          if (platformProfile.platform_focus === 'course' && item.title === t('sidebar.articles', 'Articles')) {
+            return false
+          }
+          if (platformProfile.platform_focus === 'article' && item.title === t('sidebar.courses', 'Courses')) {
+            return false
+          }
+        }
+
+        // 2. Role & Permission Check
+        const hasRoles = !!(item as any).roles
+        const hasPermissions = !!(item as any).permissions
+        
+        if (!hasRoles && !hasPermissions) return true
+        
+        const user = getUser()
+        
+        // God Mode permission fallback
+        const isSuperAdmin = can('super.admin', user) || can('manage_all', user)
+        if (isSuperAdmin) return true
+
+        let roleMatch = false
+        if (hasRoles && user?.roles) {
+          roleMatch = user.roles.some((role: any) =>
+            (item as any).roles.includes(
+              typeof role === 'string' ? role : role.name,
+            ),
+          )
+        }
+
+        let permMatch = false
+        if (hasPermissions && user?.permissions) {
+          permMatch = user.permissions.some((perm: string) =>
+            (item as any).permissions.includes(perm),
+          )
+        }
+
+        return roleMatch || permMatch
+      })
+      .map((item) => {
+        if (!item.items) return item
+        const user = getUser()
+        const isSuperAdmin = can('super.admin', user) || can('manage_all', user)
+
+        const filteredSubItems = item.items.filter((subItem: any) => {
+          if (isSuperAdmin) return true
+          
+          const subHasRoles = !!subItem.roles
+          const subHasPermissions = !!subItem.permissions
+          
+          if (!subHasRoles && !subHasPermissions) return true
+          
+          let roleMatch = false
+          if (subHasRoles && user?.roles) {
+            roleMatch = user.roles.some((role: any) =>
+              subItem.roles.includes(typeof role === 'string' ? role : role.name)
+            )
+          }
+          
+          let permMatch = false
+          if (subHasPermissions && user?.permissions) {
+            permMatch = user.permissions.some((perm: string) =>
+              subItem.permissions.includes(perm)
+            )
+          }
+          
+          return roleMatch || permMatch
+        })
+
+        return {
+          ...item,
+          items: filteredSubItems,
+        }
+      })
+      .filter((item) => !item.items || item.items.length > 0)
+  }, [platformProfile, t])
+
+  const filteredPlatform = filterNavItems(data.navMain)
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -308,78 +401,7 @@ export function AdminSidebar({
       <SidebarContent>
         {mounted && (
           <>
-            <NavMain
-              items={data.navMain
-                .filter((item) => {
-                  // 1. Feature Toggle Check
-                  if (item.feature && !(APP_CONFIG.features as any)[item.feature])
-                    return false
-
-                  // 1.5. Platform Focus Check
-                  if (platformProfile?.platform_focus) {
-                    if (platformProfile.platform_focus === 'course' && item.title === t('sidebar.articles', 'Articles')) {
-                      return false
-                    }
-                    if (platformProfile.platform_focus === 'article' && item.title === t('sidebar.courses', 'Courses')) {
-                      return false
-                    }
-                  }
-
-                  // 2. Role & Permission Check
-                  const hasRoles = !!(item as any).roles
-                  const hasPermissions = !!(item as any).permissions
-                  
-                  if (!hasRoles && !hasPermissions) return true
-                  
-                  const user = getUser()
-                  
-                  // Super Admin always sees everything
-                  const isSuperAdmin = user?.roles?.some((role: any) =>
-                    (typeof role === 'string' ? role : role.name) === 'Super Admin'
-                  )
-                  if (isSuperAdmin) return true
-
-                  let roleMatch = false
-                  if (hasRoles && user?.roles) {
-                    roleMatch = user.roles.some((role: any) =>
-                      (item as any).roles.includes(
-                        typeof role === 'string' ? role : role.name,
-                      ),
-                    )
-                  }
-
-                  let permMatch = false
-                  if (hasPermissions && user?.permissions) {
-                    permMatch = user.permissions.some((perm: string) =>
-                      (item as any).permissions.includes(perm),
-                    )
-                  }
-
-                  return roleMatch || permMatch
-                })
-                .map((item) => {
-                  if (!item.items) return item
-                  const user = getUser()
-                  const isSuperAdmin = user?.roles?.some((role: any) =>
-                    (typeof role === 'string' ? role : role.name) === 'Super Admin'
-                  )
-
-                  const filteredSubItems = item.items.filter((subItem: any) => {
-                    const subHasRoles = !!subItem.roles
-                    if (!subHasRoles || isSuperAdmin) return true
-                    return user?.roles?.some((role: any) =>
-                      subItem.roles.includes(typeof role === 'string' ? role : role.name)
-                    )
-                  })
-
-                  return {
-                    ...item,
-                    items: filteredSubItems,
-                  }
-                })
-                .filter((item) => !item.items || item.items.length > 0)
-              }
-            />
+            <NavMain items={filteredPlatform} />
             <NavProjects
               projects={data.projects.filter((project) => {
                 if (

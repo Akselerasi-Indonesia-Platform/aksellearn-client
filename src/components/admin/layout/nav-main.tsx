@@ -22,6 +22,7 @@ import {
 
 export function NavMain({
   items,
+  label = 'Platform',
 }: {
   items: {
     title: string
@@ -40,12 +41,13 @@ export function NavMain({
       onClick?: () => void
     }[]
   }[]
+  label?: string
 }) {
   const { pathname } = useLocation()
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const isUrlActive = (url: string) => {
