@@ -27,7 +27,6 @@ import { adminCourseCategoryService } from '@/services/admin/course-category.ser
 import { invalidateDiscoveryCache } from '@/lib/cache-utils'
 import type { Course } from '@/types/course'
 import { CourseDrawer } from '@/components/admin/courses/quick-add-course-modal'
-import { CourseInsightsDrawer } from '@/components/admin/courses/course-insights-drawer'
 
 const courseSearchSchema = z.object({
   page: z.number().default(1).catch(1),
@@ -99,9 +98,6 @@ function CoursesPage() {
     Course | undefined
   >()
   const [isQuickAddOpen, setIsQuickAddOpen] = React.useState(false)
-  const [isInsightsOpen, setIsInsightsOpen] = React.useState(false)
-  const [selectedCourseForInsights, setSelectedCourseForInsights] =
-    React.useState<Course | undefined>()
 
   const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set())
 
@@ -116,8 +112,7 @@ function CoursesPage() {
     navigate({ to: `/admin/course/${course.uuid}` })
 
   const handleShowInsights = (course: Course) => {
-    setSelectedCourseForInsights(course)
-    setIsInsightsOpen(true)
+    navigate({ to: `/admin/course/gradebook/${course.uuid}` })
   }
 
   const toggleStatus = (val: string) => {
@@ -294,11 +289,7 @@ function CoursesPage() {
         onClose={() => setIsQuickAddOpen(false)}
       />
 
-      <CourseInsightsDrawer
-        course={selectedCourseForInsights}
-        open={isInsightsOpen}
-        onOpenChange={setIsInsightsOpen}
-      />
+
     </AdminPage>
   )
 }

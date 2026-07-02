@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { BookOpen, HelpCircle, MessageSquare, Paperclip, Megaphone, CheckCircle, Ticket } from 'lucide-react'
+import { getUser, can } from '@/lib/auth'
+import { BookOpen, HelpCircle, MessageSquare, Paperclip, Megaphone, CheckCircle, Ticket, Wallet, Star } from 'lucide-react'
 import { AdminPage } from '@/components/admin/shared/layout/admin-page'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { GuideLanguageToggle } from '@/components/admin/guide/guide-language-toggle'
@@ -114,6 +115,33 @@ const topics = [
       en: 'How to create coupon codes (vouchers) with fixed or percentage discounts to share with specific students.',
     },
   },
+  {
+    id: 'finance-withdrawal',
+    url: '/admin/guide/withdrawal',
+    icon: Wallet,
+    title: {
+      id: 'Penarikan Dana (Withdrawal)',
+      en: 'Funds Withdrawal',
+    },
+    description: {
+      id: 'Panduan proses penarikan pendapatan instruktur dan cara admin memproses permintaan pencairan dana.',
+      en: 'Guide to the instructor withdrawal process and how admins process fund payout requests.',
+    },
+  },
+  {
+    id: 'marketing-featured-course',
+    url: '/admin/guide/featured-course',
+    icon: Star,
+    roles: ['Super Admin', 'Admin'],
+    title: {
+      id: 'Kursus Unggulan',
+      en: 'Featured Courses',
+    },
+    description: {
+      id: 'Panduan mengatur daftar kursus unggulan pilihan yang akan ditampilkan secara khusus di halaman utama.',
+      en: 'Guide to managing the selected featured courses list that will be prominently displayed on the homepage.',
+    },
+  },
 ]
 
 function GuideLandingPage() {
@@ -121,6 +149,28 @@ function GuideLandingPage() {
   const [searchQuery, setSearchQuery] = React.useState('')
 
   const filteredTopics = topics.filter((topic) => {
+    // Role & Permission Check
+    const hasRoles = !!(topic as any).roles
+    let allowed = true
+    
+    if (hasRoles) {
+      const user = getUser()
+      const isSuperAdmin = can('super.admin', user) || can('manage_all', user)
+      
+      if (!isSuperAdmin) {
+        allowed = false
+        if (user?.roles) {
+          allowed = user.roles.some((role: any) =>
+            (topic as any).roles.includes(
+              typeof role === 'string' ? role : role.name,
+            ),
+          )
+        }
+      }
+    }
+    
+    if (!allowed) return false
+
     const query = searchQuery.toLowerCase()
     return (
       topic.title[lang].toLowerCase().includes(query) ||

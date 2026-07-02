@@ -254,6 +254,15 @@ export function AdminSidebar({
             title: t('sidebar.guidePromotion', 'Promotion & Coupon'),
             url: '/admin/guide/promotion',
           },
+          {
+            title: t('sidebar.guideWithdrawal', ' Withdrawal'),
+            url: '/admin/guide/withdrawal',
+          },
+          {
+            title: t('sidebar.guideFeaturedCourse', 'Featured Courses'),
+            url: '/admin/guide/featured-course',
+            roles: ['Super Admin', 'Admin'],
+          },
         ],
       },
     ],

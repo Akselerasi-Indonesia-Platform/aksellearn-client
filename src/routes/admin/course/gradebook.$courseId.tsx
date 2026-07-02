@@ -2,10 +2,9 @@ import * as React from 'react'
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { adminCourseService } from '@/services/admin/course.service'
-import apiClient from '@/lib/api-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Download, Loader2, Users, Target, BookOpen } from 'lucide-react'
+import { Download, Loader2, Users, Target, BookOpen, Clock, CheckCircle, Eye, ArrowLeft } from 'lucide-react'
 import {
   BarChart,
   Bar,
@@ -19,152 +18,240 @@ import {
 } from 'recharts'
 import { format } from 'date-fns'
 import { AdminPage } from '@/components/admin/shared/layout/admin-page'
+import { PageHeader } from '@/components/admin/shared/layout'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { getToken } from '@/lib/auth'
+import { Column, DataTable } from '@/components/admin/shared/data'
+import { StatusBadge } from '@/components/admin/shared/status'
+
+export interface ModuleProgress {
+  module_id: number;
+  is_completed: boolean;
+  score: number | null;
+  last_position_seconds: number | null;
+}
+
+export interface StudentGrade {
+  name: string;
+  email: string;
+  progress_percentage: number;
+  gpa: number;
+  completed_at: string | null;
+  last_accessed: string | null;
+  module_progress: ModuleProgress[];
+}
 
 function GradebookPage() {
   const { courseId } = useParams({ from: '/admin/course/gradebook/$courseId' })
   const navigate = useNavigate()
 
+  // 1. Fetch course details for module mapping
   const {
-    data: analytics,
-    isLoading: isLoadingAnalytics,
-    isError: isAnalyticsError,
+    data: course,
+    isLoading: isLoadingCourse,
   } = useQuery({
-    queryKey: ['admin', 'course', courseId, 'analytics'],
-    queryFn: () => adminCourseService.getAnalytics(courseId),
-    retry: 1, // Don't retry much since it might be 404
+    queryKey: ['admin', 'course', courseId],
+    queryFn: () => adminCourseService.getOne(courseId),
   })
 
+  // 2. Fetch Gradebook
   const {
     data: gradebook,
     isLoading: isLoadingGradebook,
-    isError: isGradebookError,
   } = useQuery({
     queryKey: ['admin', 'course', courseId, 'gradebook'],
     queryFn: () => adminCourseService.getGradebook(courseId),
     retry: 1,
   })
 
-  const isLoading = isLoadingAnalytics || isLoadingGradebook
+  // 3. Analytics (Optional, just keep the chart if data comes)
+  const {
+    data: analytics,
+  } = useQuery({
+    queryKey: ['admin', 'course', courseId, 'analytics'],
+    queryFn: () => adminCourseService.getAnalytics(courseId),
+    retry: false,
+  })
 
-  if (isLoading) {
-    return (
-      <AdminPage>
-        <div className="flex items-center justify-center min-h-[500px]">
-          <Loader2 className="size-8 animate-spin text-primary" />
-        </div>
-      </AdminPage>
-    )
-  }
+  const isLoading = isLoadingCourse || isLoadingGradebook
 
-  // Graceful fallback while BE endpoints are under development
-  if (isAnalyticsError || isGradebookError || (!analytics && !gradebook)) {
-    return (
-      <AdminPage>
-        <div className="flex flex-col items-center justify-center min-h-[500px] text-center space-y-4">
-          <div className="size-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-500 mb-4">
-            <BookOpen className="size-8" />
-          </div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">
-            Gradebook Coming Soon
-          </h2>
-          <p className="text-slate-500 max-w-md mx-auto text-sm leading-relaxed">
-            The advanced Instructor Gradebook and Cohort Analytics engine is currently in the final stages of integration. 
-            Check back soon to unlock deep insights into student progress, quiz performance, and completion heatmaps.
-          </p>
-          <Button
-            onClick={() => navigate({ to: '/admin/course' })}
-            variant="outline"
-            className="mt-4 rounded-xl font-bold uppercase tracking-widest text-xs"
-          >
-            <ArrowLeft className="mr-2 size-4" /> Return to Courses
-          </Button>
-        </div>
-      </AdminPage>
-    )
-  }
-
-  // Fallbacks if data structure varies
-  const totalEnrolled = analytics?.total_enrolled || gradebook?.length || 0
-  const completionRate = analytics?.completion_rate || 0
-  const avgGpa = analytics?.avg_gpa || 0
+  const students: StudentGrade[] = Array.isArray(gradebook) ? gradebook : (gradebook?.data || [])
+  const totalEnrolled = students.length
+  
+  const totalProgress = students.reduce((sum, s) => sum + (s.progress_percentage || 0), 0)
+  const completionRate = totalEnrolled ? Math.round(totalProgress / totalEnrolled) : 0
+  
+  const gpaStudents = students.filter(s => s.gpa !== null && s.gpa !== undefined && !isNaN(s.gpa))
+  const totalGpa = gpaStudents.reduce((sum, s) => sum + Number(s.gpa), 0)
+  const avgGpa = gpaStudents.length ? (totalGpa / gpaStudents.length).toFixed(1) : 0
 
   const dropOffData = analytics?.drop_off || []
-  const students = gradebook || []
 
-  const handleExportCsv = async () => {
-    try {
-      const response = await apiClient.get(
-        `/admin/course/${courseId}/gradebook`,
-        {
-          params: { format: 'csv' },
-          responseType: 'blob',
-        }
-      )
-      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `gradebook_${courseId}.csv`)
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    } catch (error) {
-      console.error('Failed to export CSV', error)
-      // Fallback to client-side if backend is not ready
-      if (!students.length) return
-      const headers = ['Name', 'Email', 'Progress (%)', 'GPA', 'Status', 'Last Accessed']
-      const rows = students.map((s: any) => [
-        s.name,
-        s.email,
-        s.progress_percentage || 0,
-        s.gpa || 'N/A',
-        s.status || 'Active',
-        s.last_accessed ? format(new Date(s.last_accessed), 'yyyy-MM-dd') : 'N/A'
-      ])
-      const csvContent = [
-        headers.join(','),
-        ...rows.map((r: any) => r.join(','))
-      ].join('\n')
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `gradebook_${courseId}_fallback.csv`)
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
+  const getModuleTitle = (moduleId: number) => {
+    if (!course || !course.modules) return `Module ${moduleId}`
+    const mod = course.modules.find(m => (m as any).db_id === moduleId || m.id === String(moduleId) || (m as any).id === moduleId)
+    return mod?.title || `Module ${moduleId}`
   }
+
+  const formatSeconds = (seconds: number) => {
+    const h = Math.floor(seconds / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = Math.floor(seconds % 60)
+    if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  const handleExportCsv = () => {
+    const baseUrl =
+      (typeof window !== 'undefined' && (window as any).__ENV__?.VITE_API_URL) ||
+      import.meta.env.VITE_API_URL ||
+      ''
+    
+    let url = `${baseUrl}/api/admin/course/${courseId}/gradebook?format=csv`
+    const token = getToken()
+    if (token) {
+      url += `&token=${token}`
+    }
+    
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `gradebook_${courseId}.csv`
+    a.click()
+  }
+
+  const columns: Column<StudentGrade>[] = [
+    {
+      header: 'Student',
+      cell: (item) => (
+        <div className="flex flex-col">
+          <span className="font-bold text-slate-900">{item.name}</span>
+          <span className="text-xs text-muted-foreground">{item.email}</span>
+        </div>
+      ),
+    },
+    {
+      header: 'Progress',
+      cell: (item) => (
+        <div className="flex items-center gap-2">
+          <div className="w-full max-w-[100px] h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-indigo-500 rounded-full" 
+              style={{ width: `${item.progress_percentage || 0}%` }}
+            />
+          </div>
+          <span className="text-xs font-bold">{item.progress_percentage || 0}%</span>
+        </div>
+      ),
+    },
+    {
+      header: 'GPA',
+      cell: (item) => (
+        <span className="font-semibold text-slate-700">
+          {item.gpa !== null && item.gpa !== undefined && !isNaN(item.gpa) ? Number(item.gpa).toFixed(1) : 'N/A'}
+        </span>
+      ),
+    },
+    {
+      header: 'Status',
+      cell: (item) => (
+        <StatusBadge
+          status={(item.progress_percentage || 0) === 100}
+          labels={{
+            true: 'Completed',
+            false: 'Active',
+          }}
+        />
+      ),
+    },
+    {
+      header: 'Last Access',
+      cell: (item) => (
+        item.last_accessed ? format(new Date(item.last_accessed), 'MMM d, yyyy') : 'Never'
+      ),
+    },
+    {
+      header: 'Action',
+      headerClassName: 'text-center',
+      cell: (item) => (
+        <div className="flex justify-center">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Eye className="size-4" /> Details
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Progress Details: {item.name}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                {!item.module_progress || item.module_progress.length === 0 ? (
+                  <div className="text-center text-muted-foreground p-8">No module progress data available.</div>
+                ) : (
+                  <div className="grid gap-3">
+                    {item.module_progress.map((mod, midx) => (
+                      <div key={midx} className="flex items-center justify-between p-4 border rounded-lg bg-slate-50">
+                        <div className="flex items-center gap-3">
+                          {mod.is_completed ? (
+                            <CheckCircle className="size-5 text-emerald-500 shrink-0" />
+                          ) : (
+                            <div className="size-5 rounded-full border-2 border-slate-300 shrink-0" />
+                          )}
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-sm text-slate-800">
+                              {getModuleTitle(mod.module_id)}
+                            </span>
+                            {mod.last_position_seconds !== null && mod.last_position_seconds > 0 && (
+                              <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
+                                <Clock className="size-3" />
+                                Left off at {formatSeconds(mod.last_position_seconds)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {mod.score !== null && (
+                          <Badge variant="outline" className="bg-white">
+                            Score: {mod.score}
+                          </Badge>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      ),
+    },
+  ]
 
   return (
     <AdminPage>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            className="rounded-full"
-            size="icon"
-            variant="ghost"
-            onClick={() => navigate({ to: '/admin/course' })}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Instructor Gradebook</h2>
-            <p className="text-muted-foreground">
-              Course analytics and student progress tracking.
-            </p>
-          </div>
-        </div>
-        <Button onClick={handleExportCsv} variant="outline" className="gap-2">
-          <Download className="size-4" />
-          Export CSV
+      <div className="mb-4">
+        <Button
+          className="rounded-full gap-2 mb-4"
+          size="sm"
+          variant="ghost"
+          onClick={() => navigate({ to: '/admin/course' })}
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Courses
         </Button>
       </div>
 
-      {/* Top KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <PageHeader
+        title="Instructor Gradebook"
+        description={`Course analytics and student progress tracking for ${course?.title || 'the course'}`}
+        actions={
+          <Button onClick={handleExportCsv} variant="outline" className="gap-2">
+            <Download className="size-4" />
+            Export CSV
+          </Button>
+        }
+      />
+
+      <div className="grid gap-4 md:grid-cols-3 mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Enrolled</CardTitle>
@@ -197,14 +284,13 @@ function GradebookPage() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Module Drop-off Heatmap/Chart */}
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Module Drop-off</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            {dropOffData.length > 0 ? (
+      {dropOffData.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2 mt-6">
+          <Card className="col-span-1">
+            <CardHeader>
+              <CardTitle>Module Drop-off</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={dropOffData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -214,21 +300,13 @@ function GradebookPage() {
                   <Bar dataKey="drop_off_rate" fill="#818cf8" radius={[4, 4, 0, 0]} name="Drop-off %" />
                 </BarChart>
               </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                No drop-off data available
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Progress Distribution */}
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Student Progress Trend</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            {students.length > 0 ? (
+            </CardContent>
+          </Card>
+          <Card className="col-span-1">
+            <CardHeader>
+              <CardTitle>Student Progress Trend</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={students.slice(0, 10)}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -238,77 +316,19 @@ function GradebookPage() {
                   <Line type="monotone" dataKey="progress_percentage" stroke="#4f46e5" strokeWidth={3} name="Progress %" />
                 </LineChart>
               </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                No progress data available
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
-      {/* Gradebook Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Student Progress Table</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left text-slate-500">
-              <thead className="text-xs text-slate-700 uppercase bg-slate-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 rounded-tl-lg">Student</th>
-                  <th scope="col" className="px-6 py-3">Progress</th>
-                  <th scope="col" className="px-6 py-3">GPA</th>
-                  <th scope="col" className="px-6 py-3">Status</th>
-                  <th scope="col" className="px-6 py-3 rounded-tr-lg">Last Access</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student: any, i: number) => (
-                  <tr key={student.uuid || i} className="bg-white border-b hover:bg-slate-50">
-                    <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span>{student.name}</span>
-                        <span className="text-xs text-slate-400">{student.email}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-full max-w-[100px] h-2 bg-slate-100 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-indigo-500 rounded-full" 
-                            style={{ width: `${student.progress_percentage || 0}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-bold">{student.progress_percentage || 0}%</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-slate-700">
-                      {student.gpa || 'N/A'}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${student.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                        {student.status || 'Active'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {student.last_accessed ? format(new Date(student.last_accessed), 'MMM d, yyyy') : 'Never'}
-                    </td>
-                  </tr>
-                ))}
-                {students.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
-                      No students enrolled yet.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mt-8 flex flex-col gap-4">
+        <DataTable
+          data={students}
+          columns={columns}
+          isLoading={isLoadingGradebook}
+          emptyMessage="No students enrolled yet."
+        />
+      </div>
     </AdminPage>
   )
 }

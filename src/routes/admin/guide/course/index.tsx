@@ -136,17 +136,17 @@ function CourseGuidePage() {
             }
           >
             <div className="p-6 bg-card grid gap-6 sm:grid-cols-2 border-b">
-              <div className="space-y-3">
+              <div className="space-y-3 flex flex-col">
                 <Label>{lang === 'id' ? 'Thumbnail Kursus' : 'Course Thumbnail'}</Label>
-                <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center bg-muted/50 text-muted-foreground hover:bg-muted transition-colors">
+                <div className="flex-1 border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center bg-muted/50 text-muted-foreground hover:bg-muted transition-colors">
                   <Upload className="size-8 mb-2" />
                   <p className="text-sm font-medium">{lang === 'id' ? 'Klik untuk unggah' : 'Click to upload'}</p>
                   <p className="text-xs opacity-70">PNG, JPG, max 5MB. 16:9 ratio.</p>
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 flex flex-col">
                 <Label>{lang === 'id' ? 'Video Promo' : 'Promo Video'} (Opsional)</Label>
-                <div className="border rounded-lg p-6 flex flex-col items-center justify-center text-center bg-muted/20 text-muted-foreground h-full min-h-[140px]">
+                <div className="flex-1 border rounded-lg p-6 flex flex-col items-center justify-center text-center bg-muted/20 text-muted-foreground">
                   <Video className="size-8 mb-2" />
                   <p className="text-sm font-medium">{lang === 'id' ? 'Tidak ada video' : 'No video provided'}</p>
                 </div>
@@ -160,32 +160,21 @@ function CourseGuidePage() {
           </GuideStep>
           <GuideStep
             step={3}
-            title={lang === 'id' ? 'Pengaturan Harga & Akses' : 'Pricing & Access Settings'}
+            title={lang === 'id' ? 'Pengaturan Harga' : 'Pricing Settings'}
             description={
               lang === 'id'
-                ? 'Tentukan apakah kursus ini Gratis atau Berbayar. Jika berbayar, masukkan harga dasar dan harga diskon (opsional). Atur juga apakah akses kursus berlaku selamanya (Lifetime) atau memiliki batas waktu tertentu.'
-                : 'Determine if this course is Free or Paid. If paid, enter the base price and discount price (optional). Also set whether course access is Lifetime or has a specific time limit.'
+                ? 'Masukkan harga kursus. Jika kursus ini gratis, cukup atur harga menjadi 0. Pengaturan diskon dan promosi dikelola secara terpisah melalui menu Promosi.'
+                : 'Enter the course price. If the course is free, simply set the price to 0. Discounts and promotional settings are managed separately through the Promotions menu.'
             }
           >
             <div className="p-6 bg-card flex flex-col gap-6 border-b">
-              <div className="flex items-center justify-between border rounded-lg p-4 bg-muted/20">
-                <div className="space-y-0.5">
-                  <Label className="text-base">{lang === 'id' ? 'Kursus Berbayar' : 'Paid Course'}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {lang === 'id' ? 'Nonaktifkan jika kursus ini gratis' : 'Disable if this course is free'}
-                  </p>
-                </div>
-                <Switch checked={true} />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 max-w-sm">
                 <div className="grid gap-2">
-                  <Label>{lang === 'id' ? 'Harga Dasar (Rp)' : 'Base Price (Rp)'}</Label>
+                  <Label>{lang === 'id' ? 'Harga (Rp)' : 'Price (Rp)'}</Label>
                   <Input value="500000" readOnly className="font-mono" />
-                </div>
-                <div className="grid gap-2">
-                  <Label>{lang === 'id' ? 'Harga Diskon (Rp)' : 'Discount Price (Rp)'}</Label>
-                  <Input value="250000" readOnly className="font-mono text-green-600 font-medium" />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {lang === 'id' ? 'Atur ke 0 untuk kursus gratis.' : 'Set to 0 for free courses.'}
+                  </p>
                 </div>
               </div>
             </div>

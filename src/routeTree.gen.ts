@@ -91,7 +91,9 @@ import { Route as AdminCourseCourseIdRouteImport } from './routes/admin/course/$
 import { Route as AdminArticleCreateRouteImport } from './routes/admin/article/create'
 import { Route as AdminArticleCategoryRouteImport } from './routes/admin/article/category'
 import { Route as AdminArticleArticleIdRouteImport } from './routes/admin/article/$articleId'
+import { Route as AdminGuideWithdrawalIndexRouteImport } from './routes/admin/guide/withdrawal/index'
 import { Route as AdminGuidePromotionIndexRouteImport } from './routes/admin/guide/promotion/index'
+import { Route as AdminGuideFeaturedCourseIndexRouteImport } from './routes/admin/guide/featured-course/index'
 import { Route as AdminGuideCourseIndexRouteImport } from './routes/admin/guide/course/index'
 import { Route as AdminPromotionPromotionIdEditRouteImport } from './routes/admin/promotion/$promotionId.edit'
 import { Route as AdminCourseGradebookCourseIdRouteImport } from './routes/admin/course/gradebook.$courseId'
@@ -518,10 +520,22 @@ const AdminArticleArticleIdRoute = AdminArticleArticleIdRouteImport.update({
   path: '/article/$articleId',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGuideWithdrawalIndexRoute =
+  AdminGuideWithdrawalIndexRouteImport.update({
+    id: '/guide/withdrawal/',
+    path: '/guide/withdrawal/',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminGuidePromotionIndexRoute =
   AdminGuidePromotionIndexRouteImport.update({
     id: '/guide/promotion/',
     path: '/guide/promotion/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminGuideFeaturedCourseIndexRoute =
+  AdminGuideFeaturedCourseIndexRouteImport.update({
+    id: '/guide/featured-course/',
+    path: '/guide/featured-course/',
     getParentRoute: () => AdminRoute,
   } as any)
 const AdminGuideCourseIndexRoute = AdminGuideCourseIndexRouteImport.update({
@@ -628,7 +642,9 @@ export interface FileRoutesByFullPath {
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -715,7 +731,9 @@ export interface FileRoutesByTo {
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/featured-course': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/withdrawal': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -804,7 +822,9 @@ export interface FileRoutesById {
   '/admin/course/gradebook/$courseId': typeof AdminCourseGradebookCourseIdRoute
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
+  '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -894,7 +914,9 @@ export interface FileRouteTypes {
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course/'
+    | '/admin/guide/featured-course/'
     | '/admin/guide/promotion/'
+    | '/admin/guide/withdrawal/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -981,7 +1003,9 @@ export interface FileRouteTypes {
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course'
+    | '/admin/guide/featured-course'
     | '/admin/guide/promotion'
+    | '/admin/guide/withdrawal'
   id:
     | '__root__'
     | '/'
@@ -1069,7 +1093,9 @@ export interface FileRouteTypes {
     | '/admin/course/gradebook/$courseId'
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course/'
+    | '/admin/guide/featured-course/'
     | '/admin/guide/promotion/'
+    | '/admin/guide/withdrawal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1681,11 +1707,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticleArticleIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide/withdrawal/': {
+      id: '/admin/guide/withdrawal/'
+      path: '/guide/withdrawal'
+      fullPath: '/admin/guide/withdrawal/'
+      preLoaderRoute: typeof AdminGuideWithdrawalIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/guide/promotion/': {
       id: '/admin/guide/promotion/'
       path: '/guide/promotion'
       fullPath: '/admin/guide/promotion/'
       preLoaderRoute: typeof AdminGuidePromotionIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/guide/featured-course/': {
+      id: '/admin/guide/featured-course/'
+      path: '/guide/featured-course'
+      fullPath: '/admin/guide/featured-course/'
+      preLoaderRoute: typeof AdminGuideFeaturedCourseIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/guide/course/': {
@@ -1759,7 +1799,9 @@ interface AdminRouteChildren {
   AdminCourseGradebookCourseIdRoute: typeof AdminCourseGradebookCourseIdRoute
   AdminPromotionPromotionIdEditRoute: typeof AdminPromotionPromotionIdEditRoute
   AdminGuideCourseIndexRoute: typeof AdminGuideCourseIndexRoute
+  AdminGuideFeaturedCourseIndexRoute: typeof AdminGuideFeaturedCourseIndexRoute
   AdminGuidePromotionIndexRoute: typeof AdminGuidePromotionIndexRoute
+  AdminGuideWithdrawalIndexRoute: typeof AdminGuideWithdrawalIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -1810,7 +1852,9 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCourseGradebookCourseIdRoute: AdminCourseGradebookCourseIdRoute,
   AdminPromotionPromotionIdEditRoute: AdminPromotionPromotionIdEditRoute,
   AdminGuideCourseIndexRoute: AdminGuideCourseIndexRoute,
+  AdminGuideFeaturedCourseIndexRoute: AdminGuideFeaturedCourseIndexRoute,
   AdminGuidePromotionIndexRoute: AdminGuidePromotionIndexRoute,
+  AdminGuideWithdrawalIndexRoute: AdminGuideWithdrawalIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
