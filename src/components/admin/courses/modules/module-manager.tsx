@@ -639,7 +639,7 @@ function ModuleItem({
         uuid: data.uuid,
       })
 
-      if (data.status === 'completed' || data.status === 'finished') {
+      if (['completed', 'finished', 'available'].includes(data.status)) {
         form.setValue('video', data.stream_url || '', { shouldDirty: true })
       }
     } catch {

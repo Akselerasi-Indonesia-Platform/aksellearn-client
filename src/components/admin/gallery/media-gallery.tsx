@@ -111,10 +111,10 @@ export function MediaGallery({ onSelect, mode = 'view' }: MediaGalleryProps) {
 
   const renderStatusBadge = (item: MediaData) => {
     if (!item.status) return null
-    if (item.status === 'completed' || item.status === 'finished') {
+    if (['completed', 'finished', 'available'].includes(item.status)) {
       return (
         <Badge className="bg-emerald-500/90 hover:bg-emerald-500/90 text-white border-none shadow-sm">
-          🟢 HD Ready
+          🟢 {item.status === 'available' ? 'Available (HD pending)' : 'HD Ready'}
         </Badge>
       )
     }
