@@ -60,8 +60,9 @@ export default defineEventHandler(async (event) => {
   if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
     if (isMultipart) {
       bodyText = ''
-      // CRITICAL: Forward the raw Node request stream for file uploads
-      body = event.node.req
+      // CRITICAL: Use Web Streams API (event.request.body) — works on Bun AND Node.js.
+      // event.node.req is Node-specific and crashes on the Bun runtime used in production.
+      body = event.request.body
     } else {
       const rawBody = await readRawBody(event)
       body = rawBody
