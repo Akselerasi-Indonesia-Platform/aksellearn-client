@@ -376,6 +376,11 @@ export const adminCourseService = {
       ),
       progress: Number(data.progress || (data as any).contents?.progress || 0),
       duration: Number((data as any).meta?.duration || data.duration || 0),
+      // HD detection fields — critical for "keep polling until HD arrives" strategy
+      qualities: (data as any).qualities || [],
+      hd_status: (data as any).hd_status || null,
+      hd_progress: (data as any).hd_progress || null,
+      hd_eta: (data as any).hd_eta || null,
     }
   },
 

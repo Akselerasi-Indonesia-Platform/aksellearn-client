@@ -18,6 +18,7 @@ interface VideoUploadInputProps {
       | 'finished'
       | 'transcoding'
       | 'uploading'
+      | 'available'
       | null
     progress: number
     duration?: number
@@ -163,10 +164,16 @@ export function VideoUploadInput({
         )}
 
         {value && !isProcessing && videoStatus?.status !== 'failed' && (
-          <div className="relative aspect-video rounded-3xl overflow-hidden border shadow-2xl bg-black group transition-all duration-500 hover:ring-4 ring-primary/20">
-            <VideoPlayer url={value} onPlayingChange={setIsVideoPlaying} />
+          <div className="relative aspect-video w-full group">
+            <div className="absolute inset-0 rounded-3xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
+              <VideoPlayer
+                key={`${value}-${videoStatus?.status}`}
+                url={value}
+                onPlayingChange={setIsVideoPlaying}
+              />
+            </div>
             <Button
-              className="absolute top-4 right-4 z-[9999] size-8 rounded-full bg-black/70 hover:bg-destructive text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-2 right-2 z-10 size-8 rounded-full bg-black/70 hover:bg-destructive text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
               disabled={disabled}
               size="icon"
               type="button"
@@ -291,16 +298,22 @@ export function VideoUploadInput({
       )}
 
       {value && !isProcessing && videoStatus?.status !== 'failed' && (
-        <div className="relative aspect-video rounded-3xl overflow-hidden border shadow-2xl bg-black group transition-all duration-500 hover:ring-4 ring-primary/20">
-          <VideoPlayer url={value} onPlayingChange={setIsVideoPlaying} />
-          {videoStatus?.duration && !isVideoPlaying && (
-            <div className="absolute bottom-4 left-4 z-[50] px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white text-[10px] font-black uppercase tracking-widest shadow-2xl transition-opacity duration-300 pointer-events-none">
-              {Math.floor(videoStatus.duration / 60)}:
-              {(videoStatus.duration % 60).toString().padStart(2, '0')}
-            </div>
-          )}
+        <div className="relative aspect-video group">
+          <div className="absolute inset-0 rounded-3xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
+            <VideoPlayer
+              key={`${value}-${videoStatus?.status}`}
+              url={value}
+              onPlayingChange={setIsVideoPlaying}
+            />
+            {videoStatus?.duration && !isVideoPlaying && (
+              <div className="absolute bottom-4 left-4 z-10 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white text-[10px] font-black uppercase tracking-widest shadow-2xl transition-opacity duration-300 pointer-events-none">
+                {Math.floor(videoStatus.duration / 60)}:
+                {(videoStatus.duration % 60).toString().padStart(2, '0')}
+              </div>
+            )}
+          </div>
           <Button
-            className="absolute top-4 right-4 z-[9999] h-10 w-10 rounded-full bg-black/70 hover:bg-destructive text-white hover:text-white transition-all shadow-2xl border-2 border-white/40 backdrop-blur-md opacity-0 group-hover:opacity-100"
+            className="absolute top-3 right-3 z-10 h-10 w-10 rounded-full bg-black/70 hover:bg-destructive text-white hover:text-white transition-all shadow-2xl border-2 border-white/40 backdrop-blur-md opacity-0 group-hover:opacity-100"
             disabled={disabled}
             size="icon"
             type="button"

@@ -17,7 +17,7 @@ import { adminCourseService } from '@/services/admin/course.service'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
-const TERMINAL_STATUSES = ['completed', 'finished', 'available', 'failed']
+const TERMINAL_STATUSES = ['completed', 'finished', 'failed']
 
 type UploadStatus = {
   isUploading: boolean
@@ -103,6 +103,40 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
             },
           }))
 
+          // 'available' = 480p ready — update form so player shows, but KEEP POLLING for HD
+          if (data.status === 'available' && data.stream_url) {
+            const index = fieldsRef.current.findIndex((f: any) => f.id === id)
+            if (index !== -1) {
+              setValue(`${name}.${index}.stream_url` as any, data.stream_url as any, {
+                shouldDirty: true,
+              })
+            }
+
+            // Smart HD detection: check if HD qualities already arrived
+            const hasHD = data.qualities?.some((q) => ['720p', '1080p', '480p+'].includes(q))
+            const hdFailed = data.hd_status === 'failed'
+
+            if (hasHD) {
+              clearInterval(pollingIntervals.current[id])
+              delete pollingIntervals.current[id]
+              setUploadStatuses((prev) => ({
+                ...prev,
+                [id]: { ...prev[id], status: 'completed' },
+              }))
+              toast.success('HD video is now available')
+            } else if (hdFailed) {
+              clearInterval(pollingIntervals.current[id])
+              delete pollingIntervals.current[id]
+              setUploadStatuses((prev) => ({
+                ...prev,
+                [id]: { ...prev[id], status: 'completed' },
+              }))
+              toast.info('Video available in 480p (HD encoding unavailable for this video)')
+            }
+            // else: keep polling until HD arrives or fails
+          }
+
+          // Terminal: stop polling and finalize
           if (TERMINAL_STATUSES.includes(data.status || '')) {
             clearInterval(pollingIntervals.current[id])
             delete pollingIntervals.current[id]
@@ -117,13 +151,36 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
               }
             }
           }
-        } catch (error) {
-          console.error(`[VideoPlaylistManager] Polling error for uuid=${uuid}:`, error)
+        } catch (error: any) {
+          // 404 = media is fully processed (status endpoint only exists during processing)
+          // Stop polling gracefully and treat as completed
+          if (error?.response?.status === 404) {
+            clearInterval(pollingIntervals.current[id])
+            delete pollingIntervals.current[id]
+            console.info(`[VideoPlaylistManager] Media ${uuid} returned 404 — treating as completed`)
+          } else {
+            console.error(`[VideoPlaylistManager] Polling error for uuid=${uuid}:`, error)
+          }
         }
       }, 3000)
     },
     [name, setValue],
   )
+
+  // Initialize polling on mount ONLY for videos still in processing (no stream_url yet)
+  // Videos with a stream_url are already at least 'available' — do NOT re-poll them on load
+  // because the media status endpoint returns 404 for fully processed media
+  useEffect(() => {
+    fieldsRef.current.forEach((field: any) => {
+      const alreadyHasStream = !!(field.stream_url || uploadStatuses[field.id]?.stream_url)
+      const alreadyPolling = !!pollingIntervals.current[field.id]
+
+      // Only start polling if: has a UUID, no stream yet, not already polling
+      if (field.media_uuid && !alreadyHasStream && !alreadyPolling) {
+        startPolling(field.id, field.media_uuid)
+      }
+    })
+  }, [fields, startPolling, uploadStatuses])
 
   const handleUpload = async (index: number, id: string, file: File) => {
     setUploadStatuses((prev) => ({
@@ -175,9 +232,16 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
       delete pollingIntervals.current[id]
     }
     setUploadStatuses((prev) => {
-      const next = { ...prev }
-      delete next[id]
-      return next
+      return {
+        ...prev,
+        [id]: {
+          isUploading: false,
+          status: null,
+          progress: 0,
+          uuid: null,
+          stream_url: ''
+        }
+      }
     })
     setValue(`${name}.${index}.media_uuid` as any, '' as any, { shouldDirty: true })
     setValue(`${name}.${index}.stream_url` as any, '' as any, { shouldDirty: true })
@@ -224,13 +288,18 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
         <div className="space-y-3">
           <Reorder.Group axis="y" values={items} onReorder={handleReorder} className="space-y-3">
             {fields.map((field: any, index) => {
-              const status: UploadStatus = uploadStatuses[field.id] ?? {
-                isUploading: false,
-                status: field.stream_url
-                  ? 'available'
+              const hasHD = field.qualities?.some((q: string) => ['720p', '1080p', '480p+'].includes(q))
+              const defaultStatus = field.status
+                ? (field.status === 'available' && hasHD ? 'completed' : field.status)
+                : field.stream_url
+                  ? (hasHD ? 'completed' : 'available')
                   : field.media_uuid
                     ? 'processing'
-                    : null,
+                    : null
+
+              const status: UploadStatus = uploadStatuses[field.id] ?? {
+                isUploading: false,
+                status: defaultStatus as any,
                 progress: field.stream_url ? 100 : 0,
                 uuid: field.media_uuid || null,
                 stream_url: field.stream_url || '',
@@ -269,8 +338,8 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
                       </FormLabel>
                       <FormField
                         control={control}
-                        name={`${name}.${index}.media_uuid` as any}
-                        render={() => (
+                        name={`${name}.${index}.stream_url` as any}
+                        render={({ field: streamField }) => (
                           <FormItem>
                             <FormControl>
                               <VideoUploadInput
@@ -280,7 +349,7 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
                                 onClear={() => handleClear(index, field.id)}
                                 onUpload={(f) => handleUpload(index, field.id, f)}
                                 videoStatus={status as any}
-                                value={status.stream_url || control._formValues[name]?.[index]?.stream_url || ''}
+                                value={status.stream_url || streamField.value || ''}
                               />
                             </FormControl>
                             <FormMessage />

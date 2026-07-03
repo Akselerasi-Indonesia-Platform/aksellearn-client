@@ -31,6 +31,7 @@ interface FormInputVideoProps<TFieldValues extends FieldValues = FieldValues> {
       | 'finished'
       | 'transcoding'
       | 'uploading'
+      | 'available'
       | null
     progress: number
     duration?: number

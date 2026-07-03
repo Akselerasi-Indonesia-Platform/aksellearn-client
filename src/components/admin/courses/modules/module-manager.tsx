@@ -452,12 +452,23 @@ function ModuleItem({
         quiz_uuid: quizUuid,
       })
 
-      // Update video status when expanding
+      // Use the actual status from the backend, not a hardcoded assumption.
+      // 'available' means fast-track done but HD may still be processing — keep polling.
+      // Only treat as 'finished'/'completed' if the backend explicitly says so.
+      // If no video_data.status exists but a video URL does, safely assume 'completed'
+      // (old records without video_data are fully processed).
+      const backendStatus = (module as any).video_data?.status || null
+      const hasHD = (module as any).video_data?.qualities?.some((q: string) => ['720p', '1080p', '480p+'].includes(q))
+      const derivedStatus = backendStatus
+        ? (backendStatus === 'available' && hasHD ? 'completed' : backendStatus)
+        : module.video
+          ? (hasHD ? 'completed' : 'completed') // Safely assume completed if no video_data but URL exists
+          : (module as any).video_uuid
+            ? 'processing'
+            : null
+
       setVideoStatus({
-        status: module.video
-          ? 'finished'
-          : (module as any).video_data?.status ||
-            ((module as any).video_uuid ? 'processing' : null),
+        status: derivedStatus as any,
         progress: module.video
           ? 100
           : (module as any).video_data?.progress || 0,
@@ -474,7 +485,7 @@ function ModuleItem({
     // Stop polling if we reach a terminal state
     const isPollingStatus =
       videoStatus.status &&
-      !['completed', 'finished', 'available', 'failed'].includes(videoStatus.status)
+      !['completed', 'finished', 'failed'].includes(videoStatus.status)
 
     const videoUuid = videoStatus.uuid
 
@@ -492,8 +503,43 @@ function ModuleItem({
             uuid: status.uuid,
           })
 
-          // Terminal success states
-          if (['completed', 'finished', 'available'].includes(status.status)) {
+          // 'available' = 480p ready — update form so player shows, but KEEP POLLING for HD
+          if ((videoStatus.status as string) === 'available' || ['available'].includes(status.status)) {
+            if (status.stream_url)
+              form.setValue('video', status.stream_url, {
+                shouldDirty: true,
+                shouldValidate: true,
+              })
+            if (status.uuid)
+              form.setValue('video_uuid', status.uuid, {
+                shouldDirty: true,
+                shouldValidate: true,
+              })
+
+            // Smart HD detection: check if HD qualities already arrived
+            const hasHD = status.qualities?.some((q) => ['720p', '1080p', '480p+'].includes(q))
+            const hdFailed = status.hd_status === 'failed'
+
+            if (hasHD) {
+              if (pollingInterval.current) {
+                clearInterval(pollingInterval.current)
+                pollingInterval.current = null
+              }
+              setVideoStatus((prev) => ({ ...prev, status: 'completed' as any }))
+              toast.success('HD video is now available')
+            } else if (hdFailed) {
+              if (pollingInterval.current) {
+                clearInterval(pollingInterval.current)
+                pollingInterval.current = null
+              }
+              setVideoStatus((prev) => ({ ...prev, status: 'completed' as any }))
+              toast.info('Video available in 480p (HD encoding unavailable for this video)')
+            }
+            // else: keep polling until HD arrives or fails
+          }
+
+          // Terminal success: HD is ready — update form and stop polling
+          if (['completed', 'finished'].includes(status.status)) {
             if (status.stream_url)
               form.setValue('video', status.stream_url, {
                 shouldDirty: true,
@@ -527,8 +573,18 @@ function ModuleItem({
             }))
             toast.error('Video processing failed')
           }
-        } catch (error) {
-          console.error('Video polling error:', error)
+        } catch (error: any) {
+          // 404 = media is fully processed (status endpoint only exists during processing)
+          if (error?.response?.status === 404) {
+            if (pollingInterval.current) {
+              clearInterval(pollingInterval.current)
+              pollingInterval.current = null
+            }
+            setVideoStatus((prev) => ({ ...prev, status: 'completed' as any }))
+            console.info('Video polling stopped: media endpoint returned 404 (fully processed)')
+          } else {
+            console.error('Video polling error:', error)
+          }
         }
       }, 3000)
     }

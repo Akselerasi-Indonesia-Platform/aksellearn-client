@@ -21,7 +21,8 @@ export interface LessonVideo {
   duration?: number
   watch_progress?: LessonVideoProgress | null
   media_uuid?: string
-  status?: 'pending' | 'processing' | 'available' | 'failed'
+  status?: 'pending' | 'processing' | 'available' | 'completed' | 'finished' | 'failed'
+  qualities?: string[]
 }
 
 export interface CourseModule {

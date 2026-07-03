@@ -392,6 +392,28 @@ function AppSettingsPage() {
                           <span className="text-[10px] text-muted-foreground font-mono">
                             {job.uuid}
                           </span>
+                          {/* Qualities Display */}
+                          <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                            {job.qualities && job.qualities.length > 0 ? (
+                              job.qualities.map((q: string) => (
+                                <Badge
+                                  key={q}
+                                  variant="secondary"
+                                  className={cn(
+                                    "text-[9px] h-4 px-1.5 py-0 uppercase font-black",
+                                    q === '1080p' && 'bg-blue-500/10 text-blue-600',
+                                    q === '720p' && 'bg-indigo-500/10 text-indigo-600',
+                                  )}
+                                >
+                                  {q}
+                                </Badge>
+                              ))
+                            ) : (
+                              <span className="text-[9px] text-muted-foreground italic">
+                                Encoding manifest...
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
                           <span className="text-[10px] text-muted-foreground">
