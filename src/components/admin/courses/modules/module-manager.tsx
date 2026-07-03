@@ -474,7 +474,7 @@ function ModuleItem({
     // Stop polling if we reach a terminal state
     const isPollingStatus =
       videoStatus.status &&
-      !['completed', 'finished', 'failed'].includes(videoStatus.status)
+      !['completed', 'finished', 'available', 'failed'].includes(videoStatus.status)
 
     const videoUuid = videoStatus.uuid
 
@@ -493,9 +493,14 @@ function ModuleItem({
           })
 
           // Terminal success states
-          if (status.status === 'completed' || status.status === 'finished') {
+          if (['completed', 'finished', 'available'].includes(status.status)) {
             if (status.stream_url)
               form.setValue('video', status.stream_url, {
+                shouldDirty: true,
+                shouldValidate: true,
+              })
+            if (status.thumbnail_url)
+              form.setValue('video_thumbnail', status.thumbnail_url, {
                 shouldDirty: true,
                 shouldValidate: true,
               })

@@ -273,7 +273,7 @@ export function CourseForm({
     // Stop polling if we reach a terminal state
     const isPollingStatus =
       videoStatus.status &&
-      !['completed', 'finished', 'failed'].includes(videoStatus.status)
+      !['completed', 'finished', 'available', 'failed'].includes(videoStatus.status)
 
     if (videoUuid && isPollingStatus) {
       pollingInterval.current = setInterval(async () => {
@@ -290,7 +290,7 @@ export function CourseForm({
           })
 
           // Terminal success states
-          if (status.status === 'completed' || status.status === 'finished') {
+          if (['completed', 'finished', 'available'].includes(status.status)) {
             if (status.stream_url)
               form.setValue('video', status.stream_url, {
                 shouldDirty: true,
