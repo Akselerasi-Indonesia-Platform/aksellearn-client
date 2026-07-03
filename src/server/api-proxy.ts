@@ -60,6 +60,8 @@ export default defineEventHandler(async (event) => {
   if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
     if (isMultipart) {
       bodyText = ''
+      // CRITICAL: Forward the raw Node request stream for file uploads
+      body = event.node.req
     } else {
       const rawBody = await readRawBody(event)
       body = rawBody

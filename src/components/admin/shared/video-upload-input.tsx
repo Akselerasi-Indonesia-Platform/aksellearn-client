@@ -45,8 +45,10 @@ export function VideoUploadInput({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   const isProcessing =
-    videoStatus?.status &&
-    !['completed', 'finished', 'failed', 'available'].includes(videoStatus.status)
+    isUploading ||
+    (!!videoStatus?.status &&
+      !['completed', 'finished', 'failed'].includes(videoStatus.status) &&
+      !(videoStatus.status === 'available' && value))
 
   if (compact) {
     return (
@@ -105,9 +107,11 @@ export function VideoUploadInput({
                   <Video className="h-4 w-4 text-primary animate-pulse" />
                 </div>
                 <span className="text-xs font-bold tracking-tight">
-                  {videoStatus?.status === 'uploading'
+                  {videoStatus?.status === 'uploading' || (isUploading && !videoStatus?.status)
                     ? 'Uploading Assets'
-                    : 'Processing Streams'}
+                    : videoStatus?.status === 'available'
+                      ? 'Finalizing Player'
+                      : 'Processing Streams'}
                 </span>
               </div>
               <Badge
@@ -115,24 +119,26 @@ export function VideoUploadInput({
                 className="text-[9px] uppercase font-black bg-primary/10 text-primary border-none"
               >
                 <Loader2 className="h-2.5 w-2.5 animate-spin mr-1.5" />
-                {videoStatus?.status}
+                {videoStatus?.status || 'uploading'}
               </Badge>
             </div>
             <div className="space-y-3">
               <div className="h-2 w-full bg-primary/5 rounded-full overflow-hidden border shadow-inner">
                 <motion.div
                   className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
-                  animate={{ width: `${videoStatus?.progress}%` }}
+                  animate={{ width: `${videoStatus?.progress || 5}%` }}
                   transition={{ duration: 0.5 }}
                 />
               </div>
               <div className="flex justify-between items-center text-[9px] text-muted-foreground font-black uppercase tracking-widest">
                 <span>
-                  {videoStatus?.status === 'uploading'
+                  {videoStatus?.status === 'uploading' || (isUploading && !videoStatus?.status)
                     ? 'Syncing to cloud'
-                    : 'Transcoding streams'}
+                    : videoStatus?.status === 'available'
+                      ? 'Preparing video stream'
+                      : 'Transcoding streams'}
                 </span>
-                <span>{videoStatus?.progress}%</span>
+                <span>{videoStatus?.progress || 0}%</span>
               </div>
             </div>
           </div>
@@ -222,7 +228,7 @@ export function VideoUploadInput({
         </div>
       )}
 
-      {isProcessing && videoStatus && (
+      {isProcessing && (
         <div className="relative aspect-video w-full p-6 border rounded-2xl bg-muted/30 flex flex-col justify-center space-y-6 overflow-hidden">
           <div className="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 -z-10" />
           <div className="flex items-center justify-between">
@@ -231,7 +237,7 @@ export function VideoUploadInput({
                 <Video className="h-5 w-5 text-primary animate-pulse" />
               </div>
               <span className="text-sm font-bold tracking-tight">
-                Video Processing
+                {videoStatus?.status === 'available' ? 'Finalizing Player' : 'Video Processing'}
               </span>
             </div>
             <Badge
@@ -239,7 +245,7 @@ export function VideoUploadInput({
               className="capitalize bg-primary/10 text-primary border-none px-3"
             >
               <Loader2 className="h-3 w-3 animate-spin mr-2" />
-              {videoStatus.status}
+              {videoStatus?.status || 'uploading'}
             </Badge>
           </div>
 
@@ -248,19 +254,21 @@ export function VideoUploadInput({
               <motion.div
                 className="h-full bg-gradient-to-r from-primary/80 to-primary"
                 initial={{ width: 0 }}
-                animate={{ width: `${videoStatus.progress || 10}%` }}
+                animate={{ width: `${videoStatus?.progress || 5}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
             <div className="flex justify-between items-center text-[10px] text-muted-foreground uppercase tracking-widest font-black">
               <span className="flex items-center gap-1.5">
-                {videoStatus.status === 'uploading'
+                {videoStatus?.status === 'uploading' || (isUploading && !videoStatus?.status)
                   ? 'Syncing to cloud'
-                  : videoStatus.status === 'pending'
+                  : videoStatus?.status === 'pending'
                     ? 'Preparing assets'
-                    : 'Transcoding streams'}
+                    : videoStatus?.status === 'available'
+                      ? 'Preparing video stream'
+                      : 'Transcoding streams'}
               </span>
-              <span>{videoStatus.progress}%</span>
+              <span>{videoStatus?.progress || 0}%</span>
             </div>
           </div>
         </div>
