@@ -59,10 +59,12 @@ export default defineEventHandler(async (event) => {
 
   if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
     if (isMultipart) {
+      // Do NOT manually set body for multipart/file uploads.
+      // proxyRequest() internally reads event.req.body (H3's own runtime-agnostic
+      // Web ReadableStream) and streams it to the target. Manually assigning body
+      // here via event.node.req or event.request.body only OVERRIDES and breaks it.
+      // body stays undefined → fetchOptions spread is {} → H3's requestBody wins.
       bodyText = ''
-      // CRITICAL: Use Web Streams API (event.request.body) — works on Bun AND Node.js.
-      // event.node.req is Node-specific and crashes on the Bun runtime used in production.
-      body = event.request.body
     } else {
       const rawBody = await readRawBody(event)
       body = rawBody
