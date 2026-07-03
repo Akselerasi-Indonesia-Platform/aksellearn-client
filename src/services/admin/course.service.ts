@@ -328,8 +328,8 @@ export const adminCourseService = {
     return mapApiToCourse(data)
   },
 
-  async upload(file: File): Promise<{ url: string; uuid: string }> {
-    const data = await adminMediaService.upload(file, 'course')
+  async upload(file: File, onProgress?: (progress: number) => void): Promise<{ url: string; uuid: string }> {
+    const data = await adminMediaService.upload(file, 'course', onProgress)
 
     let url = data.url || ''
     if (data.images) {
@@ -343,8 +343,8 @@ export const adminCourseService = {
     return { url: getProxyUrl(url), uuid: data.uuid }
   },
 
-  async uploadVideo(file: File): Promise<VideoResource> {
-    const data = await adminMediaService.upload(file, 'course')
+  async uploadVideo(file: File, onProgress?: (progress: number) => void): Promise<VideoResource> {
+    const data = await adminMediaService.upload(file, 'course', onProgress)
     return {
       id: 0,
       uuid: data.uuid,

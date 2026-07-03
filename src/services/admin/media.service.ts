@@ -1,3 +1,4 @@
+import axios from 'axios'
 import apiClient from '@/lib/api-client'
 
 export interface MediaUploadResponse {
@@ -44,12 +45,53 @@ export const adminMediaService = {
   async upload(
     file: File,
     module: 'article' | 'course' | 'user' | 'platform',
+    onProgress?: (progress: number) => void
   ): Promise<MediaData> {
+    const isLargeVideo = file.type.startsWith('video/') && file.size > 10 * 1024 * 1024;
+    
+    if (isLargeVideo) {
+      // Step 1: Get presigned URL
+      const presignResponse = await apiClient.post('/api/admin/media/presign', {
+        module,
+        filename: file.name,
+        mime_type: file.type,
+        size: file.size,
+      })
+      const { uuid, presigned_url } = presignResponse.data.data || presignResponse.data
+      
+      // Step 2: Upload directly to DO Spaces
+      try {
+        await axios.put(presigned_url, file, {
+          headers: { 'Content-Type': file.type },
+          onUploadProgress: (e) => {
+            if (e.total && onProgress) {
+              onProgress(Math.round((e.loaded / e.total) * 100))
+            }
+          }
+        })
+      } catch (error: any) {
+        if (error.response?.status === 403) {
+          throw new Error('Upload link expired. Please try again.')
+        }
+        throw error
+      }
+      
+      // Step 3: Tell backend to process the file
+      const completeResponse = await apiClient.post('/api/admin/media/complete', { uuid })
+      return completeResponse.data.data || completeResponse.data
+    }
+
     const formData = new FormData()
     formData.append('file', file)
     formData.append('module', module)
 
-    const response = await apiClient.post('/api/admin/media/upload', formData)
+    const response = await apiClient.post('/api/admin/media/upload', formData, {
+      onUploadProgress: (e) => {
+        if (e.total && onProgress) {
+          onProgress(Math.round((e.loaded / e.total) * 100))
+        }
+      }
+    })
 
     return response.data.data || response.data
   },

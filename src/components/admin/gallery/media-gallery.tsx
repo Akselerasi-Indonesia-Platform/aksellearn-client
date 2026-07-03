@@ -153,13 +153,18 @@ export function MediaGallery({ onSelect, mode = 'view' }: MediaGalleryProps) {
     )
   }
 
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
     setUploading(true)
+    setUploadProgress(0)
     try {
-      await adminMediaService.upload(file, 'article') // Default module
+      await adminMediaService.upload(file, 'article', (progress) => {
+        setUploadProgress(progress)
+      }) // Default module
       toast.success(t('gallery.uploadSuccess'))
       fetchMedia()
     } catch (error) {
@@ -167,6 +172,7 @@ export function MediaGallery({ onSelect, mode = 'view' }: MediaGalleryProps) {
       toast.error(t('gallery.uploadError'))
     } finally {
       setUploading(false)
+      setUploadProgress(null)
       if (e.target) e.target.value = ''
     }
   }
@@ -234,7 +240,9 @@ export function MediaGallery({ onSelect, mode = 'view' }: MediaGalleryProps) {
                 <Plus className="h-4 w-4" />
               )}
               <span className="hidden sm:inline">
-                {t('gallery.uploadMedia')}
+                {uploading && uploadProgress !== null
+                  ? `${t('gallery.uploading', 'Uploading')} ${uploadProgress}%`
+                  : t('gallery.uploadMedia')}
               </span>
             </Button>
           </label>

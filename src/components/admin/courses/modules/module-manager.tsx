@@ -687,7 +687,9 @@ function ModuleItem({
     setIsUploadingVideo(true)
     setVideoStatus({ status: 'uploading', progress: 0, uuid: null })
     try {
-      const data = await adminCourseService.uploadVideo(file)
+      const data = await adminCourseService.uploadVideo(file, (progress) => {
+        setVideoStatus((prev) => ({ ...prev, status: 'uploading', progress }))
+      })
       form.setValue('video_uuid', data.uuid, { shouldDirty: true })
       setVideoStatus({
         status: data.status as any,
