@@ -166,7 +166,7 @@ export function VideoUploadInput({
           <div className="relative aspect-video rounded-3xl overflow-hidden border shadow-2xl bg-black group transition-all duration-500 hover:ring-4 ring-primary/20">
             <VideoPlayer url={value} onPlayingChange={setIsVideoPlaying} />
             <Button
-              className="absolute top-4 right-4 z-10 size-8 rounded-full bg-black/70 hover:bg-destructive text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-4 right-4 z-[9999] size-8 rounded-full bg-black/70 hover:bg-destructive text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
               disabled={disabled}
               size="icon"
               type="button"
