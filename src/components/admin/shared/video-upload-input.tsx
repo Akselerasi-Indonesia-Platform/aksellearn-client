@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Video, Upload, Loader2, X, AlertCircle } from 'lucide-react'
+import { Video, Upload, Loader2, X, Play, AlertCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -30,6 +30,7 @@ interface VideoUploadInputProps {
   className?: string
   label?: React.ReactNode
   disabled?: boolean
+  playerKey?: string
 }
 
 export function VideoUploadInput({
@@ -41,9 +42,11 @@ export function VideoUploadInput({
   compact = false,
   className,
   disabled,
+  playerKey,
 }: VideoUploadInputProps) {
   const { t } = useTranslation()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [showPlayer, setShowPlayer] = useState(false)
 
   const isProcessing =
     isUploading ||
@@ -165,12 +168,26 @@ export function VideoUploadInput({
 
         {value && !isProcessing && videoStatus?.status !== 'failed' && (
           <div className="relative aspect-video w-full group">
-            <div className="absolute inset-0 rounded-3xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
-              <VideoPlayer
-                key={`${value}-${videoStatus?.status}`}
-                url={value}
-                onPlayingChange={setIsVideoPlaying}
-              />
+            <div className="absolute inset-0 rounded-xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
+              {!showPlayer ? (
+                <div 
+                  className="relative w-full h-full flex flex-col items-center justify-center bg-slate-900/80 cursor-pointer group/play" 
+                  onClick={() => setShowPlayer(true)}
+                >
+                  <div className="p-3 rounded-full bg-blue-500/20 text-blue-500 transition-transform duration-300 group-hover/play:scale-110 group-hover/play:bg-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.15)] group-hover/play:shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                    <Play className="h-6 w-6 ml-0.5 fill-blue-500/20" />
+                  </div>
+                  <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-white/60 group-hover/play:text-white/90">
+                    Click to Preview
+                  </p>
+                </div>
+              ) : (
+                <VideoPlayer
+                  key={playerKey || `${value}-${videoStatus?.status}`}
+                  url={value}
+                  onPlayingChange={setIsVideoPlaying}
+                />
+              )}
             </div>
             <Button
               className="absolute top-2 right-2 z-10 size-8 rounded-full bg-black/70 hover:bg-destructive text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
@@ -299,12 +316,26 @@ export function VideoUploadInput({
 
       {value && !isProcessing && videoStatus?.status !== 'failed' && (
         <div className="relative aspect-video group">
-          <div className="absolute inset-0 rounded-3xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
-            <VideoPlayer
-              key={`${value}-${videoStatus?.status}`}
-              url={value}
-              onPlayingChange={setIsVideoPlaying}
-            />
+          <div className="absolute inset-0 rounded-xl overflow-hidden border shadow-2xl bg-black transition-all duration-500 group-hover:ring-4 ring-primary/20">
+            {!showPlayer ? (
+              <div 
+                className="relative w-full h-full flex flex-col items-center justify-center bg-slate-900/80 cursor-pointer group/play" 
+                onClick={() => setShowPlayer(true)}
+              >
+                <div className="p-4 rounded-full bg-blue-500/20 text-blue-500 transition-transform duration-300 group-hover/play:scale-110 group-hover/play:bg-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)] group-hover/play:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+                  <Play className="h-8 w-8 ml-1 fill-blue-500/20" />
+                </div>
+                <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-white/60 group-hover/play:text-white/90">
+                  Click to Preview Video
+                </p>
+              </div>
+            ) : (
+              <VideoPlayer
+                key={playerKey || `${value}-${videoStatus?.status}`}
+                url={value}
+                onPlayingChange={setIsVideoPlaying}
+              />
+            )}
             {videoStatus?.duration && !isVideoPlaying && (
               <div className="absolute bottom-4 left-4 z-10 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white text-[10px] font-black uppercase tracking-widest shadow-2xl transition-opacity duration-300 pointer-events-none">
                 {Math.floor(videoStatus.duration / 60)}:

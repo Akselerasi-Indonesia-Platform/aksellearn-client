@@ -350,6 +350,7 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
                                 onUpload={(f) => handleUpload(index, field.id, f)}
                                 videoStatus={status as any}
                                 value={status.stream_url || streamField.value || ''}
+                                playerKey={`video-${field.id}-${index}`}
                               />
                             </FormControl>
                             <FormMessage />

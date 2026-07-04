@@ -395,7 +395,7 @@ function ModuleItem({
       content: module.content || '',
       video: module.video || '',
       video_uuid: (module as any).video_uuid || '',
-      videos: module.videos?.map(v => ({ title: v.title, media_uuid: v.uuid, stream_url: v.stream_url })) || 
+      videos: module.videos?.map(v => ({ title: v.title, media_uuid: v.media_uuid || v.uuid, stream_url: v.stream_url })) || 
               ((module as any).video_uuid ? [{ title: 'Video 1', media_uuid: (module as any).video_uuid, stream_url: module.video }] : []),
       is_active: module.is_active ?? false,
       published_at: module.published_at
@@ -426,7 +426,7 @@ function ModuleItem({
       if (module.videos && module.videos.length > 0) {
         initialVideos = module.videos.map(v => ({
           title: v.title,
-          media_uuid: v.uuid,
+          media_uuid: v.media_uuid || v.uuid,
           stream_url: v.stream_url
         }))
       } else if ((module as any).video_uuid || module.video) {
@@ -648,6 +648,7 @@ function ModuleItem({
                 ?.filter((v) => v.media_uuid)
                 .map((v, i) => ({
                   uuid: v.media_uuid || '',
+                  media_uuid: v.media_uuid || '',
                   title: v.title || `Video ${i + 1}`,
                   order_weight: i,
                   stream_url: v.stream_url || '',

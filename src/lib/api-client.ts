@@ -329,6 +329,20 @@ apiClient.interceptors.response.use(
       return Promise.reject(error)
     }
 
+    if (error.response?.status === 429) {
+      // INDUSTRY STANDARD UX: Suppress toast for background polling tasks
+      const isSilent = originalRequest?.headers?.['X-Silent'] === 'true'
+      
+      if (isBrowser && !isSilent) {
+        import('sonner').then(({ toast }) => {
+          toast.error('Whoops, you are going too fast! 🐢', {
+            description: 'Please slow down and wait a moment before trying again.',
+          })
+        })
+      }
+      return Promise.reject(error)
+    }
+
     if (error.response?.status === 401) {
       const appBootTime = (window as any).__APP_BOOT_TIME__ || Date.now()
       const timeSinceBoot = Date.now() - appBootTime

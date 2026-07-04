@@ -66,6 +66,7 @@ function mapApiToModule(data: RawApiModule): CourseModule {
     videos: Array.isArray((data as any).videos)
       ? (data as any).videos.map((v: any) => ({
           uuid: v.uuid || v.media_uuid || '',
+          media_uuid: v.media_uuid || v.uuid || '',
           title: v.title || '',
           order_weight: v.order_weight ?? 0,
           stream_url: v.stream_url || v.video?.stream_url || '',

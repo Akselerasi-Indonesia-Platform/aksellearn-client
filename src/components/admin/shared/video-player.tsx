@@ -1,6 +1,6 @@
 import { useEffect, useRef, useMemo, useState } from 'react'
 import type Hls from 'hls.js'
-import { Video } from 'lucide-react'
+import { Video, Loader2 } from 'lucide-react'
 import 'plyr/dist/plyr.css'
 import { getToken } from '@/lib/auth'
 import { getMediaUrl } from '@/lib/media-utils'
@@ -27,6 +27,7 @@ export function VideoPlayer({
   const hlsRef = useRef<Hls | null>(null)
   const [isClient, setIsClient] = useState(false)
   const [isSwitching, setIsSwitching] = useState(false)
+  const [isPlayerReady, setIsPlayerReady] = useState(false)
 
   const token = getToken()
   const rawToken = token?.replace('Bearer ', '') || ''
@@ -138,6 +139,10 @@ export function VideoPlayer({
           plyrInstance?.on('playing', () => onPlayingChange?.(true))
           plyrInstance?.on('pause', () => onPlayingChange?.(false))
           plyrInstance?.on('ended', () => onPlayingChange?.(false))
+          plyrInstance?.on('ready', () => setIsPlayerReady(true))
+          
+          // Fallback if ready event is missed
+          setTimeout(() => setIsPlayerReady(true), 500)
         })
 
         hls.on(HlsClass.Events.ERROR, (_event: any, data: any) => {
@@ -145,8 +150,11 @@ export function VideoPlayer({
           if (data.fatal) {
             switch (data.type) {
               case HlsClass.ErrorTypes.NETWORK_ERROR:
-                console.warn('HLS Network Error, attempting to reload...')
-                hls.startLoad()
+                console.warn('HLS Network Error, attempting to reload with backoff...')
+                // Prevent 0-ms death loops if hitting 429 or immediate connection drops
+                setTimeout(() => {
+                  hls.startLoad()
+                }, 2000)
                 break
               case HlsClass.ErrorTypes.MEDIA_ERROR:
                 console.warn('HLS Media Error, attempting to recover...')
@@ -170,12 +178,18 @@ export function VideoPlayer({
         plyrInstance?.on('playing', () => onPlayingChange?.(true))
         plyrInstance?.on('pause', () => onPlayingChange?.(false))
         plyrInstance?.on('ended', () => onPlayingChange?.(false))
+        plyrInstance?.on('ready', () => setIsPlayerReady(true))
+        
+        setTimeout(() => setIsPlayerReady(true), 500)
       }
     }
 
-    initPlayer()
+    const timeoutId = setTimeout(() => {
+      initPlayer()
+    }, 500)
 
     return () => {
+      clearTimeout(timeoutId)
       if (playerRef.current) {
         try {
           playerRef.current.destroy()
@@ -195,7 +209,7 @@ export function VideoPlayer({
     return (
       <div
         style={{ width, height }}
-        className="rounded-2xl bg-slate-900/50 flex flex-col items-center justify-center border border-dashed border-white/10 gap-3"
+        className="bg-slate-900/50 flex flex-col items-center justify-center gap-3 w-full h-full"
       >
         {!url ? (
           <>
@@ -207,7 +221,7 @@ export function VideoPlayer({
             </p>
           </>
         ) : (
-          <div className="w-8 h-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+          <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
         )}
       </div>
     )
@@ -218,6 +232,17 @@ export function VideoPlayer({
       style={{ width, height }}
       className="overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl relative group/player select-none"
     >
+      {/* 
+          INITIALIZATION OVERLAY 
+          Hides the naked browser <video> element while the 500ms debounce
+          and HLS manifest parsing is taking place.
+      */}
+      <div
+        className={`absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity duration-500 pointer-events-none ${!isPlayerReady ? 'opacity-100' : 'opacity-0'}`}
+      >
+        <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
+      </div>
+
       {/* 
           STABLE DOM OVERLAY 
           Reverted to the permanent node structure (no conditional rendering) 
