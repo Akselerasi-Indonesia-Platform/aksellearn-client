@@ -80,7 +80,7 @@ function mapApiToModule(data: RawApiModule): CourseModule {
 export const adminCourseModuleService = {
   async getAll(courseUuid: string): Promise<CourseModule[]> {
     const response = await apiClient.get(
-      `/api/admin/course/${courseUuid}/module`,
+      `/api/admin/course/${courseUuid}/module?limit=1000`,
     )
     const data = response.data.data || response.data
     return Array.isArray(data) ? data.map(mapApiToModule) : []

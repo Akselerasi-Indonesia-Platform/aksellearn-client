@@ -47,6 +47,7 @@ import {
   FormSearchableSelect,
 } from '@/components/admin/shared/form'
 import { ConfirmDialog } from '@/components/admin/shared/alert/confirm-dialog'
+import { useLeaveGuard } from '@/hooks/use-leave-guard'
 import { adminQuizService } from '@/services/admin/quiz.service'
 import { Quiz } from '@/types/course'
 import { QuizModal } from '@/components/admin/quiz/quiz-modal'
@@ -405,6 +406,8 @@ function ModuleItem({
     },
   })
 
+  const isInitialized = useRef(false)
+
   useEffect(() => {
     if (isExpanded) {
       // Support both naming conventions (module_type vs type)
@@ -450,7 +453,8 @@ function ModuleItem({
           ? new Date(module.published_at).toISOString()
           : '',
         quiz_uuid: quizUuid,
-      })
+      }, { keepDirtyValues: isInitialized.current })
+      isInitialized.current = true
 
       // Use the actual status from the backend, not a hardcoded assumption.
       // 'available' means fast-track done but HD may still be processing — keep polling.
@@ -542,11 +546,6 @@ function ModuleItem({
           if (['completed', 'finished'].includes(status.status)) {
             if (status.stream_url)
               form.setValue('video', status.stream_url, {
-                shouldDirty: true,
-                shouldValidate: true,
-              })
-            if (status.thumbnail_url)
-              form.setValue('video_thumbnail', status.thumbnail_url, {
                 shouldDirty: true,
                 shouldValidate: true,
               })
@@ -657,6 +656,7 @@ function ModuleItem({
       }
 
       onUpdate(mergedModule)
+      form.reset(values)
       toast.success('Module saved')
       // Keep module open after save
     } catch (error: any) {
@@ -708,6 +708,8 @@ function ModuleItem({
       setIsUploadingVideo(false)
     }
   }
+
+  useLeaveGuard(form.formState.isDirty || isUploadingVideo)
 
   return (
     <motion.div
@@ -892,16 +894,14 @@ function ModuleItem({
           </div>
         </div>
 
-        {/* Inline Form */}
-        <AnimatePresence initial={false}>
-          {isExpanded && (
-            <motion.div
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              initial={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <div className="p-6 pt-4 space-y-8 border-t border-border/50">
+        {/* Inline Form - Always mounted to preserve background video uploads */}
+        <motion.div
+          animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+          initial={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="overflow-hidden"
+        >
+          <div className="p-6 pt-4 space-y-8 border-t border-border/50">
                 <Form {...form}>
                   <div
                     className="space-y-8"
@@ -991,6 +991,12 @@ function ModuleItem({
                                 control={form.control} 
                                 setValue={form.setValue}
                                 name="videos" 
+                                onUploadComplete={() => {
+                                  // Auto-save the module when a video finishes uploading
+                                  if (form.formState.isValid) {
+                                    form.handleSubmit(onSubmit)()
+                                  }
+                                }}
                                 label="Lesson Videos"
                                 description="Add one or more videos to this lesson. Drag to reorder."
                               />
@@ -1183,8 +1189,6 @@ function ModuleItem({
                 </Form>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </motion.div>
   )

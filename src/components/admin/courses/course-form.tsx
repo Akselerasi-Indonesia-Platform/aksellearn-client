@@ -828,6 +828,8 @@ export function CourseForm({
           <TabsContent
             className="animate-in fade-in-50 duration-300 outline-none"
             value="module"
+            forceMount
+            hidden={activeTab !== 'module'}
           >
             {course?.uuid ? (
               <ModuleManager courseUuid={course.uuid as string} />

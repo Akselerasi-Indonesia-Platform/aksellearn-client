@@ -16,6 +16,7 @@ import { VideoUploadInput } from '@/components/admin/shared/video-upload-input'
 import { adminCourseService } from '@/services/admin/course.service'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { useLeaveGuard } from '@/hooks/use-leave-guard'
 
 const TERMINAL_STATUSES = ['completed', 'finished', 'failed']
 
@@ -45,6 +46,7 @@ interface VideoPlaylistManagerProps<TFieldValues extends FieldValues = FieldValu
   className?: string
   disabled?: boolean
   required?: boolean
+  onUploadComplete?: () => void
 }
 
 export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldValues>({
@@ -56,6 +58,7 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
   className,
   disabled,
   required,
+  onUploadComplete,
 }: VideoPlaylistManagerProps<TFieldValues>) {
   const { fields, append, remove, move } = useFieldArray({ control, name })
 
@@ -66,6 +69,9 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
   }, [fields])
 
   const [uploadStatuses, setUploadStatuses] = useState<Record<string, UploadStatus>>({})
+
+  const isPendingCompletion = Object.values(uploadStatuses).some((s) => s.status && !['completed', 'finished', 'failed', 'available'].includes(s.status))
+  useLeaveGuard(isPendingCompletion, 'A video is currently uploading or processing. Please wait for it to finish so the module can be auto-saved, otherwise it may not be linked.')
 
   // Interval store — keyed by field.id. Persists across renders, never cleared by state changes.
   const pollingIntervals = useRef<Record<string, ReturnType<typeof setInterval>>>({})
@@ -149,6 +155,7 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
                   shouldDirty: true,
                 })
               }
+              onUploadComplete?.()
             }
           }
         } catch (error: any) {
@@ -158,13 +165,18 @@ export function VideoPlaylistManager<TFieldValues extends FieldValues = FieldVal
             clearInterval(pollingIntervals.current[id])
             delete pollingIntervals.current[id]
             console.info(`[VideoPlaylistManager] Media ${uuid} returned 404 — treating as completed`)
+            setUploadStatuses((prev) => ({
+              ...prev,
+              [id]: { ...prev[id], status: 'completed' },
+            }))
+            onUploadComplete?.()
           } else {
             console.error(`[VideoPlaylistManager] Polling error for uuid=${uuid}:`, error)
           }
         }
       }, 3000)
     },
-    [name, setValue],
+    [name, setValue, onUploadComplete],
   )
 
   // Initialize polling on mount ONLY for videos still in processing (no stream_url yet)
