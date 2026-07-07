@@ -61,13 +61,14 @@ export function CourseCard({
           />
           {isPlayingPreview && course.preview_url && (
             <video
-              src={getMediaUrl(course.preview_url, 'image')}
+              src={course.preview_url}
               autoPlay
               controls
               controlsList="nodownload"
               className="absolute inset-0 w-full h-full object-cover animate-in fade-in duration-300 z-20"
               onClick={(e) => {
                 e.stopPropagation()
+                e.preventDefault()
               }}
             />
           )}

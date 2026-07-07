@@ -42,7 +42,7 @@ export function CourseListItem({
         />
         {isHovered && (course as any).preview_url && (
           <video
-            src={getMediaUrl((course as any).preview_url, 'image')}
+            src={(course as any).preview_url}
             autoPlay
             muted
             loop

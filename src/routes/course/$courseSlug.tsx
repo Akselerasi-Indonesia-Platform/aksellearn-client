@@ -60,7 +60,6 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { toast } from 'sonner'
-import { VideoPlayer } from '@/components/admin/shared/video-player'
 import { isAuthenticated, isAdmin } from '@/lib/auth'
 import { useAuthStore } from '@/hooks/use-auth'
 import { cn, formatCurrency } from '@/lib/utils'
@@ -606,11 +605,17 @@ function CoursePublicDetails() {
                   />
                   {isPlayingPreview && ((course as any).preview_url || course.video) && (
                     <div className="absolute inset-0 z-20 bg-black animate-in fade-in duration-300" onClick={(e) => e.stopPropagation()}>
-                      <VideoPlayer 
-                        url={(course as any).preview_url || course.video} 
-                        isRawVideo={false}
-                        autoPlay 
-                      />
+                      <video 
+                          controls 
+                          playsInline 
+                          preload="metadata"
+                          className="w-full h-full object-cover rounded-lg"
+                          src={(course as any).preview_url || course.video}
+                          poster={course.thumbnail || undefined}
+                          autoPlay
+                      >
+                          Your browser does not support the video tag.
+                      </video>
                     </div>
                   )}
                   {!isPlayingPreview && ((course as any).preview_url || course.video) && (
