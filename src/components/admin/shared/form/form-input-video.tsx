@@ -22,6 +22,8 @@ interface FormInputVideoProps<TFieldValues extends FieldValues = FieldValues> {
   onUpload: (file: File) => void
   onClear: () => void
   compact?: boolean
+  uploadHint?: string
+  isRawVideo?: boolean
   videoStatus?: {
     status:
       | 'pending'
@@ -50,6 +52,8 @@ export function FormInputVideo<TFieldValues extends FieldValues = FieldValues>({
   onUpload,
   onClear,
   compact = false,
+  uploadHint,
+  isRawVideo,
   videoStatus,
 }: FormInputVideoProps<TFieldValues>) {
   return (
@@ -72,6 +76,8 @@ export function FormInputVideo<TFieldValues extends FieldValues = FieldValues>({
               onClear={onClear}
               onUpload={onUpload}
               videoStatus={videoStatus}
+              uploadHint={uploadHint}
+              isRawVideo={isRawVideo}
               value={field.value}
             />
           </FormControl>

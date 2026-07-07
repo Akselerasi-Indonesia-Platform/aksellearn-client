@@ -20,6 +20,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { removeToken } from '@/lib/auth'
+import { useAuthStore } from '@/hooks/use-auth'
 
 export function NavUser({
   user,
@@ -32,9 +33,10 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const navigate = useNavigate()
+  const logout = useAuthStore((state) => state.logout)
 
   const handleLogout = () => {
-    removeToken()
+    logout()
     navigate({ to: '/login' })
   }
 

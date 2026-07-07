@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency, cn } from '@/lib/utils'
+import { getMediaUrl } from '@/lib/media-utils'
 import type { Course } from '@/types/course'
 
 export interface CourseListItemProps {
@@ -41,7 +42,7 @@ export function CourseListItem({
         />
         {isHovered && (course as any).preview_url && (
           <video
-            src={(course as any).preview_url}
+            src={getMediaUrl((course as any).preview_url, 'image')}
             autoPlay
             muted
             loop

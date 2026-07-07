@@ -73,6 +73,8 @@ export function mapApiToCourse(raw: any): Course {
             raw.video.is_public === true,
         }
       : undefined,
+    preview_video_uuid: (raw as any).preview_video_uuid || undefined,
+    preview_url: (raw as any).preview_url || undefined,
     is_public:
       raw.video?.contents?.is_public === true ||
       raw.video?.is_public === true,

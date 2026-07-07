@@ -60,6 +60,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PublicLayout } from '@/components/public/layout/main-layout'
 import { toast } from 'sonner'
+import { VideoPlayer } from '@/components/admin/shared/video-player'
 import { isAuthenticated, isAdmin } from '@/lib/auth'
 import { useAuthStore } from '@/hooks/use-auth'
 import { cn, formatCurrency } from '@/lib/utils'
@@ -246,6 +247,7 @@ function CoursePublicDetails() {
   const idempotencyKey = React.useMemo(() => crypto.randomUUID(), [])
 
   const [isPollingEnrollment, setIsPollingEnrollment] = React.useState(false)
+  const [isPlayingPreview, setIsPlayingPreview] = React.useState(false)
 
   // 1. Fetch Course Public Data
   const {
@@ -586,22 +588,41 @@ function CoursePublicDetails() {
                 }}
                 className="bg-white rounded-2xl p-2 shadow-2xl shadow-indigo-500/20 group relative overflow-hidden"
               >
-                <div className="aspect-video relative overflow-hidden rounded-xl isolate">
+                <div 
+                  className={cn("aspect-video relative overflow-hidden rounded-xl isolate", ((course as any).preview_url || course.video) && !isPlayingPreview ? "cursor-pointer" : "")}
+                  onClick={(e) => {
+                    if (((course as any).preview_url || course.video) && !isPlayingPreview) {
+                      e.preventDefault()
+                      setIsPlayingPreview(true)
+                    }
+                  }}
+                >
                   <motion.img
                     src={course.thumbnail || undefined}
-                    className="w-full h-full object-cover"
+                    className={cn("w-full h-full object-cover", isPlayingPreview ? "opacity-0" : "opacity-100")}
                     alt={course.title}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: isPlayingPreview ? 1 : 1.05 }}
                     transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                   />
-                  <motion.div 
-                    initial={false}
-                    className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  >
-                    <div className="size-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
-                      <PlayCircle className="size-10 text-white" />
+                  {isPlayingPreview && ((course as any).preview_url || course.video) && (
+                    <div className="absolute inset-0 z-20 bg-black animate-in fade-in duration-300" onClick={(e) => e.stopPropagation()}>
+                      <VideoPlayer 
+                        url={(course as any).preview_url || course.video} 
+                        isRawVideo={false}
+                        autoPlay 
+                      />
                     </div>
-                  </motion.div>
+                  )}
+                  {!isPlayingPreview && ((course as any).preview_url || course.video) && (
+                    <motion.div 
+                      initial={false}
+                      className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    >
+                      <div className="size-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
+                        <PlayCircle className="size-10 text-white" />
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
 
                 <div className="p-8 space-y-6">

@@ -24,6 +24,7 @@ import { useCourseCategories } from '@/hooks/use-discovery'
 import { useCart } from '@/hooks/use-cart'
 import { useUIStore } from '@/hooks/use-ui-store'
 import { usePlatformStore } from '@/hooks/use-platform'
+import { useAuthStore } from '@/hooks/use-auth'
 import { MiniCart } from '@/components/public/cart/mini-cart'
 import { PublicLanguageToggle } from './public-language-toggle'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +41,7 @@ export function PublicNavbar() {
   const { cart } = useCart()
   const cartItemCount = cart?.total_items || 0
   const { t } = useTranslation()
+  const logout = useAuthStore((state) => state.logout)
 
   React.useEffect(() => {
     setMounted(true)
@@ -52,7 +54,7 @@ export function PublicNavbar() {
   const canApplyInstructor = mounted && (!user || (!userIsAdmin && !userIsInstructor))
 
   const handleLogout = () => {
-    removeToken()
+    logout()
     window.location.href = '/'
   }
 

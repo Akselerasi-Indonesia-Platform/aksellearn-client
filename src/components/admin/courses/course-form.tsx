@@ -61,6 +61,7 @@ const formSchema = z.object({
   video: z.string(),
   video_thumbnail: z.string(),
   video_uuid: z.string().nullable(),
+  preview_video_uuid: z.string().nullable().optional(),
   is_active: z.boolean(),
   is_corporate: z.boolean().default(false),
   price: z.coerce.number().min(0),
@@ -121,6 +122,7 @@ export function CourseForm({
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false)
   const [isUploadingOgImage, setIsUploadingOgImage] = useState(false)
   const [isUploadingVideo, setIsUploadingVideo] = useState(false)
+  const [isUploadingPreviewVideo, setIsUploadingPreviewVideo] = useState(false)
   const [videoStatus, setVideoStatus] = useState<{
     status:
       | 'pending'
@@ -167,6 +169,7 @@ export function CourseForm({
       video: course?.video || '',
       video_thumbnail: course?.video_thumbnail || '',
       video_uuid: course?.video_uuid || null,
+      preview_video_uuid: course?.preview_video_uuid || null,
       is_active: course?.is_active ?? true,
       published_at: course?.published_at
         ? new Date(course.published_at).toISOString()
@@ -229,6 +232,7 @@ export function CourseForm({
         video: course.video || '',
         video_thumbnail: course.video_thumbnail || '',
         video_uuid: course.video_uuid ?? null,
+        preview_video_uuid: course.preview_video_uuid ?? null,
         is_active: !!course.is_active,
         published_at: course.published_at
           ? new Date(course.published_at).toISOString()
@@ -674,6 +678,31 @@ export function CourseForm({
               </div>
             </div>
 
+            <div className="py-6 border-t border-slate-100 mt-2">
+              <div className="max-w-[420px] mx-auto">
+                <FormInputVideo
+                  control={form.control}
+                  isUploading={isUploadingPreviewVideo}
+                  label="Preview Video"
+                  uploadHint="MP4, max 15MB recommended 15-30 second"
+                  isRawVideo={true}
+                  name="preview_video_uuid"
+                  onClear={() => {
+                    form.setValue('preview_video_uuid', null)
+                  }}
+                  onUpload={async (file) => {
+                    setIsUploadingPreviewVideo(true)
+                    try {
+                      const res = await adminMediaService.upload(file, 'course')
+                      form.setValue('preview_video_uuid', res.uuid)
+                    } finally {
+                      setIsUploadingPreviewVideo(false)
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
             {/* Hidden UUID fields to ensure they are tracked and sent in payload */}
             <FormField
               control={form.control}
@@ -689,6 +718,17 @@ export function CourseForm({
             <FormField
               control={form.control}
               name="video_uuid"
+              render={({ field }) => (
+                <FormItem className="hidden">
+                  <FormControl>
+                    <Input type="hidden" {...field} value={field.value || ''} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="preview_video_uuid"
               render={({ field }) => (
                 <FormItem className="hidden">
                   <FormControl>

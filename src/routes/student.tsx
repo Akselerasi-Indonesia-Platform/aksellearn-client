@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { usePlatformStore } from '@/hooks/use-platform'
+import { useAuthStore } from '@/hooks/use-auth'
 
 import { NotificationSheet } from '@/components/user/layout/notification-sheet'
 import { EmailVerificationBanner } from '@/components/auth/email-verification-banner'
@@ -93,8 +94,10 @@ function UserLayout() {
     }
   }, [user])
 
+  const logout = useAuthStore((state) => state.logout)
+
   const handleLogout = () => {
-    removeToken()
+    logout()
     window.location.href = '/login'
   }
 

@@ -31,6 +31,8 @@ interface VideoUploadInputProps {
   label?: React.ReactNode
   disabled?: boolean
   playerKey?: string
+  uploadHint?: React.ReactNode
+  isRawVideo?: boolean
 }
 
 export function VideoUploadInput({
@@ -43,6 +45,8 @@ export function VideoUploadInput({
   className,
   disabled,
   playerKey,
+  uploadHint,
+  isRawVideo,
 }: VideoUploadInputProps) {
   const { t } = useTranslation()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
@@ -72,8 +76,8 @@ export function VideoUploadInput({
               <p className="text-xs font-bold text-foreground">
                 {t('common.selectVideo', 'Select module video')}
               </p>
-              <p className="text-[9px] text-muted-foreground/70 mt-1 uppercase tracking-tighter font-black">
-                MP4, WEBM, OGG UP TO 2GB
+              <p className="mt-1 text-xs text-muted-foreground">
+                {uploadHint || "MP4, WEBM, OGG UP TO 2GB"}
               </p>
             </div>
             <Button
@@ -221,8 +225,8 @@ export function VideoUploadInput({
                 'Drag & drop or click to upload video',
               )}
             </p>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground/70">
-              MP4, WebM, or OGG {t('common.upTo', 'up to')} 2GB
+            <p className="text-xs text-muted-foreground">
+              {uploadHint || `MP4, WebM, or OGG ${t('common.upTo', 'up to')} 2GB`}
             </p>
           </div>
           <Button
@@ -333,6 +337,7 @@ export function VideoUploadInput({
               <VideoPlayer
                 key={playerKey || `${value}-${videoStatus?.status}`}
                 url={value}
+                isRawVideo={isRawVideo}
                 onPlayingChange={setIsVideoPlaying}
               />
             )}

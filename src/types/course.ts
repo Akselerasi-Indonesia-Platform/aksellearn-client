@@ -152,6 +152,8 @@ export interface Course {
   video_id?: number
   video_uuid?: string
   video_data?: VideoResource
+  preview_video_uuid?: string | null
+  preview_url?: string | null
   is_public?: boolean
   is_active: boolean
   is_corporate?: boolean

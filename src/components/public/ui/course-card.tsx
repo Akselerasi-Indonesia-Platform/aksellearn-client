@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency, cn } from '@/lib/utils'
+import { getMediaUrl } from '@/lib/media-utils'
 import type { Course } from '@/types/course'
 
 export interface CourseCardProps {
@@ -24,6 +25,7 @@ export function CourseCard({
   className
 }: CourseCardProps) {
   const [isHovered, setIsHovered] = React.useState(false)
+  const [isPlayingPreview, setIsPlayingPreview] = React.useState(false)
 
   return (
     <Card
@@ -32,39 +34,51 @@ export function CourseCard({
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false)
+        setIsPlayingPreview(false)
+      }}
     >
       <CardHeader className="p-0 relative grid-cols-1">
-        <div className="aspect-video relative overflow-hidden bg-slate-50">
+        <div 
+          className={cn("aspect-video relative overflow-hidden bg-slate-50", course.preview_url && !isPlayingPreview ? "cursor-pointer" : "")}
+          onClick={(e) => {
+            if (course.preview_url && !isPlayingPreview) {
+              e.preventDefault()
+              e.stopPropagation()
+              setIsPlayingPreview(true)
+            }
+          }}
+        >
           <img
             src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop'}
             alt={course.title}
             loading="lazy"
             className={cn(
               "absolute inset-0 w-full h-full object-cover transition-all duration-300 group-hover:scale-110",
-              isHovered && showHoverOverlay && (course as any).preview_url ? "opacity-0" : "opacity-100"
+              isPlayingPreview ? "opacity-0" : "opacity-100"
             )}
           />
-          {isHovered && showHoverOverlay && (course as any).preview_url && (
+          {isPlayingPreview && course.preview_url && (
             <video
-              src={(course as any).preview_url}
+              src={getMediaUrl(course.preview_url, 'image')}
               autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover animate-in fade-in duration-300"
+              controls
+              controlsList="nodownload"
+              className="absolute inset-0 w-full h-full object-cover animate-in fade-in duration-300 z-20"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
             />
           )}
-          {showHoverOverlay && (
+          {showHoverOverlay && !isPlayingPreview && course.preview_url && (
             <>
               <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              {(!isHovered || !(course as any).preview_url) && (
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="bg-white/20 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/30">
-                    <PlayCircle className="size-8 text-white" />
-                  </div>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div className="bg-white/20 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/30">
+                  <PlayCircle className="size-8 text-white" />
                 </div>
-              )}
+              </div>
             </>
           )}
           {course.is_corporate && (

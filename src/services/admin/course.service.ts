@@ -123,6 +123,8 @@ function mapApiToCourse(data: RawApiCourse): Course {
     video_id: videoId,
     video_uuid: videoUuid,
     video_data: videoData,
+    preview_video_uuid: (data as any).preview_video_uuid || undefined,
+    preview_url: (data as any).preview_url || undefined,
     is_active:
       data.is_active !== undefined
         ? Number(data.is_active) === 1

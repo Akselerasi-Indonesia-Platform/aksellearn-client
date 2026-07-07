@@ -11,6 +11,7 @@ interface VideoPlayerProps {
   height?: string | number
   poster?: string
   autoPlay?: boolean
+  isRawVideo?: boolean
   onPlayingChange?: (isPlaying: boolean) => void
 }
 
@@ -20,6 +21,7 @@ export function VideoPlayer({
   height = '100%',
   poster,
   autoPlay = false,
+  isRawVideo = false,
   onPlayingChange,
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -36,16 +38,45 @@ export function VideoPlayer({
     setIsClient(true)
   }, [])
 
+  const [blobUrl, setBlobUrl] = useState<string | null>(null)
+
   const resolvedUrl = useMemo(() => {
-    return getMediaUrl(url, 'stream')
-  }, [url])
+    return getMediaUrl(url, isRawVideo ? 'image' : 'stream')
+  }, [url, isRawVideo])
+
+  const needsBlobFetch = useMemo(() => {
+    return isRawVideo && resolvedUrl.includes('/api/media/')
+  }, [isRawVideo, resolvedUrl])
+
+  useEffect(() => {
+    if (!needsBlobFetch || !resolvedUrl || !isClient) return
+    
+    let active = true
+    let objectUrl: string | null = null
+    // Fetch the video into a local blob so the browser can seek natively 
+    // without depending on the server's HTTP Range header support.
+    // This is safe because preview videos are capped at 15MB.
+    fetch(resolvedUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        if (!active) return
+        objectUrl = URL.createObjectURL(blob)
+        setBlobUrl(objectUrl)
+      })
+      .catch(err => console.error('Failed to fetch raw video blob:', err))
+
+    return () => {
+      active = false
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
+  }, [needsBlobFetch, resolvedUrl, isClient])
 
   const resolvedPoster = useMemo(() => {
     return getMediaUrl(poster || '', 'image', { isPublic: true })
   }, [poster])
 
   useEffect(() => {
-    if (!isClient || !videoRef.current || !resolvedUrl) return
+    if (isRawVideo || !resolvedUrl || !isClient || !videoRef.current) return;
 
     const video = videoRef.current
     let plyrInstance: any | null = null
@@ -58,7 +89,9 @@ export function VideoPlayer({
       const PlyrClass = (PlyrModule as any).default || PlyrModule
       const HlsClass = (HlsModule as any).default || HlsModule
 
-      if (HlsClass.isSupported()) {
+      const isHls = resolvedUrl.includes('.m3u8') || resolvedUrl.includes('/playlist')
+
+      if (isHls && HlsClass.isSupported()) {
         const hls = new HlsClass({
           // The backend now rewrites the playlist to include session tokens in segments.
           // We only need to ensure the initial playlist request has the token,
@@ -167,11 +200,37 @@ export function VideoPlayer({
             }
           }
         })
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      } else if (isHls && video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = resolvedUrl
         plyrInstance = new PlyrClass(video, {
           autoplay: autoPlay,
           speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+        }) as any
+        playerRef.current = plyrInstance
+
+        plyrInstance?.on('playing', () => onPlayingChange?.(true))
+        plyrInstance?.on('pause', () => onPlayingChange?.(false))
+        plyrInstance?.on('ended', () => onPlayingChange?.(false))
+        plyrInstance?.on('ready', () => setIsPlayerReady(true))
+        
+        setTimeout(() => setIsPlayerReady(true), 500)
+      } else if (!isHls) {
+        // Native playback for MP4 or other supported formats
+        video.src = resolvedUrl
+        plyrInstance = new PlyrClass(video, {
+          autoplay: autoPlay,
+          speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+          controls: [
+            'play-large',
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'settings',
+            'pip',
+            'fullscreen',
+          ],
         }) as any
         playerRef.current = plyrInstance
 
@@ -223,6 +282,31 @@ export function VideoPlayer({
         ) : (
           <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
         )}
+      </div>
+    )
+  }
+
+  if (isRawVideo) {
+    const videoSrc = needsBlobFetch ? (blobUrl || undefined) : resolvedUrl
+    return (
+      <div style={{ width, height }} className="relative bg-black rounded-xl overflow-hidden flex items-center justify-center">
+        {needsBlobFetch && !blobUrl ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/50 backdrop-blur-sm z-10">
+            <div className="size-8 border-2 border-white/20 border-t-white/90 rounded-full animate-spin mb-3"></div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/50 animate-pulse">Loading Preview</p>
+          </div>
+        ) : null}
+        <video
+          className={`w-full h-full object-contain transition-opacity duration-500 ${needsBlobFetch && !blobUrl ? 'opacity-0' : 'opacity-100'}`}
+          src={videoSrc}
+          poster={resolvedPoster || undefined}
+          autoPlay={autoPlay}
+          controls
+          controlsList="nodownload"
+          onPlay={() => onPlayingChange?.(true)}
+          onPause={() => onPlayingChange?.(false)}
+          onEnded={() => onPlayingChange?.(false)}
+        />
       </div>
     )
   }
