@@ -1,6 +1,7 @@
+import * as React from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getUser, can } from '@/lib/auth'
-import { BookOpen, HelpCircle, MessageSquare, Paperclip, Megaphone, CheckCircle, Ticket, Wallet, Star } from 'lucide-react'
+import { BookOpen, HelpCircle, MessageSquare, Paperclip, Megaphone, CheckCircle, Ticket, Wallet, Star, KeyRound, Users, FileCheck } from 'lucide-react'
 import { AdminPage } from '@/components/admin/shared/layout/admin-page'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { GuideLanguageToggle } from '@/components/admin/guide/guide-language-toggle'
@@ -12,124 +13,46 @@ export const Route = createFileRoute('/admin/guide/')({
 
 const topics = [
   {
-    id: 'course-content',
-    url: '/admin/guide/course?tab=content',
+    id: 'course-management',
+    url: '/admin/guide/course',
     icon: BookOpen,
     title: {
-      id: 'Konten Kursus',
-      en: 'Course Content',
+      id: 'Manajemen Kursus',
+      en: 'Course Management',
     },
     description: {
-      id: 'Pelajari cara mengatur judul, deskripsi, harga, thumbnail, dan video promo kursus Anda.',
-      en: 'Learn how to set up your course title, description, price, thumbnail, and promo video.',
+      id: 'Panduan lengkap membuat dan mengelola konten kursus, modul, materi, kuis, dan diskusi.',
+      en: 'Complete guide to creating and managing course content, modules, lessons, quizzes, and discussions.',
     },
   },
   {
-    id: 'course-module',
-    url: '/admin/guide/course?tab=module',
-    icon: CheckCircle,
-    title: {
-      id: 'Modul & Materi',
-      en: 'Modules & Lessons',
-    },
-    description: {
-      id: 'Cara membuat modul, menambahkan video pembelajaran, dan mengatur urutan materi kursus.',
-      en: 'How to create modules, add video lessons, and arrange your course content order.',
-    },
-  },
-  {
-    id: 'course-quiz',
-    url: '/admin/guide/course?tab=quiz',
-    icon: HelpCircle,
-    title: {
-      id: 'Kuis & Ujian',
-      en: 'Quizzes & Exams',
-    },
-    description: {
-      id: 'Panduan membuat soal pilihan ganda, mengatur batas kelulusan, dan menyematkan kuis ke modul.',
-      en: 'Guide to creating multiple-choice questions, setting passing scores, and attaching quizzes to modules.',
-    },
-  },
-  {
-    id: 'course-discussion',
-    url: '/admin/guide/course?tab=discussion',
-    icon: MessageSquare,
-    title: {
-      id: 'Diskusi & Komentar',
-      en: 'Discussions & Comments',
-    },
-    description: {
-      id: 'Cara merespons pertanyaan siswa dan mengelola forum diskusi di dalam kursus Anda.',
-      en: 'How to respond to student questions and manage discussion forums within your course.',
-    },
-  },
-  {
-    id: 'course-attachment',
-    url: '/admin/guide/course?tab=attachment',
-    icon: Paperclip,
-    title: {
-      id: 'Lampiran & Dokumen',
-      en: 'Attachments & Documents',
-    },
-    description: {
-      id: 'Cara mengunggah materi tambahan seperti PDF, presentasi, atau source code untuk diunduh siswa.',
-      en: 'How to upload supplementary materials like PDFs, presentations, or source code for students to download.',
-    },
-  },
-  {
-    id: 'course-announcement',
-    url: '/admin/guide/course?tab=announcement',
-    icon: Megaphone,
-    title: {
-      id: 'Pengumuman',
-      en: 'Announcements',
-    },
-    description: {
-      id: 'Cara membuat pengumuman penting yang akan dikirimkan sebagai notifikasi kepada semua siswa yang terdaftar.',
-      en: 'How to create important announcements that will be sent as notifications to all enrolled students.',
-    },
-  },
-  {
-    id: 'marketing-promotion',
-    url: '/admin/guide/promotion?tab=promotion',
-    icon: Megaphone,
-    title: {
-      id: 'Promosi Spesial',
-      en: 'Special Promotions',
-    },
-    description: {
-      id: 'Panduan membuat promosi berbatas waktu dengan diskon persentase yang akan ditampilkan sebagai banner di halaman utama.',
-      en: 'Guide to creating time-limited promotions with percentage discounts that will be displayed as banners on the homepage.',
-    },
-  },
-  {
-    id: 'marketing-coupon',
-    url: '/admin/guide/promotion?tab=coupon',
+    id: 'promotion-coupon',
+    url: '/admin/guide/promotion',
     icon: Ticket,
     title: {
-      id: 'Kupon Diskon',
-      en: 'Discount Coupons',
+      id: 'Promosi & Kupon',
+      en: 'Promotion & Coupon',
     },
     description: {
-      id: 'Cara membuat kode kupon (voucher) dengan nominal diskon tetap atau persentase untuk dibagikan kepada siswa tertentu.',
-      en: 'How to create coupon codes (vouchers) with fixed or percentage discounts to share with specific students.',
+      id: 'Panduan membuat promosi berbatas waktu dan kode kupon diskon untuk siswa.',
+      en: 'Guide to creating time-limited promotions and discount coupon codes for students.',
     },
   },
   {
-    id: 'finance-withdrawal',
+    id: 'withdrawal',
     url: '/admin/guide/withdrawal',
     icon: Wallet,
     title: {
-      id: 'Penarikan Dana (Withdrawal)',
-      en: 'Funds Withdrawal',
+      id: 'Penarikan Dana',
+      en: 'Withdrawal',
     },
     description: {
-      id: 'Panduan proses penarikan pendapatan instruktur dan cara admin memproses permintaan pencairan dana.',
-      en: 'Guide to the instructor withdrawal process and how admins process fund payout requests.',
+      id: 'Panduan proses penarikan pendapatan instruktur dan pencairan dana.',
+      en: 'Guide to the instructor revenue withdrawal process and fund payouts.',
     },
   },
   {
-    id: 'marketing-featured-course',
+    id: 'featured-course',
     url: '/admin/guide/featured-course',
     icon: Star,
     roles: ['Super Admin', 'Admin'],
@@ -138,8 +61,62 @@ const topics = [
       en: 'Featured Courses',
     },
     description: {
-      id: 'Panduan mengatur daftar kursus unggulan pilihan yang akan ditampilkan secara khusus di halaman utama.',
-      en: 'Guide to managing the selected featured courses list that will be prominently displayed on the homepage.',
+      id: 'Panduan mengatur daftar kursus unggulan pilihan yang akan ditampilkan di halaman utama.',
+      en: 'Guide to managing the selected featured courses list displayed on the homepage.',
+    },
+  },
+  {
+    id: 'user-password',
+    url: '/admin/guide/user-password',
+    icon: KeyRound,
+    title: {
+      id: 'Kata Sandi Pengguna',
+      en: 'User Password',
+    },
+    description: {
+      id: 'Pelajari cara mengubah kata sandi atau apa yang harus dilakukan jika Anda lupa kata sandi.',
+      en: 'Learn how to change your password or what to do if you forget it.',
+    },
+  },
+  {
+    id: 'user-management',
+    url: '/admin/guide/user-management',
+    icon: Users,
+    roles: ['Super Admin', 'Admin'],
+    title: {
+      id: 'Manajemen Pengguna',
+      en: 'User Management',
+    },
+    description: {
+      id: 'Panduan mengelola profil pengguna, mengatur peran (roles), dan mengonfigurasi perizinan.',
+      en: 'Guide to managing user profiles, setting roles, and configuring permissions.',
+    },
+  },
+  {
+    id: 'instructor-application',
+    url: '/admin/guide/instructor-application',
+    icon: FileCheck,
+    roles: ['Super Admin', 'Admin'],
+    title: {
+      id: 'Pendaftar Instruktur',
+      en: 'Instructor Applicants',
+    },
+    description: {
+      id: 'Cara meninjau dan menyetujui pendaftaran pengguna yang ingin menjadi instruktur.',
+      en: 'How to review and approve applications from users who want to become instructors.',
+    },
+  },
+  {
+    id: 'quizzes',
+    url: '/admin/guide/quiz',
+    icon: HelpCircle,
+    title: {
+      id: 'Kuis',
+      en: 'Quizzes',
+    },
+    description: {
+      id: 'Panduan membuat soal pilihan ganda dan mengatur kuis untuk siswa.',
+      en: 'Guide to creating multiple-choice questions and managing quizzes for students.',
     },
   },
 ]

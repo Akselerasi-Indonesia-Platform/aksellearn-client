@@ -95,8 +95,10 @@ import { Route as AdminArticleCategoryRouteImport } from './routes/admin/article
 import { Route as AdminArticleArticleIdRouteImport } from './routes/admin/article/$articleId'
 import { Route as AdminGuideWithdrawalIndexRouteImport } from './routes/admin/guide/withdrawal/index'
 import { Route as AdminGuideUserPasswordIndexRouteImport } from './routes/admin/guide/user-password/index'
+import { Route as AdminGuideUserManagementIndexRouteImport } from './routes/admin/guide/user-management/index'
 import { Route as AdminGuideQuizIndexRouteImport } from './routes/admin/guide/quiz/index'
 import { Route as AdminGuidePromotionIndexRouteImport } from './routes/admin/guide/promotion/index'
+import { Route as AdminGuideInstructorApplicationIndexRouteImport } from './routes/admin/guide/instructor-application/index'
 import { Route as AdminGuideFeaturedCourseIndexRouteImport } from './routes/admin/guide/featured-course/index'
 import { Route as AdminGuideCourseIndexRouteImport } from './routes/admin/guide/course/index'
 import { Route as AdminPromotionPromotionIdEditRouteImport } from './routes/admin/promotion/$promotionId.edit'
@@ -546,6 +548,12 @@ const AdminGuideUserPasswordIndexRoute =
     path: '/guide/user-password/',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminGuideUserManagementIndexRoute =
+  AdminGuideUserManagementIndexRouteImport.update({
+    id: '/guide/user-management/',
+    path: '/guide/user-management/',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminGuideQuizIndexRoute = AdminGuideQuizIndexRouteImport.update({
   id: '/guide/quiz/',
   path: '/guide/quiz/',
@@ -555,6 +563,12 @@ const AdminGuidePromotionIndexRoute =
   AdminGuidePromotionIndexRouteImport.update({
     id: '/guide/promotion/',
     path: '/guide/promotion/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminGuideInstructorApplicationIndexRoute =
+  AdminGuideInstructorApplicationIndexRouteImport.update({
+    id: '/guide/instructor-application/',
+    path: '/guide/instructor-application/',
     getParentRoute: () => AdminRoute,
   } as any)
 const AdminGuideFeaturedCourseIndexRoute =
@@ -670,8 +684,10 @@ export interface FileRoutesByFullPath {
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
+  '/admin/guide/instructor-application/': typeof AdminGuideInstructorApplicationIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
   '/admin/guide/quiz/': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-management/': typeof AdminGuideUserManagementIndexRoute
   '/admin/guide/user-password/': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
@@ -763,8 +779,10 @@ export interface FileRoutesByTo {
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course': typeof AdminGuideFeaturedCourseIndexRoute
+  '/admin/guide/instructor-application': typeof AdminGuideInstructorApplicationIndexRoute
   '/admin/guide/promotion': typeof AdminGuidePromotionIndexRoute
   '/admin/guide/quiz': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-management': typeof AdminGuideUserManagementIndexRoute
   '/admin/guide/user-password': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal': typeof AdminGuideWithdrawalIndexRoute
 }
@@ -858,8 +876,10 @@ export interface FileRoutesById {
   '/admin/promotion/$promotionId/edit': typeof AdminPromotionPromotionIdEditRoute
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
+  '/admin/guide/instructor-application/': typeof AdminGuideInstructorApplicationIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
   '/admin/guide/quiz/': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-management/': typeof AdminGuideUserManagementIndexRoute
   '/admin/guide/user-password/': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
@@ -954,8 +974,10 @@ export interface FileRouteTypes {
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course/'
     | '/admin/guide/featured-course/'
+    | '/admin/guide/instructor-application/'
     | '/admin/guide/promotion/'
     | '/admin/guide/quiz/'
+    | '/admin/guide/user-management/'
     | '/admin/guide/user-password/'
     | '/admin/guide/withdrawal/'
   fileRoutesByTo: FileRoutesByTo
@@ -1047,8 +1069,10 @@ export interface FileRouteTypes {
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course'
     | '/admin/guide/featured-course'
+    | '/admin/guide/instructor-application'
     | '/admin/guide/promotion'
     | '/admin/guide/quiz'
+    | '/admin/guide/user-management'
     | '/admin/guide/user-password'
     | '/admin/guide/withdrawal'
   id:
@@ -1141,8 +1165,10 @@ export interface FileRouteTypes {
     | '/admin/promotion/$promotionId/edit'
     | '/admin/guide/course/'
     | '/admin/guide/featured-course/'
+    | '/admin/guide/instructor-application/'
     | '/admin/guide/promotion/'
     | '/admin/guide/quiz/'
+    | '/admin/guide/user-management/'
     | '/admin/guide/user-password/'
     | '/admin/guide/withdrawal/'
   fileRoutesById: FileRoutesById
@@ -1786,6 +1812,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuideUserPasswordIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide/user-management/': {
+      id: '/admin/guide/user-management/'
+      path: '/guide/user-management'
+      fullPath: '/admin/guide/user-management/'
+      preLoaderRoute: typeof AdminGuideUserManagementIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/guide/quiz/': {
       id: '/admin/guide/quiz/'
       path: '/guide/quiz'
@@ -1798,6 +1831,13 @@ declare module '@tanstack/react-router' {
       path: '/guide/promotion'
       fullPath: '/admin/guide/promotion/'
       preLoaderRoute: typeof AdminGuidePromotionIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/guide/instructor-application/': {
+      id: '/admin/guide/instructor-application/'
+      path: '/guide/instructor-application'
+      fullPath: '/admin/guide/instructor-application/'
+      preLoaderRoute: typeof AdminGuideInstructorApplicationIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/guide/featured-course/': {
@@ -1879,8 +1919,10 @@ interface AdminRouteChildren {
   AdminPromotionPromotionIdEditRoute: typeof AdminPromotionPromotionIdEditRoute
   AdminGuideCourseIndexRoute: typeof AdminGuideCourseIndexRoute
   AdminGuideFeaturedCourseIndexRoute: typeof AdminGuideFeaturedCourseIndexRoute
+  AdminGuideInstructorApplicationIndexRoute: typeof AdminGuideInstructorApplicationIndexRoute
   AdminGuidePromotionIndexRoute: typeof AdminGuidePromotionIndexRoute
   AdminGuideQuizIndexRoute: typeof AdminGuideQuizIndexRoute
+  AdminGuideUserManagementIndexRoute: typeof AdminGuideUserManagementIndexRoute
   AdminGuideUserPasswordIndexRoute: typeof AdminGuideUserPasswordIndexRoute
   AdminGuideWithdrawalIndexRoute: typeof AdminGuideWithdrawalIndexRoute
 }
@@ -1934,8 +1976,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPromotionPromotionIdEditRoute: AdminPromotionPromotionIdEditRoute,
   AdminGuideCourseIndexRoute: AdminGuideCourseIndexRoute,
   AdminGuideFeaturedCourseIndexRoute: AdminGuideFeaturedCourseIndexRoute,
+  AdminGuideInstructorApplicationIndexRoute:
+    AdminGuideInstructorApplicationIndexRoute,
   AdminGuidePromotionIndexRoute: AdminGuidePromotionIndexRoute,
   AdminGuideQuizIndexRoute: AdminGuideQuizIndexRoute,
+  AdminGuideUserManagementIndexRoute: AdminGuideUserManagementIndexRoute,
   AdminGuideUserPasswordIndexRoute: AdminGuideUserPasswordIndexRoute,
   AdminGuideWithdrawalIndexRoute: AdminGuideWithdrawalIndexRoute,
 }

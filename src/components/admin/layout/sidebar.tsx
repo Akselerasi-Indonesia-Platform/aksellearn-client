@@ -245,33 +245,6 @@ export function AdminSidebar({
         title: t('sidebar.guide', 'Guide'),
         url: '/admin/guide',
         icon: BookMarked,
-        items: [
-          {
-            title: t('sidebar.guideCourse', 'Course Management'),
-            url: '/admin/guide/course',
-          },
-          {
-            title: t('sidebar.guidePromotion', 'Promotion & Coupon'),
-            url: '/admin/guide/promotion',
-          },
-          {
-            title: t('sidebar.guideWithdrawal', ' Withdrawal'),
-            url: '/admin/guide/withdrawal',
-          },
-          {
-            title: t('sidebar.guideFeaturedCourse', 'Featured Courses'),
-            url: '/admin/guide/featured-course',
-            roles: ['Super Admin', 'Admin'],
-          },
-          {
-            title: t('sidebar.guideUserPassword', 'User Password'),
-            url: '/admin/guide/user-password',
-          },
-          {
-            title: t('sidebar.guideQuizzes', 'Quizzes'),
-            url: '/admin/guide/quiz',
-          },
-        ],
       },
     ],
     projects: [
