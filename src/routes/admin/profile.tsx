@@ -20,6 +20,9 @@ import { adminMediaService } from '@/services/admin/media.service'
 import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AdminPage } from '@/components/admin/shared/layout/admin-page'
+import { ChangePasswordDialog } from '@/components/admin/profile/change-password-dialog'
+import { ActiveSessionsCard } from '@/components/admin/profile/active-sessions-card'
+import { AccountDeletionCard } from '@/components/admin/profile/account-deletion-card'
 
 export const Route = createFileRoute('/admin/profile')({
   component: ProfilePage,
@@ -213,8 +216,8 @@ export function ProfilePage() {
         </Card>
 
         {/* Settings Card */}
-        <Card className="md:col-span-2 border border-border shadow-filament rounded-xl overflow-hidden">
-          <CardHeader className="bg-muted/30 border-b pb-6">
+        <Card className="md:col-span-2 border border-border shadow-sm rounded-xl overflow-hidden p-0">
+          <CardHeader className="bg-muted/30 border-b p-6">
             <CardTitle className="text-xl font-black uppercase tracking-tight">
               Personal Information
             </CardTitle>
@@ -222,7 +225,7 @@ export function ProfilePage() {
               Update your profile details and email address.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-8">
+          <CardContent className="p-6 pt-8">
             <form onSubmit={handleUpdateProfile} className="space-y-8">
               <div className="grid gap-6">
                 <div className="space-y-3">
@@ -317,8 +320,8 @@ export function ProfilePage() {
       </div>
 
       {/* Security Section */}
-      <Card className="border border-border shadow-filament rounded-xl overflow-hidden">
-        <CardHeader className="bg-muted/30 border-b pb-6">
+      <Card className="border border-border shadow-sm rounded-xl overflow-hidden p-0">
+        <CardHeader className="bg-muted/30 border-b p-6">
           <CardTitle className="text-xl font-black uppercase tracking-tight">
             Security & Privacy
           </CardTitle>
@@ -326,7 +329,7 @@ export function ProfilePage() {
             Keep your account secure with robust password management.
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-8">
+        <CardContent className="p-6 pt-8">
           <div className="p-6 rounded-2xl bg-orange-500/5 border border-orange-500/10 flex flex-col sm:flex-row items-center gap-6">
             <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-600 shadow-inner">
               <Lock className="w-6 h-6" />
@@ -340,15 +343,11 @@ export function ProfilePage() {
                 using elsewhere.
               </p>
             </div>
-            <Button
-              variant="outline"
-              className="rounded-xl font-black uppercase tracking-widest text-[10px] h-10 px-6 border-orange-500/20 hover:bg-orange-500/10 hover:text-orange-600 transition-all"
-            >
-              Change Password
-            </Button>
+            <ChangePasswordDialog />
           </div>
         </CardContent>
       </Card>
+
     </AdminPage>
   )
 }

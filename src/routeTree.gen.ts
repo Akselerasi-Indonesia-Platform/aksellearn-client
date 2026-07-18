@@ -15,11 +15,13 @@ import { Route as SyaratKetentuanRouteImport } from './routes/syarat-ketentuan'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SearchOldRouteImport } from './routes/search-old'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginNewRouteImport } from './routes/login-new'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KebijakanPrivasiRouteImport } from './routes/kebijakan-privasi'
 import { Route as HubungiKamiRouteImport } from './routes/hubungi-kami'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DevRouteImport } from './routes/dev'
 import { Route as DebugAuthRouteImport } from './routes/debug-auth'
 import { Route as ClientRouteImport } from './routes/client'
@@ -92,6 +94,8 @@ import { Route as AdminArticleCreateRouteImport } from './routes/admin/article/c
 import { Route as AdminArticleCategoryRouteImport } from './routes/admin/article/category'
 import { Route as AdminArticleArticleIdRouteImport } from './routes/admin/article/$articleId'
 import { Route as AdminGuideWithdrawalIndexRouteImport } from './routes/admin/guide/withdrawal/index'
+import { Route as AdminGuideUserPasswordIndexRouteImport } from './routes/admin/guide/user-password/index'
+import { Route as AdminGuideQuizIndexRouteImport } from './routes/admin/guide/quiz/index'
 import { Route as AdminGuidePromotionIndexRouteImport } from './routes/admin/guide/promotion/index'
 import { Route as AdminGuideFeaturedCourseIndexRouteImport } from './routes/admin/guide/featured-course/index'
 import { Route as AdminGuideCourseIndexRouteImport } from './routes/admin/guide/course/index'
@@ -128,6 +132,11 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -151,6 +160,11 @@ const KebijakanPrivasiRoute = KebijakanPrivasiRouteImport.update({
 const HubungiKamiRoute = HubungiKamiRouteImport.update({
   id: '/hubungi-kami',
   path: '/hubungi-kami',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevRoute = DevRouteImport.update({
@@ -526,6 +540,17 @@ const AdminGuideWithdrawalIndexRoute =
     path: '/guide/withdrawal/',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminGuideUserPasswordIndexRoute =
+  AdminGuideUserPasswordIndexRouteImport.update({
+    id: '/guide/user-password/',
+    path: '/guide/user-password/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminGuideQuizIndexRoute = AdminGuideQuizIndexRouteImport.update({
+  id: '/guide/quiz/',
+  path: '/guide/quiz/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminGuidePromotionIndexRoute =
   AdminGuidePromotionIndexRouteImport.update({
     id: '/guide/promotion/',
@@ -567,11 +592,13 @@ export interface FileRoutesByFullPath {
   '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/hubungi-kami': typeof HubungiKamiRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
@@ -644,6 +671,8 @@ export interface FileRoutesByFullPath {
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/quiz/': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-password/': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRoutesByTo {
@@ -656,11 +685,13 @@ export interface FileRoutesByTo {
   '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/hubungi-kami': typeof HubungiKamiRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
@@ -733,6 +764,8 @@ export interface FileRoutesByTo {
   '/admin/guide/course': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/quiz': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-password': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRoutesById {
@@ -747,11 +780,13 @@ export interface FileRoutesById {
   '/client': typeof ClientRoute
   '/debug-auth': typeof DebugAuthRoute
   '/dev': typeof DevRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/hubungi-kami': typeof HubungiKamiRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
   '/login': typeof LoginRoute
   '/login-new': typeof LoginNewRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/search-old': typeof SearchOldRoute
   '/student': typeof StudentRouteWithChildren
@@ -824,6 +859,8 @@ export interface FileRoutesById {
   '/admin/guide/course/': typeof AdminGuideCourseIndexRoute
   '/admin/guide/featured-course/': typeof AdminGuideFeaturedCourseIndexRoute
   '/admin/guide/promotion/': typeof AdminGuidePromotionIndexRoute
+  '/admin/guide/quiz/': typeof AdminGuideQuizIndexRoute
+  '/admin/guide/user-password/': typeof AdminGuideUserPasswordIndexRoute
   '/admin/guide/withdrawal/': typeof AdminGuideWithdrawalIndexRoute
 }
 export interface FileRouteTypes {
@@ -839,11 +876,13 @@ export interface FileRouteTypes {
     | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/forgot-password'
     | '/hubungi-kami'
     | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/search-old'
     | '/student'
@@ -916,6 +955,8 @@ export interface FileRouteTypes {
     | '/admin/guide/course/'
     | '/admin/guide/featured-course/'
     | '/admin/guide/promotion/'
+    | '/admin/guide/quiz/'
+    | '/admin/guide/user-password/'
     | '/admin/guide/withdrawal/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -928,11 +969,13 @@ export interface FileRouteTypes {
     | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/forgot-password'
     | '/hubungi-kami'
     | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/search-old'
     | '/student'
@@ -1005,6 +1048,8 @@ export interface FileRouteTypes {
     | '/admin/guide/course'
     | '/admin/guide/featured-course'
     | '/admin/guide/promotion'
+    | '/admin/guide/quiz'
+    | '/admin/guide/user-password'
     | '/admin/guide/withdrawal'
   id:
     | '__root__'
@@ -1018,11 +1063,13 @@ export interface FileRouteTypes {
     | '/client'
     | '/debug-auth'
     | '/dev'
+    | '/forgot-password'
     | '/hubungi-kami'
     | '/kebijakan-privasi'
     | '/login'
     | '/login-new'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/search-old'
     | '/student'
@@ -1095,6 +1142,8 @@ export interface FileRouteTypes {
     | '/admin/guide/course/'
     | '/admin/guide/featured-course/'
     | '/admin/guide/promotion/'
+    | '/admin/guide/quiz/'
+    | '/admin/guide/user-password/'
     | '/admin/guide/withdrawal/'
   fileRoutesById: FileRoutesById
 }
@@ -1109,11 +1158,13 @@ export interface RootRouteChildren {
   ClientRoute: typeof ClientRoute
   DebugAuthRoute: typeof DebugAuthRoute
   DevRoute: typeof DevRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HubungiKamiRoute: typeof HubungiKamiRoute
   KebijakanPrivasiRoute: typeof KebijakanPrivasiRoute
   LoginRoute: typeof LoginRoute
   LoginNewRoute: typeof LoginNewRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SearchOldRoute: typeof SearchOldRoute
   StudentRoute: typeof StudentRouteWithChildren
@@ -1175,6 +1226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -1208,6 +1266,13 @@ declare module '@tanstack/react-router' {
       path: '/hubungi-kami'
       fullPath: '/hubungi-kami'
       preLoaderRoute: typeof HubungiKamiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dev': {
@@ -1714,6 +1779,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuideWithdrawalIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide/user-password/': {
+      id: '/admin/guide/user-password/'
+      path: '/guide/user-password'
+      fullPath: '/admin/guide/user-password/'
+      preLoaderRoute: typeof AdminGuideUserPasswordIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/guide/quiz/': {
+      id: '/admin/guide/quiz/'
+      path: '/guide/quiz'
+      fullPath: '/admin/guide/quiz/'
+      preLoaderRoute: typeof AdminGuideQuizIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/guide/promotion/': {
       id: '/admin/guide/promotion/'
       path: '/guide/promotion'
@@ -1801,6 +1880,8 @@ interface AdminRouteChildren {
   AdminGuideCourseIndexRoute: typeof AdminGuideCourseIndexRoute
   AdminGuideFeaturedCourseIndexRoute: typeof AdminGuideFeaturedCourseIndexRoute
   AdminGuidePromotionIndexRoute: typeof AdminGuidePromotionIndexRoute
+  AdminGuideQuizIndexRoute: typeof AdminGuideQuizIndexRoute
+  AdminGuideUserPasswordIndexRoute: typeof AdminGuideUserPasswordIndexRoute
   AdminGuideWithdrawalIndexRoute: typeof AdminGuideWithdrawalIndexRoute
 }
 
@@ -1854,6 +1935,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminGuideCourseIndexRoute: AdminGuideCourseIndexRoute,
   AdminGuideFeaturedCourseIndexRoute: AdminGuideFeaturedCourseIndexRoute,
   AdminGuidePromotionIndexRoute: AdminGuidePromotionIndexRoute,
+  AdminGuideQuizIndexRoute: AdminGuideQuizIndexRoute,
+  AdminGuideUserPasswordIndexRoute: AdminGuideUserPasswordIndexRoute,
   AdminGuideWithdrawalIndexRoute: AdminGuideWithdrawalIndexRoute,
 }
 
@@ -1897,11 +1980,13 @@ const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRoute,
   DebugAuthRoute: DebugAuthRoute,
   DevRoute: DevRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HubungiKamiRoute: HubungiKamiRoute,
   KebijakanPrivasiRoute: KebijakanPrivasiRoute,
   LoginRoute: LoginRoute,
   LoginNewRoute: LoginNewRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SearchOldRoute: SearchOldRoute,
   StudentRoute: StudentRouteWithChildren,

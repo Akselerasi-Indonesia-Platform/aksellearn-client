@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { isAuthenticated, isAdmin } from '@/lib/auth'
 import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/hooks/use-auth'
@@ -69,6 +70,8 @@ function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -125,6 +128,12 @@ function LoginPage() {
     } catch (err: any) {
       console.error('Login error:', err)
 
+      // Security: Lockout (423)
+      if (err.response?.status === 423) {
+        setError(err.response?.data?.message || 'Account is temporarily locked due to multiple failed login attempts. Please try again later.')
+        return
+      }
+
       // Security: Rate Limiting (429)
       if (err.response?.status === 429) {
         setError('Too many attempts. Please wait a minute before trying again.')
@@ -178,88 +187,94 @@ function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form
-              className="space-y-4"
-              method="POST"
-              onSubmit={(e) => {
-                e.preventDefault()
-                handleSubmit(onSubmit)(e)
-              }}
-            >
-              {error && (
-                <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive font-medium border border-destructive/20 text-center animate-in slide-in-from-top-2 mt-3">
-                  {error}
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="email">{t('auth.login.email')}</Label>
-                <Input
-                  autoComplete="email"
-                  id="email"
-                  placeholder="name@example.com"
-                  type="email"
-                  {...register('email')}
-                  className={
-                    errors.email
-                      ? 'border-destructive focus-visible:ring-destructive'
-                      : ''
-                  }
-                />
-                {errors.email && (
-                  <p className="text-xs text-destructive font-medium">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">{t('auth.login.password')}</Label>
-                </div>
-                <div className="relative">
-                  <Input
-                    autoComplete="current-password"
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    {...register('password')}
-                    className={`pr-10 ${errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-                  />
-                  <Button
-                    className="absolute right-0 top-0 h-9 w-9 text-muted-foreground hover:text-foreground"
-                    size="icon"
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                    <span className="sr-only">
-                      {showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
-                    </span>
-                  </Button>
-                </div>
-                {errors.password && (
-                  <p className="text-xs text-destructive font-medium">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-              <Button
-                className="w-full font-semibold"
-                disabled={isLoading}
-                type="submit"
+            <div className="space-y-4">
+              <form
+                className="space-y-4"
+                method="POST"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  handleSubmit(onSubmit)(e)
+                }}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('auth.login.signingIn')}
-                  </>
-                ) : (
-                  t('auth.login.signIn')
+                {error && (
+                  <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive font-medium border border-destructive/20 text-center animate-in slide-in-from-top-2 mt-3">
+                    {error}
+                  </div>
                 )}
-              </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t('auth.login.email')}</Label>
+                  <Input
+                    autoComplete="email"
+                    id="email"
+                    placeholder="name@example.com"
+                    type="email"
+                    {...register('email')}
+                    className={
+                      errors.email
+                        ? 'border-destructive focus-visible:ring-destructive'
+                        : ''
+                    }
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-destructive font-medium">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">{t('auth.login.password')}</Label>
+                    <Link to="/forgot-password" className="text-xs font-semibold text-primary hover:underline">
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      autoComplete="current-password"
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      {...register('password')}
+                      className={`pr-10 ${errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}`}
+                    />
+                    <Button
+                      className="absolute right-0 top-0 h-9 w-9 text-muted-foreground hover:text-foreground"
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
+                      </span>
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-xs text-destructive font-medium">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  className="w-full font-semibold"
+                  disabled={isLoading}
+                  type="submit"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('auth.login.signingIn')}
+                    </>
+                  ) : (
+                    t('auth.login.signIn')
+                  )}
+                </Button>
+              </form>
 
               <div className="relative flex items-center py-2">
                 <div className="grow border-t border-border" />
@@ -306,13 +321,13 @@ function LoginPage() {
                 {t('auth.login.loginWithGoogle')}
               </Button>
 
-              <div className="mt-4 text-center text-sm text-slate-500">
+              <div className="mt-4 text-center text-sm text-slate-500 pt-2">
                 {t('auth.login.noAccount')}{' '}
                 <Link to="/register" className="font-semibold text-primary hover:underline">
                   {t('auth.login.signUp')}
                 </Link>
               </div>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>

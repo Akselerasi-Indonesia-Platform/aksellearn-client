@@ -18,3 +18,4 @@ count.txt
 .vinxi
 todos.json
 scripts/sync-client.ps1
+tmp/

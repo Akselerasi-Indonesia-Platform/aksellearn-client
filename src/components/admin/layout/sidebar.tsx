@@ -263,6 +263,14 @@ export function AdminSidebar({
             url: '/admin/guide/featured-course',
             roles: ['Super Admin', 'Admin'],
           },
+          {
+            title: t('sidebar.guideUserPassword', 'User Password'),
+            url: '/admin/guide/user-password',
+          },
+          {
+            title: t('sidebar.guideQuizzes', 'Quizzes'),
+            url: '/admin/guide/quiz',
+          },
         ],
       },
     ],

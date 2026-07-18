@@ -126,4 +126,39 @@ export const authService = {
     })
     return response.data.data
   },
+
+  async changePassword(data: any): Promise<any> {
+    const response = await apiClient.put('/api/user/password', data)
+    return response.data
+  },
+
+  async forgotPassword(data: { email: string }): Promise<any> {
+    const response = await apiClient.post('/api/auth/forgot-password', data)
+    return response.data
+  },
+
+  async resetPassword(data: any): Promise<any> {
+    const response = await apiClient.post('/api/auth/reset-password', data)
+    return response.data
+  },
+
+  async getSessions(): Promise<any> {
+    const response = await apiClient.get('/api/user/sessions')
+    return response.data.data || response.data
+  },
+
+  async revokeSession(id: string): Promise<any> {
+    const response = await apiClient.delete(`/api/user/sessions/${id}`)
+    return response.data
+  },
+
+  async revokeAllSessions(): Promise<any> {
+    const response = await apiClient.delete('/api/user/sessions')
+    return response.data
+  },
+
+  async deleteAccount(): Promise<any> {
+    const response = await apiClient.delete('/api/user/account')
+    return response.data
+  },
 }
