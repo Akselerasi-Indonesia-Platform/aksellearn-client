@@ -113,10 +113,6 @@ jobs:
             
             cd ${{ secrets.SERVER_WORKDIR }}
 
-            # Remove legacy container name to prevent port/name conflicts
-            docker stop ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
-            docker rm ${COMPOSE_PROJECT_NAME} 2>/dev/null || true
-
             # We rely on the existing .env.production file managed manually on the server.
             # Make sure the server's .env.production uses the correct variable names!
 
@@ -127,6 +123,13 @@ jobs:
             # Example: 'aksellearn-client' becomes 'aksellearn-network'
             BACKEND_PROJ="${COMPOSE_PROJECT_NAME%-client}"
             export APP_NETWORK="${BACKEND_PROJ}-network"
+
+            # Remove any existing containers to prevent naming conflicts.
+            # `docker compose down` alone can leave the container behind if it
+            # was created outside compose's tracking (e.g. a previous manual
+            # `docker run`/`docker rename`), so force-remove by name too.
+            docker compose --env-file .env.production -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+            docker ps -a --filter "name=^${COMPOSE_PROJECT_NAME}$" -q | xargs -r docker rm -f
 
             # Log in to GHCR on the remote server using a secure method
             # We use --password-stdin to avoid the password appearing in 'ps'
