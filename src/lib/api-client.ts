@@ -357,6 +357,19 @@ apiClient.interceptors.response.use(
         return Promise.reject(error)
       }
 
+      // 👤 Guest Shield: A 401 from a background identity check (rehydrate,
+      // GlobalAuthSync, etc.) is the NORMAL, expected response for a visitor
+      // who was never logged in -- it is not a "session" that "expired".
+      // Without this guard, every guest gets hard-redirected to /login the
+      // moment they interact with the site past the 5s hydration window,
+      // since navigating (e.g. tapping a mobile-menu category link) re-runs
+      // the root route's identity check. Only treat this as a real expired
+      // session -- and hard-redirect -- if this browser has evidence of a
+      // prior login (a locally-seeded access token).
+      if (!getToken()) {
+        return Promise.reject(error)
+      }
+
       // 🔄 4. Refresh Token Logic (BE Guide Alignment)
       // If we haven't tried to retry yet, attempt to refresh the session
       if (!originalRequest._retry && !originalRequest.url?.includes('/auth/')) {
