@@ -79,12 +79,18 @@ export const useAuthStore = create<AuthState>()(
         try {
           console.log('🔄 [Auth Store] Rehydration started...')
           // 1. Hybrid Handshake: Check URL for Social Auth token
-          const urlParams = new URLSearchParams(window.location.search)
-          const urlToken = urlParams.get('token')
-          if (urlToken) {
-            logger.identity('Seeding token from URL')
-            localStorage.setItem('access_token', urlToken)
-            window.history.replaceState({}, document.title, window.location.pathname)
+          // Scoped to /auth/callback only -- other pages use a `token`
+          // search param for unrelated purposes (email verification,
+          // password reset), and blindly seeding those as an access token
+          // corrupts the session and strips the param those pages need.
+          if (window.location.pathname === '/auth/callback') {
+            const urlParams = new URLSearchParams(window.location.search)
+            const urlToken = urlParams.get('token')
+            if (urlToken) {
+              logger.identity('Seeding token from URL')
+              localStorage.setItem('access_token', urlToken)
+              window.history.replaceState({}, document.title, window.location.pathname)
+            }
           }
 
           const user = await authService.getProfile()
