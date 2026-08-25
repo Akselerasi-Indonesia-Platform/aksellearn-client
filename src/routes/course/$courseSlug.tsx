@@ -619,12 +619,12 @@ function CoursePublicDetails() {
                     </div>
                   )}
                   {!isPlayingPreview && ((course as any).preview_url || course.video) && (
-                    <motion.div 
+                    <motion.div
                       initial={false}
-                      className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     >
-                      <div className="size-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
-                        <PlayCircle className="size-10 text-white" />
+                      <div className="size-14 md:size-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
+                        <PlayCircle className="size-8 md:size-10 text-white" />
                       </div>
                     </motion.div>
                   )}
