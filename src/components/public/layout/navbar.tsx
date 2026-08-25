@@ -301,19 +301,8 @@ export function PublicNavbar() {
                   </Link>
                 </div>
 
-                {/* Scrollable middle: search + nav links (footer CTAs stay pinned below) */}
+                {/* Scrollable middle: nav links (footer CTAs stay pinned below) */}
                 <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 flex flex-col gap-6">
-                  <form className="relative w-full group" onSubmit={handleSearch}>
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
-                    <Input
-                      className="w-full bg-muted/50 pl-11 h-12 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all text-base"
-                      placeholder={t('search.placeholder')}
-                      type="search"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </form>
-
                   <div className="flex flex-col">
                     {categories?.map((cat) => (
                       <Link
