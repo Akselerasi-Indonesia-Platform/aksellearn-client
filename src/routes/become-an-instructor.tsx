@@ -136,7 +136,7 @@ function BecomeAnInstructorPage() {
             <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-16 text-slate-900">
               {isID ? 'Begitu banyak alasan untuk memulai' : 'So many reasons to start'}
             </h2>
-            <div className="grid md:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               <div className="flex flex-col items-center text-center space-y-5">
                 <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                   <Globe className="w-8 h-8" />

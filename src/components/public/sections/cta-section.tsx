@@ -19,7 +19,7 @@ export function CTASection() {
           <div className="absolute top-0 right-0 h-full w-1/2 bg-linear-to-l from-white/10 to-transparent"></div>
           <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-white/20 rounded-full blur-[100px]"></div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
             <div className="space-y-8 text-white">
               <SectionHeader
                 badge={{ icon: Building2, label: t('publicHome.cta.badge') }}

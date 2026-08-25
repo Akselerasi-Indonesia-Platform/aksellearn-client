@@ -137,7 +137,7 @@ function HubungiKamiPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <h2 className="text-2xl font-bold text-slate-900">Kirim Pesan</h2>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Nama Lengkap <span className="text-destructive">*</span></Label>
                       <Input id="name" name="name" placeholder="Nama Anda" value={form.name} onChange={handleChange} required />
@@ -147,7 +147,7 @@ function HubungiKamiPage() {
                       <Input id="email" name="email" type="email" placeholder="email@domain.com" value={form.email} onChange={handleChange} required />
                     </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="phone">Nomor Telepon</Label>
                       <Input id="phone" name="phone" placeholder="+62 ..." value={form.phone} onChange={handleChange} />

@@ -31,7 +31,7 @@ function StudentProfilePage() {
     <div className="max-w-4xl mx-auto space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <ProfileHeader user={user} />
 
-      <div className="grid md:grid-cols-12 gap-8 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 px-4">
         <div className="md:col-span-7 space-y-8">
           <ProfessionalSummary bio={user.profile?.bio} />
           <ExperienceIdentity email={user.email} phone={user.phone} isVerified={!!user.email_verified_at} />

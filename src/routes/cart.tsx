@@ -187,7 +187,7 @@ function CartPage() {
     return (
       <PublicLayout>
         <div className="container mx-auto px-4 py-20 max-w-7xl">
-          <div className="grid lg:grid-cols-12 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div className="lg:col-span-8 space-y-6">
               <Skeleton className="h-10 w-48" />
               <Skeleton className="h-[400px] w-full rounded-xl" />
@@ -291,7 +291,7 @@ function CartPage() {
               </Button>
             </header>
 
-            <div className="grid lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Cart Items */}
               <div className="lg:col-span-8 space-y-4">
                 <AnimatePresence mode="popLayout">

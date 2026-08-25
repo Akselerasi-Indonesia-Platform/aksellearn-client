@@ -178,7 +178,7 @@ function OrderDetailsPage() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Details & Items */}
           <div className="lg:col-span-8 space-y-8">
             {order.status === 'pending' && paymentDetails && (
