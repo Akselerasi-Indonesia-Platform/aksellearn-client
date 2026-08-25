@@ -274,9 +274,11 @@ export function PublicNavbar() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-full sm:max-w-[400px]" side="right">
+              <SheetContent className="w-full sm:max-w-[400px] flex flex-col gap-0 p-0" side="right">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                <div className="flex flex-col gap-8 py-6 h-full overflow-y-auto no-scrollbar pb-12 px-2">
+
+                {/* Header: logo (native SheetClose X already sits top-right) */}
+                <div className="shrink-0 px-5 pt-5 pb-4 border-b border-slate-100">
                   <Link
                     className="text-2xl font-bold italic text-primary flex items-center gap-2"
                     to="/"
@@ -285,132 +287,117 @@ export function PublicNavbar() {
                       <img
                         src={profile.logo.url}
                         alt={profile.name || 'Logo'}
-                        className="h-10 w-auto object-contain"
+                        className="h-9 w-auto object-contain"
                       />
                     ) : profile?.logo_dark?.url ? (
                       <img
                         src={profile.logo_dark.url}
                         alt={profile.name || 'Logo'}
-                        className="h-10 w-auto object-contain"
+                        className="h-9 w-auto object-contain"
                       />
                     ) : (
                       <span>{profile?.name?.toUpperCase() || 'AKSELLEARN LEARN'}</span>
                     )}
                   </Link>
-                  <div className="flex flex-col gap-4">
-                    <form
-                      className="relative w-full group"
-                      onSubmit={handleSearch}
-                    >
-                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
-                      <Input
-                        className="w-full bg-muted/50 pl-11 h-12 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all text-base"
-                        placeholder={t('search.placeholder')}
-                        type="search"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                    </form>
+                </div>
+
+                {/* Scrollable middle: search + nav links (footer CTAs stay pinned below) */}
+                <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 flex flex-col gap-6">
+                  <form className="relative w-full group" onSubmit={handleSearch}>
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                    <Input
+                      className="w-full bg-muted/50 pl-11 h-12 rounded-xl border-transparent focus-visible:ring-primary/20 transition-all text-base"
+                      placeholder={t('search.placeholder')}
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </form>
+
+                  <div className="flex flex-col">
+                    {categories?.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center justify-between group"
+                        to="/search"
+                        search={{ category: cat.slug }}
+                      >
+                        {cat.name}
+                        <ChevronRight className="size-4 text-slate-300 group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
                   </div>
 
-                  <div className="flex flex-col gap-3">
-                    <h3 className="font-bold text-xs uppercase tracking-widest text-muted-foreground ml-1">
-                      Most Popular
-                    </h3>
+                  {isAuth && (
                     <div className="flex flex-col">
-                      {categories?.map((cat) => (
-                        <Link
-                          key={cat.id}
-                          className="text-base font-bold text-slate-700 hover:text-primary transition-colors py-3.5 border-b border-slate-100 last:border-0 flex items-center justify-between group"
-                          to="/search"
-                          search={{ category: cat.slug }}
-                        >
-                          {cat.name}
-                          <ChevronRight className="size-4 text-slate-300 group-hover:text-primary transition-colors" />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="border-t border-slate-100 pt-6 mt-auto">
-                    <div className="flex flex-col gap-3">
-                      {canApplyInstructor && (
-                        <Button
-                          asChild
-                          className="w-full justify-start gap-3 rounded-xl border-white/20 hover:bg-white/10 h-12 text-base font-bold"
-                          variant="outline"
-                        >
-                          <Link to="/become-an-instructor">
-                            {t('publicHome.navbar.teachOn')}
+                      {!userIsAdmin && (
+                        <>
+                          <Link
+                            className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                            to="/student/profile"
+                          >
+                            <User className="size-4 text-slate-400" /> {t('publicHome.navbar.myProfile')}
                           </Link>
-                        </Button>
-                      )}
-                      {isAuth ? (
-                        <>
-                          {!userIsAdmin && (
-                            <>
-                              <Button
-                                asChild
-                                className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                                variant="outline"
-                              >
-                                <Link to="/student/profile">
-                                  <User className="h-4 w-4" /> {t('publicHome.navbar.myProfile')}
-                                </Link>
-                              </Button>
-                              <Button
-                                asChild
-                                className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                                variant="outline"
-                              >
-                                <Link to="/student/settings">
-                                  <Settings2 className="h-4 w-4" /> {t('publicHome.navbar.accountSettings')}
-                                </Link>
-                              </Button>
-                            </>
-                          )}
-                          <Button
-                            asChild
-                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                            variant="outline"
+                          <Link
+                            className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                            to="/student/settings"
                           >
-                            <Link to="/cart">
-                              <ShoppingCart className="h-4 w-4" /> {t('publicHome.navbar.myCart')}
-                              {cartItemCount > 0 && (
-                                <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                  {cartItemCount}
-                                </span>
-                              )}
-                            </Link>
-                          </Button>
-                          <Button
-                            asChild
-                            className="w-full justify-start gap-3 rounded-xl h-12 text-base"
-                            variant="outline"
-                          >
-                            <Link to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}>
-                              <LayoutDashboard className="h-4 w-4" />{' '}
-                              {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
-                            </Link>
-                          </Button>
-                          <Button
-                            onClick={handleLogout}
-                            className="w-full justify-start gap-3 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 border-none h-12 text-base"
-                          >
-                            <LogOut className="h-4 w-4" /> {t('publicHome.navbar.logout')}
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button asChild className="w-full h-12 text-base rounded-xl" variant="outline">
-                            <Link to="/login">{t('auth.signIn')}</Link>
-                          </Button>
-                          <Button asChild className="w-full h-12 text-base rounded-xl">
-                            <Link to="/register">{t('auth.signUp')}</Link>
-                          </Button>
+                            <Settings2 className="size-4 text-slate-400" /> {t('publicHome.navbar.accountSettings')}
+                          </Link>
                         </>
                       )}
+                      <Link
+                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                        to="/cart"
+                      >
+                        <ShoppingCart className="size-4 text-slate-400" /> {t('publicHome.navbar.myCart')}
+                        {cartItemCount > 0 && (
+                          <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            {cartItemCount}
+                          </span>
+                        )}
+                      </Link>
+                      <Link
+                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                        to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}
+                      >
+                        <LayoutDashboard className="size-4 text-slate-400" />{' '}
+                        {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
+                      </Link>
                     </div>
-                  </div>
+                  )}
+
+                  {canApplyInstructor && (
+                    <div className="flex flex-col border-t border-slate-100 pt-4">
+                      <Link
+                        className="text-sm font-medium text-slate-500 hover:text-primary transition-colors py-2"
+                        to="/become-an-instructor"
+                      >
+                        {t('publicHome.navbar.teachOn')}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pinned footer: primary CTA on top, matching the Coursera-style guest menu */}
+                <div className="shrink-0 border-t border-slate-100 px-5 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+                  {isAuth ? (
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full h-12 text-base rounded-full gap-2 text-rose-600 bg-rose-50 hover:bg-rose-100 border-none"
+                    >
+                      <LogOut className="h-4 w-4" /> {t('publicHome.navbar.logout')}
+                    </Button>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <Button asChild className="w-full h-12 text-base rounded-full">
+                        <Link to="/register">{t('auth.signUp')}</Link>
+                      </Button>
+                      <Button asChild className="w-full h-12 text-base rounded-full" variant="outline">
+                        <Link to="/login">{t('auth.signIn')}</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
