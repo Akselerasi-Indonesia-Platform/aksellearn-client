@@ -142,7 +142,7 @@ function CheckoutPage() {
     return (
       <PublicLayout>
         <div className="container mx-auto px-4 py-32">
-          <div className="grid lg:grid-cols-12 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div className="lg:col-span-8 space-y-8">
               <Skeleton className="h-10 w-48 rounded-lg" />
               <div className="space-y-4">
@@ -211,7 +211,7 @@ function CheckoutPage() {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-12 gap-12 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               {/* Left Column: Details */}
               <div className="lg:col-span-8 space-y-12">
                 {/* 1. Review Items */}

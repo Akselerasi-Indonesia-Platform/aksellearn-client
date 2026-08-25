@@ -371,7 +371,7 @@ function CoursePublicDetails() {
       <PublicLayout>
         <div className="pt-32 pb-20 bg-slate-900">
           <div className="container mx-auto px-4 animate-in fade-in duration-300">
-            <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-8 space-y-8">
                 <Skeleton className="h-6 w-24 rounded-full bg-slate-800" />
                 <div className="space-y-4">
@@ -456,8 +456,8 @@ function CoursePublicDetails() {
         </div>
 
         <div className="container relative z-20 mx-auto px-4">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="min-w-0 lg:col-span-7 space-y-8">
               <div className="flex flex-wrap gap-2">
                 {course.category?.slug ? (
                   <Link to="/categories/$slug" params={{ slug: course.category.slug }}>
@@ -750,7 +750,7 @@ function CoursePublicDetails() {
                               disabled={isAdding || isLoading || !course}
                               variant="card-enroll"
                               size="xl"
-                              className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30"
+                              className="w-full text-sm sm:text-lg uppercase tracking-normal sm:tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30"
                             >
                               {isAdding || isLoading ? (
                                 <Loader2 className="size-5 animate-spin" />
@@ -805,7 +805,7 @@ function CoursePublicDetails() {
                                   disabled={isEnrollingFree || isPollingEnrollment || isLoading || !course}
                                   variant="commerce"
                                   size="xl"
-                                  className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
+                                  className="w-full text-sm sm:text-lg uppercase tracking-normal sm:tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
                                 >
                                   {isEnrollingFree || isPollingEnrollment ? (
                                     <Loader2 className="size-5 animate-spin" />
@@ -836,7 +836,7 @@ function CoursePublicDetails() {
                                     disabled={isAdding || isLoading || !course}
                                     variant="card-enroll"
                                     size="xl"
-                                    className="w-full text-lg uppercase tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
+                                    className="w-full text-sm sm:text-lg uppercase tracking-normal sm:tracking-widest gap-2 shadow-lg hover:shadow-xl hover:shadow-primary/30 h-14"
                                   >
                                     {isAdding || isLoading ? (
                                       <Loader2 className="size-5 animate-spin" />
@@ -850,7 +850,7 @@ function CoursePublicDetails() {
                                     disabled={isAdding || isLoading || !course}
                                     variant="outline"
                                     size="xl"
-                                    className="w-full text-slate-800 hover:text-slate-900 text-lg uppercase tracking-widest gap-2 h-14"
+                                    className="w-full text-slate-800 hover:text-slate-900 text-sm sm:text-lg uppercase tracking-normal sm:tracking-widest gap-2 h-14"
                                   >
                                     {isAdding || isLoading ? (
                                       <Loader2 className="size-5 animate-spin" />
@@ -882,8 +882,8 @@ function CoursePublicDetails() {
       {/* Course Highlights */}
       <section className="py-24 bg-white border-b">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-8 space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            <div className="min-w-0 lg:col-span-8 space-y-16">
               {/* What You'll Learn */}
               {course.what_you_will_learn &&
               course.what_you_will_learn.length > 0 ? (
@@ -891,7 +891,7 @@ function CoursePublicDetails() {
                   <h2 className="text-2xl font-bold tracking-tight">
                     What you will learn
                   </h2>
-                  <div className="grid md:grid-cols-2 gap-x-12 gap-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                     {course.what_you_will_learn.map((item: any, i: number) => (
                       <div key={i} className="flex gap-3">
                         <CheckCircle className="size-5 text-emerald-500 shrink-0 mt-0.5" />
@@ -1179,8 +1179,8 @@ function CoursePublicDetails() {
       {course.reviews && course.reviews.length > 0 ? (
         <section className="py-16 bg-white border-b">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-12 gap-16">
-              <div className="lg:col-span-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+              <div className="min-w-0 lg:col-span-8">
             {/* Section header + FE-05 aggregate rating */}
             <div className="flex flex-col sm:flex-row sm:items-start gap-8 mb-10">
               <h2 className="text-2xl font-bold tracking-tight shrink-0">Student Reviews</h2>
@@ -1234,7 +1234,7 @@ function CoursePublicDetails() {
             </div>
 
             {/* Review cards grid */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {course.reviews.map((review: any) => {
                 const name = review.user?.name || 'Anonymous'
                 const avatarColor = getAvatarColor(name)
@@ -1289,8 +1289,8 @@ function CoursePublicDetails() {
       {relatedCourses && relatedCourses.length > 0 ? (
         <section className="py-14 bg-white border-b border-slate-100">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-12 gap-16">
-              <div className="lg:col-span-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+              <div className="min-w-0 lg:col-span-8">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold tracking-tight text-slate-900">Students also bought</h2>
                   <Link to="/search" className="text-sm font-bold text-[#056FAE] hover:underline">View all</Link>

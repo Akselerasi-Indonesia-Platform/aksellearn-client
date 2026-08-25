@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @import 'tw-animate-css';
+@import '@fontsource-variable/mona-sans';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -132,6 +133,10 @@
   --sidebar-accent-foreground: oklch(0.2 0.05 260);
   --sidebar-border: oklch(0.92 0.02 260);
   --sidebar-ring: oklch(0.55 0.22 260);
+
+  --font-sans: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-serif: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
 /* Brand utility classes */
@@ -228,6 +233,10 @@
   /* Transitions */
   --animation-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --animation-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font-sans: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-serif: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
 /* Custom Scrollbar for Admin (Filament style) */
@@ -405,9 +414,9 @@
   --sidebar-accent-foreground: oklch(0 0 0);
   --sidebar-border: oklch(1 0 0);
   --sidebar-ring: oklch(0.7044 0.1872 23.1858);
-  --font-sans: DM Sans, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-  --font-mono: Space Mono, monospace;
+  --font-sans: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-serif: 'Mona Sans Variable', 'Mona Sans', ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
   --radius: 0px;
   --shadow-x: 4px;
   --shadow-y: 4px;
@@ -434,7 +443,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 

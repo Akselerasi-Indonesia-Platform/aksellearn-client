@@ -298,7 +298,7 @@ function ArticlePage() {
                       ></div>
                     </div>
                     <Card className="overflow-hidden border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                      <div className="grid md:grid-cols-2 gap-0">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
                         <CardHeader className="p-0 relative overflow-hidden">
                           <div className="aspect-video md:aspect-square relative">
                             <img

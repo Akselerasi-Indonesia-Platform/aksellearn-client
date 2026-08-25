@@ -351,7 +351,7 @@ function CourseDetailPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className={cn(
-            "sticky top-[152px] h-[calc(100vh-190px)] min-h-[500px] transition-all duration-300",
+            "transition-all duration-300 lg:sticky lg:top-[152px] lg:h-[calc(100vh-190px)] lg:min-h-[500px]",
             isSidebarCollapsed ? "lg:col-span-1 hidden lg:block" : "lg:col-span-4"
           )}
         >
