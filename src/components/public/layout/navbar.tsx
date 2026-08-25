@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/components/ui/sheet'
 import { isAuthenticated, getUser, removeToken, isAdmin } from '@/lib/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -279,41 +279,44 @@ export function PublicNavbar() {
 
                 {/* Header: logo (native SheetClose X already sits top-right) */}
                 <div className="shrink-0 px-5 pt-5 pb-4 border-b border-slate-100">
-                  <Link
-                    className="text-2xl font-bold italic text-primary flex items-center gap-2"
-                    to="/"
-                  >
-                    {profile?.logo?.url ? (
-                      <img
-                        src={profile.logo.url}
-                        alt={profile.name || 'Logo'}
-                        className="h-9 w-auto object-contain"
-                      />
-                    ) : profile?.logo_dark?.url ? (
-                      <img
-                        src={profile.logo_dark.url}
-                        alt={profile.name || 'Logo'}
-                        className="h-9 w-auto object-contain"
-                      />
-                    ) : (
-                      <span>{profile?.name?.toUpperCase() || 'AKSELLEARN LEARN'}</span>
-                    )}
-                  </Link>
+                  <SheetClose asChild>
+                    <Link
+                      className="text-2xl font-bold italic text-primary flex items-center gap-2"
+                      to="/"
+                    >
+                      {profile?.logo?.url ? (
+                        <img
+                          src={profile.logo.url}
+                          alt={profile.name || 'Logo'}
+                          className="h-9 w-auto object-contain"
+                        />
+                      ) : profile?.logo_dark?.url ? (
+                        <img
+                          src={profile.logo_dark.url}
+                          alt={profile.name || 'Logo'}
+                          className="h-9 w-auto object-contain"
+                        />
+                      ) : (
+                        <span>{profile?.name?.toUpperCase() || 'AKSELLEARN LEARN'}</span>
+                      )}
+                    </Link>
+                  </SheetClose>
                 </div>
 
                 {/* Scrollable middle: nav links (footer CTAs stay pinned below) */}
                 <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 flex flex-col gap-6">
                   <div className="flex flex-col">
                     {categories?.map((cat) => (
-                      <Link
-                        key={cat.id}
-                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center justify-between group"
-                        to="/search"
-                        search={{ category: cat.slug }}
-                      >
-                        {cat.name}
-                        <ChevronRight className="size-4 text-slate-300 group-hover:text-primary transition-colors" />
-                      </Link>
+                      <SheetClose asChild key={cat.id}>
+                        <Link
+                          className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center justify-between group"
+                          to="/search"
+                          search={{ category: cat.slug }}
+                        >
+                          {cat.name}
+                          <ChevronRight className="size-4 text-slate-300 group-hover:text-primary transition-colors" />
+                        </Link>
+                      </SheetClose>
                     ))}
                   </div>
 
@@ -321,49 +324,59 @@ export function PublicNavbar() {
                     <div className="flex flex-col">
                       {!userIsAdmin && (
                         <>
-                          <Link
-                            className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
-                            to="/student/profile"
-                          >
-                            <User className="size-4 text-slate-400" /> {t('publicHome.navbar.myProfile')}
-                          </Link>
-                          <Link
-                            className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
-                            to="/student/settings"
-                          >
-                            <Settings2 className="size-4 text-slate-400" /> {t('publicHome.navbar.accountSettings')}
-                          </Link>
+                          <SheetClose asChild>
+                            <Link
+                              className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                              to="/student/profile"
+                            >
+                              <User className="size-4 text-slate-400" /> {t('publicHome.navbar.myProfile')}
+                            </Link>
+                          </SheetClose>
+                          <SheetClose asChild>
+                            <Link
+                              className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                              to="/student/settings"
+                            >
+                              <Settings2 className="size-4 text-slate-400" /> {t('publicHome.navbar.accountSettings')}
+                            </Link>
+                          </SheetClose>
                         </>
                       )}
-                      <Link
-                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
-                        to="/cart"
-                      >
-                        <ShoppingCart className="size-4 text-slate-400" /> {t('publicHome.navbar.myCart')}
-                        {cartItemCount > 0 && (
-                          <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            {cartItemCount}
-                          </span>
-                        )}
-                      </Link>
-                      <Link
-                        className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
-                        to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}
-                      >
-                        <LayoutDashboard className="size-4 text-slate-400" />{' '}
-                        {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
-                      </Link>
+                      <SheetClose asChild>
+                        <Link
+                          className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                          to="/cart"
+                        >
+                          <ShoppingCart className="size-4 text-slate-400" /> {t('publicHome.navbar.myCart')}
+                          {cartItemCount > 0 && (
+                            <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+                              {cartItemCount}
+                            </span>
+                          )}
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="text-base font-medium text-slate-800 hover:text-primary transition-colors py-3.5 border-b border-slate-100 flex items-center gap-3"
+                          to={userIsAdmin ? '/admin/dashboard' : '/student/dashboard'}
+                        >
+                          <LayoutDashboard className="size-4 text-slate-400" />{' '}
+                          {userIsAdmin ? t('publicHome.navbar.adminDashboard') : t('publicHome.navbar.learningPortal')}
+                        </Link>
+                      </SheetClose>
                     </div>
                   )}
 
                   {canApplyInstructor && (
                     <div className="flex flex-col border-t border-slate-100 pt-4">
-                      <Link
-                        className="text-sm font-medium text-slate-500 hover:text-primary transition-colors py-2"
-                        to="/become-an-instructor"
-                      >
-                        {t('publicHome.navbar.teachOn')}
-                      </Link>
+                      <SheetClose asChild>
+                        <Link
+                          className="text-sm font-medium text-slate-500 hover:text-primary transition-colors py-2"
+                          to="/become-an-instructor"
+                        >
+                          {t('publicHome.navbar.teachOn')}
+                        </Link>
+                      </SheetClose>
                     </div>
                   )}
                 </div>
@@ -379,12 +392,16 @@ export function PublicNavbar() {
                     </Button>
                   ) : (
                     <div className="flex flex-col gap-3">
-                      <Button asChild className="w-full h-12 text-base rounded-full">
-                        <Link to="/register">{t('auth.signUp')}</Link>
-                      </Button>
-                      <Button asChild className="w-full h-12 text-base rounded-full" variant="outline">
-                        <Link to="/login">{t('auth.signIn')}</Link>
-                      </Button>
+                      <SheetClose asChild>
+                        <Button asChild className="w-full h-12 text-base rounded-full">
+                          <Link to="/register">{t('auth.signUp')}</Link>
+                        </Button>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Button asChild className="w-full h-12 text-base rounded-full" variant="outline">
+                          <Link to="/login">{t('auth.signIn')}</Link>
+                        </Button>
+                      </SheetClose>
                     </div>
                   )}
                 </div>
