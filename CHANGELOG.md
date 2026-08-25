@@ -9,6 +9,22 @@ must follow when cutting a release.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-08-25
+
+### Added
+- Redesigned the mobile hamburger nav drawer to match Coursera's mobile
+  menu: fixed logo/close header, plain divided list rows with chevrons,
+  and a pinned footer with a solid "Daftar" CTA above an outline "Masuk"
+  button. Dropped the search field from the mobile drawer. (#21)
+
+### Fixed
+- Course thumbnail video-preview play icon was invisible on mobile,
+  desktop, and tablet until hover; now always visible on every device.
+  (#19, #20)
+- GitHub Actions deploy could fail with a Docker container name
+  conflict on redeploy due to a stale container not being fully
+  removed. (#18)
+
 ## [1.2.0] - 2026-08-25
 
 ### Added
