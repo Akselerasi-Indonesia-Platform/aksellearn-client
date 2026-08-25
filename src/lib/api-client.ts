@@ -383,7 +383,20 @@ apiClient.interceptors.response.use(
       )
 
       removeToken()
-      const loginPaths = ['/login', '/admin/login', '/login-new']
+      // Public/unauthenticated flows that render their own self-contained
+      // success/error UI and must never be hijacked by a hard redirect --
+      // a stale token left over from a previous session can cause a 401
+      // here even though the page itself doesn't require auth.
+      const loginPaths = [
+        '/login',
+        '/admin/login',
+        '/login-new',
+        '/register',
+        '/verify-email',
+        '/auth/callback',
+        '/forgot-password',
+        '/reset-password',
+      ]
       const isLoginPage =
         isBrowser &&
         loginPaths.some((path) => window.location.pathname.startsWith(path))
