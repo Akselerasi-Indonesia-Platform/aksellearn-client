@@ -37,6 +37,7 @@ function AuthCallbackPage() {
 
           // 3. Fetch full profile to populate the store
           const user = await authService.getProfile()
+          const onboardingRequired = (user as any).onboarding_required ?? false
 
           // 4. Synchronize state with the unified Auth Store
           setAuth(
@@ -45,11 +46,13 @@ function AuthCallbackPage() {
               uuid: user.uuid || '',
               name: user.name,
               email: user.email,
+              email_verified_at: user.email_verified_at,
               role: user.roles?.[0] || 'student',
               roles: user.roles || [],
               permissions: user.permissions || [],
             },
             token,
+            onboardingRequired,
           )
 
           // 5. Clean up the URL for security
