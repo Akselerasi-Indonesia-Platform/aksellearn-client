@@ -9,6 +9,19 @@ must follow when cutting a release.
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-08-25
+
+### Fixed
+- Guests browsing more than ~5 seconds after page load would get
+  hard-redirected to `/login` the moment they tapped any link (e.g. a
+  category row in the mobile menu), because a routine background
+  identity check returning a normal, expected 401 for a never-logged-in
+  visitor was being treated as an expired session. Only browsers with
+  evidence of a prior login now trigger that redirect. (#22)
+- The mobile nav drawer navigated correctly but stayed open over the
+  new page; category, account, and auth links now close the drawer
+  in the same tap. (#23)
+
 ## [1.3.0] - 2026-08-25
 
 ### Added
