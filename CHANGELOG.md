@@ -9,6 +9,30 @@ must follow when cutting a release.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-25
+
+### Added
+- Self-hosted Mona Sans as the site-wide font, replacing a long-standing
+  bug where `--font-sans` was never actually defined for the default or
+  light admin theme, so the app silently fell back to the browser
+  default font everywhere. (#15)
+
+### Fixed
+- 12 files used a responsive `grid` pattern with no base `grid-cols-1`,
+  letting CSS Grid auto-size mobile columns to content width instead of
+  the viewport and causing text/cards to overflow off-screen on phones.
+  Also fixed clipped course-detail CTA buttons and an oversized sticky
+  syllabus sidebar on the course learning page at mobile widths. (#15)
+- New users signing up via Google never saw the "What is your primary
+  goal?" onboarding modal, because `/auth/callback` called `setAuth()`
+  without forwarding `onboarding_required` from the profile response.
+  Now consistent with manual registration. (#16)
+- `/verify-email` and `/reset-password` could be hijacked mid-flow:
+  `rehydrate()`'s OAuth token handshake read the `token` query param on
+  every route, not just `/auth/callback`, so it mistook those pages'
+  unrelated single-use tokens for a JWT access token, corrupted the
+  session, and stripped the token from the URL. (#17)
+
 ## [1.1.0] - 2026-08-25
 
 ### Added
