@@ -74,8 +74,8 @@ export function CourseCard({
           )}
           {showHoverOverlay && !isPlayingPreview && course.preview_url && (
             <>
-              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-100 transition-opacity duration-300 pointer-events-none" />
+              <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-300 pointer-events-none">
                 <div className="bg-white/20 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/30">
                   <PlayCircle className="size-8 text-white" />
                 </div>
